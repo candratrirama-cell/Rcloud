@@ -1,7 +1,7 @@
 {
-  "name": "cloudpay-system",
+  "name": "rcloud-ppob",
   "version": "1.0.0",
-  "description": "PPOB Webview System with QRIS and Telegram Bot",
+  "description": "CloudPay PPOB System by Rama",
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js",
