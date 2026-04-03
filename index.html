@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloudpay - Top Up & Withdraw</title>
+    <title>Cloudpay - GoR 1.1 Database</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
         .loader { border-top-color: #2563eb; animation: spinner 0.6s linear infinite; }
         @keyframes spinner { to { transform: rotate(360deg); } }
-        .tab-active { color: #2563eb; }
-        .tab-inactive { color: #94a3b8; }
         .hide { display: none !important; }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -22,134 +20,129 @@
     <!-- Loading Screen -->
     <div id="loading-screen" class="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center">
         <div class="loader w-10 h-10 border-4 border-slate-200 rounded-full mb-4"></div>
-        <p class="text-slate-500 font-medium animate-pulse">Menghubungkan ke Cloudpay...</p>
+        <p id="loading-text" class="text-slate-500 font-medium animate-pulse">Sinkronisasi Database...</p>
     </div>
 
     <!-- Auth Container -->
     <div id="auth-container" class="min-h-screen flex items-center justify-center p-6 bg-white hide">
         <div class="w-full max-w-md">
             <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-200">
-                    <i class="fas fa-wallet text-white text-2xl"></i>
+                <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-blue-200">
+                    <i class="fas fa-database text-white text-3xl"></i>
                 </div>
-                <h1 class="text-2xl font-bold tracking-tight">Cloudpay</h1>
-                <p id="auth-subtitle" class="text-slate-400 text-sm">Masuk untuk mengelola saldo Anda</p>
+                <h1 class="text-2xl font-bold tracking-tight text-slate-800">Cloudpay Cloud</h1>
+                <p id="auth-subtitle" class="text-slate-400 text-sm">Data tersimpan aman di Cloud Database</p>
             </div>
 
-            <!-- Login Form -->
+            <!-- Login -->
             <form id="login-form" class="space-y-4">
-                <div class="relative">
-                    <i class="fas fa-phone absolute left-4 top-4 text-slate-300"></i>
-                    <input type="tel" id="login-phone" placeholder="Nomor WhatsApp" required class="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase ml-1">Akses Akun</label>
+                    <input type="tel" id="login-phone" placeholder="Nomor WhatsApp (628...)" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                    <input type="password" id="login-pass" placeholder="Password Akun" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                 </div>
-                <div class="relative">
-                    <i class="fas fa-lock absolute left-4 top-4 text-slate-300"></i>
-                    <input type="password" id="login-pass" placeholder="Password" required class="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <button type="submit" id="btn-login-submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg active:scale-[0.98] transition-all">Masuk Sekarang</button>
-                <p class="text-center text-sm text-slate-500 mt-4">Belum punya akun? <button type="button" onclick="toggleAuth('register')" class="text-blue-600 font-bold">Daftar</button></p>
+                <button type="submit" id="btn-login" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-100 active:scale-95 transition-all">Masuk ke Sistem</button>
+                <p class="text-center text-sm text-slate-500">Baru di sini? <button type="button" onclick="toggleAuth('reg')" class="text-blue-600 font-bold">Buat Akun Cloud</button></p>
             </form>
 
-            <!-- Register Form -->
+            <!-- Register -->
             <form id="register-form" class="space-y-4 hide">
-                <input type="text" id="reg-name" placeholder="Nama Lengkap" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                <input type="tel" id="reg-phone" placeholder="Nomor WhatsApp (628...)" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                <input type="password" id="reg-pass" placeholder="Buat Password" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                <button type="submit" id="btn-reg-submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg">Buat Akun Baru</button>
-                <p class="text-center text-sm text-slate-500 mt-4">Sudah punya akun? <button type="button" onclick="toggleAuth('login')" class="text-blue-600 font-bold">Login</button></p>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase ml-1">Pendaftaran Baru</label>
+                    <input type="text" id="reg-name" placeholder="Nama Lengkap" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                    <input type="tel" id="reg-phone" placeholder="Nomor WhatsApp" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                    <input type="password" id="reg-pass" placeholder="Buat Password" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+                <button type="submit" id="btn-reg" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all">Daftar & Simpan</button>
+                <p class="text-center text-sm text-slate-500">Sudah punya akun? <button type="button" onclick="toggleAuth('log')" class="text-blue-600 font-bold">Login</button></p>
             </form>
         </div>
     </div>
 
     <!-- Main Dashboard -->
     <div id="app-container" class="min-h-screen pb-24 hide">
-        <header class="bg-white border-b border-slate-100 p-4 sticky top-0 z-50 glass">
-            <div class="max-w-md mx-auto flex justify-between items-center">
-                <div>
-                    <h2 class="text-xl font-bold text-blue-600">Cloudpay</h2>
-                    <p id="user-display" class="text-[10px] text-slate-400 font-medium">Memuat profil...</p>
-                </div>
-                <button onclick="logout()" class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-red-500">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
+        <header class="bg-white/80 border-b p-4 sticky top-0 z-50 glass flex justify-between items-center">
+            <div>
+                <h2 class="text-xl font-bold text-blue-600 flex items-center gap-2">
+                    <i class="fas fa-cloud text-sm"></i> Cloudpay
+                </h2>
+                <p id="user-display" class="text-[10px] text-slate-400 font-bold uppercase tracking-widest"></p>
             </div>
+            <button onclick="logout()" class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center active:scale-90 transition-all">
+                <i class="fas fa-power-off"></i>
+            </button>
         </header>
 
         <main class="max-w-md mx-auto p-4 space-y-6">
+            <!-- Balance Card -->
             <section id="view-home" class="view">
-                <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-6 text-white shadow-xl mb-6">
-                    <p class="text-blue-100 text-xs font-medium uppercase tracking-wider mb-1">Total Saldo</p>
-                    <h2 id="balance-display" class="text-3xl font-bold mb-6">Rp 0</h2>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="switchView('topup')" class="bg-white/20 hover:bg-white/30 p-3 rounded-xl flex items-center justify-center gap-2 backdrop-blur-sm transition-colors">
-                            <i class="fas fa-circle-plus"></i> <span class="font-bold text-sm">Top Up</span>
-                        </button>
-                        <button onclick="switchView('withdraw')" class="bg-white/20 hover:bg-white/30 p-3 rounded-xl flex items-center justify-center gap-2 backdrop-blur-sm transition-colors">
-                            <i class="fas fa-circle-minus"></i> <span class="font-bold text-sm">Tarik Dana</span>
-                        </button>
+                <div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-[2rem] p-8 text-white shadow-2xl shadow-blue-200 mb-8 relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+                    <p class="text-blue-100 text-xs font-bold mb-2 tracking-widest">SALDO TERSEDIA</p>
+                    <h2 id="balance-display" class="text-4xl font-bold mb-8">Rp 0</h2>
+                    <div class="flex gap-4">
+                        <button onclick="switchView('topup')" class="flex-1 bg-white text-blue-600 py-3 rounded-2xl font-bold text-sm shadow-inner">Top Up</button>
+                        <button onclick="switchView('withdraw')" class="flex-1 bg-blue-500/50 py-3 rounded-2xl font-bold text-sm border border-white/20">Tarik</button>
                     </div>
                 </div>
-                <!-- ... Info Box ... -->
-                <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-                    <h3 class="font-bold flex items-center gap-2 text-slate-800"><i class="fas fa-info-circle text-blue-500"></i> Informasi</h3>
-                    <div class="space-y-2 text-sm text-slate-500">
-                        <div class="flex justify-between"><span>Minimal Top Up</span><span class="font-bold text-slate-700">Rp 100</span></div>
-                        <div class="flex justify-between"><span>Minimal Withdraw</span><span class="font-bold text-slate-700">Rp 10.000</span></div>
-                    </div>
-                </div>
+
+                <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-history text-blue-500"></i> Riwayat Database
+                </h3>
+                <div id="history-list" class="space-y-3"></div>
             </section>
 
             <!-- TopUp View -->
             <section id="view-topup" class="view hide">
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                    <h2 class="text-xl font-bold mb-4">Isi Saldo</h2>
-                    <div id="topup-initial">
-                        <input type="number" id="topup-amount" placeholder="Nominal (Min. 100)" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl text-xl font-bold outline-none mb-4">
-                        <button onclick="generateQRIS()" id="btn-generate" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg">Lanjut Bayar</button>
-                    </div>
-                    <div id="topup-qr" class="hide text-center space-y-4">
-                        <img id="qr-img" src="" class="mx-auto w-[220px] bg-white p-2 border rounded-xl">
-                        <div class="bg-blue-50 p-3 rounded-xl">
-                            <p id="qr-total" class="text-xl font-bold text-blue-700">Rp 0</p>
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+                    <h3 class="font-bold mb-4">Isi Saldo Otomatis</h3>
+                    <div id="qr-init">
+                        <div class="relative mb-4">
+                            <span class="absolute left-4 top-4 font-bold text-slate-400">Rp</span>
+                            <input type="number" id="topup-amt" placeholder="0" class="w-full pl-12 p-4 bg-slate-50 rounded-2xl outline-none border border-slate-100 text-xl font-bold">
                         </div>
-                        <button onclick="cancelTopUp()" class="text-slate-400 text-xs font-bold">Batalkan</button>
+                        <button onclick="reqQRIS()" id="btn-qr" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all">Generate QRIS</button>
+                    </div>
+                    <div id="qr-display" class="hide text-center space-y-4">
+                        <div class="bg-white p-4 border-2 border-blue-50 rounded-3xl inline-block shadow-inner">
+                            <img id="qr-img" class="mx-auto w-56 h-56 object-contain">
+                        </div>
+                        <p id="qr-info" class="font-bold text-blue-600 text-lg"></p>
+                        <div class="flex items-center justify-center gap-2 text-slate-400 text-[10px] animate-pulse">
+                            <i class="fas fa-sync fa-spin"></i> Menunggu pembayaran otomatis...
+                        </div>
+                        <button onclick="cancelQR()" class="text-sm font-bold text-red-400">Batalkan Pesanan</button>
                     </div>
                 </div>
             </section>
 
-            <!-- Withdraw View -->
+            <!-- WD View -->
             <section id="view-withdraw" class="view hide">
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                    <h2 class="text-xl font-bold mb-4">Penarikan Dana</h2>
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+                    <h3 class="font-bold mb-4">Penarikan Dana</h3>
                     <form id="wd-form" class="space-y-4">
-                        <select id="wd-bank" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none">
-                            <option value="">Pilih Bank / E-Wallet</option>
-                            <option>DANA</option><option>GOPAY</option><option>OVO</option>
-                        </select>
-                        <input type="text" id="wd-acc" placeholder="No. Rekening / No. HP" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none">
-                        <input type="number" id="wd-amount" placeholder="Nominal" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none">
-                        <button type="submit" id="btn-wd-submit" class="w-full bg-slate-900 text-white font-bold py-4 rounded-xl shadow-lg">Ajukan Penarikan</button>
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="text" id="wd-bank" placeholder="Bank/E-Wallet" required class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 outline-none text-sm">
+                            <input type="text" id="wd-acc" placeholder="No Rekening" required class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 outline-none text-sm">
+                        </div>
+                        <input type="number" id="wd-amt" placeholder="Nominal Tarik" required class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 outline-none font-bold text-lg">
+                        <button type="submit" id="btn-wd" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all">Ajukan Penarikan</button>
                     </form>
                 </div>
             </section>
-
-            <section id="view-history" class="view hide space-y-3">
-                <h2 class="text-xl font-bold mb-4 px-2">Riwayat Transaksi</h2>
-                <div id="history-list" class="space-y-3"></div>
-            </section>
         </main>
 
-        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 flex justify-around p-3 max-w-md mx-auto z-[60]">
-            <button onclick="switchView('home')" class="nav-btn tab-active" data-view="home"><i class="fas fa-wallet"></i></button>
-            <button onclick="switchView('topup')" class="nav-btn tab-inactive" data-view="topup"><i class="fas fa-plus-circle"></i></button>
-            <button onclick="switchView('withdraw')" class="nav-btn tab-inactive" data-view="withdraw"><i class="fas fa-minus-circle"></i></button>
-            <button onclick="switchView('history')" class="nav-btn tab-inactive" data-view="history"><i class="fas fa-history"></i></button>
+        <!-- Bottom Nav -->
+        <nav class="fixed bottom-6 left-6 right-6 bg-white/90 border border-slate-100 flex justify-around p-4 rounded-[2rem] max-w-md mx-auto z-[60] shadow-2xl glass">
+            <button onclick="switchView('home')" class="nav-icon text-blue-600"><i class="fas fa-home text-xl"></i></button>
+            <button onclick="switchView('topup')" class="nav-icon text-slate-300"><i class="fas fa-qrcode text-xl"></i></button>
+            <button onclick="switchView('withdraw')" class="nav-icon text-slate-300"><i class="fas fa-wallet text-xl"></i></button>
         </nav>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -164,40 +157,41 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const APP_ID = "cloudpay_v2";
+        
+        const appId = "cloudpay_final_v2"; // AppID baru untuk database bersih
         const API_KEY = "rapay_jur337mgb";
         const BASE_URL = "https://bior-beta.vercel.app/api/pay";
 
-        let currentProfile = null;
-        let checkInterval = null;
+        let profile = null;
+        let checkInt = null;
+        let isSystemReady = false;
 
+        // UI Helpers
         const show = (id) => document.getElementById(id)?.classList.remove('hide');
         const hide = (id) => document.getElementById(id)?.classList.add('hide');
-        const formatIDR = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
 
-        // Global Auth Logic
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const session = localStorage.getItem('cp_session');
-                if (session) {
-                    initAppData(session);
+        // Main Inisialisasi
+        async function init() {
+            try {
+                // Auth Anonymously sebagai gerbang masuk Firebase
+                await signInAnonymously(auth);
+                isSystemReady = true;
+                
+                const savedPhone = localStorage.getItem('cp_phone');
+                if (savedPhone) {
+                    await syncProfile(savedPhone);
                 } else {
                     hide('loading-screen');
                     show('auth-container');
                 }
-            } else {
-                try {
-                    await signInAnonymously(auth);
-                } catch (e) {
-                    console.error("Auth failed", e);
-                    hide('loading-screen');
-                    show('auth-container');
-                }
+            } catch (e) {
+                document.getElementById('loading-text').innerText = "Gagal terhubung ke Cloud.";
             }
-        });
+        }
 
-        async function initAppData(phone) {
-            const docRef = doc(db, 'artifacts', APP_ID, 'users', phone, 'profile', 'data');
+        // Sinkronisasi data dari Database (Firestore)
+        async function syncProfile(phone) {
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', phone);
             try {
                 const snap = await getDoc(docRef);
                 if (!snap.exists()) {
@@ -205,165 +199,191 @@
                     return;
                 }
 
+                // Real-time listener: Saldo berubah otomatis jika admin edit di DB
                 onSnapshot(docRef, (s) => {
-                    if (s.exists()) {
-                        currentProfile = s.data();
-                        document.getElementById('user-display').innerText = `Halo, ${currentProfile.name}`;
-                        document.getElementById('balance-display').innerText = formatIDR(currentProfile.balance || 0);
-                        hide('loading-screen');
-                        hide('auth-container');
-                        show('app-container');
-                    }
+                    profile = s.data();
+                    document.getElementById('user-display').innerText = profile.name;
+                    document.getElementById('balance-display').innerText = "Rp " + profile.balance.toLocaleString('id-ID');
+                    hide('loading-screen');
+                    hide('auth-container');
+                    show('app-container');
                 });
 
-                const txRef = collection(db, 'artifacts', APP_ID, 'users', phone, 'transactions');
+                // Sinkronisasi Riwayat
+                const txRef = collection(db, 'artifacts', appId, 'public', 'data', 'users', phone, 'tx');
                 onSnapshot(txRef, (snap) => {
-                    const list = snap.docs.map(d => ({id: d.id, ...d.data()}));
-                    list.sort((a,b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-                    renderHistory(list);
+                    const txs = snap.docs.map(d => d.data()).sort((a,b) => (b.time?.seconds || 0) - (a.time?.seconds || 0));
+                    renderHistory(txs);
                 });
             } catch (e) {
-                console.error("Data error", e);
+                alert("Gagal sinkron data.");
                 logout();
             }
         }
 
-        // Auth Actions
+        // Login Logika
         document.getElementById('login-form').onsubmit = async (e) => {
             e.preventDefault();
             const phone = document.getElementById('login-phone').value;
             const pass = document.getElementById('login-pass').value;
-            const btn = document.getElementById('btn-login-submit');
+            const btn = document.getElementById('btn-login');
             
-            btn.disabled = true;
-            btn.innerText = "Memproses...";
+            btn.disabled = true; btn.innerText = "Memvalidasi Database...";
             
             try {
-                const docRef = doc(db, 'artifacts', APP_ID, 'users', phone, 'profile', 'data');
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', phone);
                 const snap = await getDoc(docRef);
-                if (snap.exists() && snap.data().password === pass) {
-                    localStorage.setItem('cp_session', phone);
-                    initAppData(phone);
+                
+                if (snap.exists() && snap.data().pass === pass) {
+                    localStorage.setItem('cp_phone', phone);
+                    await syncProfile(phone);
                 } else {
-                    alert("Nomor WA atau Password salah!");
+                    alert("Nomor WA atau Password salah.");
+                    btn.disabled = false; btn.innerText = "Masuk ke Sistem";
                 }
-            } catch (err) { alert("Koneksi gagal"); }
-            finally { btn.disabled = false; btn.innerText = "Masuk Sekarang"; }
+            } catch (err) {
+                alert("Kesalahan Jaringan Database.");
+                btn.disabled = false;
+            }
         };
 
+        // Pendaftaran Logika (Simpan ke Database)
         document.getElementById('register-form').onsubmit = async (e) => {
             e.preventDefault();
-            const name = document.getElementById('reg-name').value;
             const phone = document.getElementById('reg-phone').value;
+            const name = document.getElementById('reg-name').value;
             const pass = document.getElementById('reg-pass').value;
-            const btn = document.getElementById('btn-reg-submit');
-
-            btn.disabled = true;
-            btn.innerText = "Memproses...";
+            const btn = document.getElementById('btn-reg');
+            
+            if (!isSystemReady) return alert("Menunggu Cloud Ready...");
+            btn.disabled = true; btn.innerText = "Menyimpan ke Cloud...";
 
             try {
-                const docRef = doc(db, 'artifacts', APP_ID, 'users', phone, 'profile', 'data');
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', phone);
                 const snap = await getDoc(docRef);
                 if (snap.exists()) {
-                    alert("Nomor sudah terdaftar!");
+                    alert("Nomor WA sudah terdaftar di sistem kami.");
                 } else {
-                    await setDoc(docRef, { name, phone, password: pass, balance: 0, createdAt: serverTimestamp() });
-                    localStorage.setItem('cp_session', phone);
-                    initAppData(phone);
+                    // Simpan data permanen di Database Firestore
+                    await setDoc(docRef, { 
+                        name, 
+                        phone, 
+                        pass, 
+                        balance: 0, 
+                        role: 'user',
+                        time: serverTimestamp() 
+                    });
+                    localStorage.setItem('cp_phone', phone);
+                    await syncProfile(phone);
                 }
-            } catch (err) { alert("Gagal mendaftar"); }
-            finally { btn.disabled = false; btn.innerText = "Buat Akun Baru"; }
+            } catch (err) {
+                alert("Gagal mendaftar: " + err.message);
+            } finally {
+                btn.disabled = false; btn.innerText = "Daftar & Simpan";
+            }
         };
 
-        window.toggleAuth = (mode) => {
-            if (mode === 'register') { hide('login-form'); show('register-form'); }
+        window.toggleAuth = (m) => {
+            if (m === 'reg') { hide('login-form'); show('register-form'); }
             else { show('login-form'); hide('register-form'); }
         };
 
-        window.logout = () => {
-            localStorage.removeItem('cp_session');
-            location.reload();
+        window.logout = () => { localStorage.clear(); location.reload(); };
+
+        window.switchView = (v) => {
+            document.querySelectorAll('.view').forEach(e => e.classList.add('hide'));
+            show('view-' + v);
+            // Update Nav Icons
+            document.querySelectorAll('.nav-icon').forEach(i => i.classList.replace('text-blue-600', 'text-slate-300'));
+            event.currentTarget.classList.replace('text-slate-300', 'text-blue-600');
         };
 
-        window.switchView = (target) => {
-            document.querySelectorAll('.view').forEach(v => v.classList.add('hide'));
-            show('view-' + target);
-            document.querySelectorAll('.nav-btn').forEach(b => {
-                b.classList.replace(b.dataset.view === target ? 'tab-inactive' : 'tab-active', b.dataset.view === target ? 'tab-active' : 'tab-inactive');
-            });
-        };
-
-        // Payment Logic
-        window.generateQRIS = async () => {
-            const amount = parseInt(document.getElementById('topup-amount').value);
-            if (amount < 100) return alert("Min. 100");
-            const btn = document.getElementById('btn-generate');
-            btn.disabled = true;
-            btn.innerText = "Sedang Membuat QRIS...";
+        // QRIS & Payment Logic
+        window.reqQRIS = async () => {
+            const amt = parseInt(document.getElementById('topup-amt').value);
+            if (amt < 100) return alert("Minimal Top Up Rp 100");
+            const btn = document.getElementById('btn-qr');
+            btn.disabled = true; btn.innerText = "Meminta QRIS...";
 
             try {
-                const res = await fetch(`${BASE_URL}?key=${API_KEY}&amt=${amount}`);
+                const res = await fetch(`${BASE_URL}?key=${API_KEY}&amt=${amt}`);
                 const data = await res.json();
                 if (data.success) {
-                    document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(data.qr)}`;
-                    document.getElementById('qr-total').innerText = formatIDR(amount);
-                    hide('topup-initial'); show('topup-qr');
-                    startCheckPayment(data.trxId, amount);
+                    document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${data.qr}`;
+                    document.getElementById('qr-info').innerText = "Bayar: Rp " + amt.toLocaleString('id-ID');
+                    hide('qr-init'); show('qr-display');
+                    startPaymentCheck(data.trxId, amt);
                 }
-            } catch (e) { alert("API Offline"); }
-            finally { btn.disabled = false; btn.innerText = "Lanjut Bayar"; }
+            } catch (e) { alert("API Pembayaran Offline."); }
+            finally { btn.disabled = false; btn.innerText = "Generate QRIS"; }
         };
 
-        function startCheckPayment(trxId, amt) {
-            if (checkInterval) clearInterval(checkInterval);
-            checkInterval = setInterval(async () => {
+        function startPaymentCheck(trxId, amt) {
+            checkInt = setInterval(async () => {
                 try {
-                    const res = await fetch(`${BASE_URL}?action=check&trxId=${trxId}`);
-                    const data = await res.json();
-                    if (data.success && data.paid) {
-                        clearInterval(checkInterval);
-                        const phone = localStorage.getItem('cp_session');
-                        const docRef = doc(db, 'artifacts', APP_ID, 'users', phone, 'profile', 'data');
-                        await updateDoc(docRef, { balance: (currentProfile.balance || 0) + amt });
-                        await addDoc(collection(db, 'artifacts', APP_ID, 'users', phone, 'transactions'), {
-                            type: 'topup', amount: amt, status: 'success', createdAt: serverTimestamp()
+                    const r = await fetch(`${BASE_URL}?action=check&trxId=${trxId}`);
+                    const d = await r.json();
+                    if (d.success && d.paid) {
+                        clearInterval(checkInt);
+                        const phone = localStorage.getItem('cp_phone');
+                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', phone);
+                        
+                        // Update saldo permanen di DB
+                        await updateDoc(docRef, { balance: (profile.balance || 0) + amt });
+                        // Simpan riwayat di DB
+                        await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'users', phone, 'tx'), {
+                            type: 'topup', amt: amt, status: 'Lunas', time: serverTimestamp()
                         });
-                        alert("Top Up Berhasil!");
-                        cancelTopUp(); switchView('home');
+                        
+                        alert("Pembayaran Berhasil! Saldo ditambahkan ke Cloud.");
+                        cancelQR(); switchView('home');
                     }
                 } catch (e) {}
             }, 6000);
         }
 
-        window.cancelTopUp = () => { clearInterval(checkInterval); hide('topup-qr'); show('topup-initial'); };
+        window.cancelQR = () => { clearInterval(checkInt); hide('qr-display'); show('qr-init'); };
 
         document.getElementById('wd-form').onsubmit = async (e) => {
             e.preventDefault();
-            const amt = parseInt(document.getElementById('wd-amount').value);
-            if (amt < 10000 || amt > currentProfile.balance) return alert("Saldo tidak cukup atau kurang dari 10rb");
-            const phone = localStorage.getItem('cp_session');
-            await updateDoc(doc(db, 'artifacts', APP_ID, 'users', phone, 'profile', 'data'), { balance: currentProfile.balance - amt });
-            await addDoc(collection(db, 'artifacts', APP_ID, 'users', phone, 'transactions'), {
-                type: 'withdraw', amount: amt, status: 'pending', createdAt: serverTimestamp()
-            });
-            alert("Berhasil diajukan!"); switchView('home');
+            const amt = parseInt(document.getElementById('wd-amt').value);
+            if (amt > profile.balance || amt < 10000) return alert("Saldo tidak cukup (Min WD 10rb)");
+            
+            const btn = document.getElementById('btn-wd');
+            btn.disabled = true; btn.innerText = "Mengirim Permintaan...";
+
+            try {
+                const phone = localStorage.getItem('cp_phone');
+                // Potong saldo di DB
+                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'users', phone), { balance: profile.balance - amt });
+                // Simpan transaksi WD di DB
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'users', phone, 'tx'), {
+                    type: 'wd', amt: amt, status: 'Pending', bank: document.getElementById('wd-bank').value, acc: document.getElementById('wd-acc').value, time: serverTimestamp()
+                });
+                alert("Penarikan Sedang Diproses!"); switchView('home');
+            } catch (e) { alert("Database Error."); }
+            finally { btn.disabled = false; btn.innerText = "Ajukan Penarikan"; }
         };
 
-        function renderHistory(data) {
-            const container = document.getElementById('history-list');
-            container.innerHTML = data.map(tx => `
-                <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-slate-50">
-                    <div>
-                        <p class="text-xs font-bold">${tx.type === 'topup' ? 'Top Up' : 'Withdraw'}</p>
-                        <p class="text-[9px] text-slate-400">${tx.createdAt ? new Date(tx.createdAt.seconds * 1000).toLocaleString() : '...'}</p>
+        function renderHistory(txs) {
+            const list = document.getElementById('history-list');
+            list.innerHTML = txs.map(t => `
+                <div class="bg-white p-4 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center ${t.type==='topup'?'bg-green-50 text-green-500':'bg-red-50 text-red-500'}">
+                            <i class="fas ${t.type==='topup'?'fa-plus':'fa-minus'} text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold">${t.type==='topup'?'Top Up Cloud':'Penarikan Cloud'}</p>
+                            <p class="text-[8px] text-slate-400 font-bold uppercase">${t.time ? new Date(t.time.seconds*1000).toLocaleString('id-ID') : 'Sinkronisasi...'}</p>
+                        </div>
                     </div>
-                    <div class="text-right">
-                        <p class="text-sm font-bold ${tx.type === 'topup' ? 'text-green-600' : 'text-red-600'}">${formatIDR(tx.amount)}</p>
-                        <p class="text-[8px] uppercase font-bold">${tx.status}</p>
-                    </div>
+                    <span class="font-bold text-sm ${t.type==='topup'?'text-green-600':'text-red-600'}">${t.type==='topup'?'+':'-'} Rp ${t.amt.toLocaleString()}</span>
                 </div>
-            `).join('') || '<p class="text-center text-slate-400 py-10">Kosong</p>';
+            `).join('') || '<div class="text-center py-12 text-slate-300 text-xs font-medium">Belum ada riwayat database.</div>';
         }
+
+        init();
     </script>
 </body>
 </html>
