@@ -1,54 +1,29 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoR 1.1 - Network Bridge</title>
+    <title>GoR 1.1 - Dashboard</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            background: #0a0a0a; 
-            color: #00ff00; 
-            font-family: 'Courier New', Courier, monospace; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh;
-            overflow: hidden;
-        }
-        .container {
-            border: 2px solid #00ff00;
-            padding: 40px;
-            background: #111;
-            box-shadow: 10px 10px 0px #00ff00;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-        h1 { font-size: 24px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 3px; }
-        .status { color: #fff; font-weight: bold; margin-bottom: 20px; }
-        .badge { background: #00ff00; color: #000; padding: 5px 10px; font-weight: bold; border-radius: 3px; }
-        hr { border: 1px solid #00ff00; margin: 20px 0; }
-        .info { font-size: 12px; text-align: left; color: #888; line-height: 1.6; }
-        .blink { animation: blinker 1s linear infinite; }
-        @keyframes blinker { 50% { opacity: 0; } }
+        body { background: #000; color: #0f0; font-family: monospace; text-align: center; padding: 20px; }
+        .btn { background: #0f0; color: #000; padding: 10px; border: none; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>GoR 1.1</h1>
-        <p class="status">BRIDGE SYSTEM <span class="badge">ONLINE</span></p>
-        
-        <div class="info">
-            <p>> SOURCE: GITHUB VERCEL</p>
-            <p>> TARGET: TERMUX LOCALHOST</p>
-            <p>> STATUS: <span class="blink">LISTENING...</span></p>
-        </div>
+    <h1>GoR 1.1 - Payment System</h1>
+    <p>Status: <span id="user-status">Memeriksa Login...</span></p>
+    
+    <button class="btn" onclick="topup()">TEST TOP UP 1K</button>
 
-        <hr>
-        
-        <p style="font-size: 11px; color: #00ff00;">READY FOR SKETCHWARE REQUESTS</p>
-        <p style="font-size: 10px; color: #444; margin-top: 20px;">Created by @maramadhona</p>
-    </div>
+    <script>
+        // Fungsi kirim data ke Termux lewat Bridge Vercel
+        async function topup() {
+            const res = await fetch('/api/generate-qris', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ username: "Rama", amount: 1000 })
+            });
+            const data = await res.json();
+            alert("QRIS Diterima! Cek Bot Telegram.");
+        }
+    </script>
 </body>
 </html>
