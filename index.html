@@ -3,151 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloudpay - GoR 1.1 Database</title>
+    <title>Cloudpay - PPOB Ecosystem</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .loader { border-top-color: #2563eb; animation: spinner 0.6s linear infinite; }
-        @keyframes spinner { to { transform: rotate(360deg); } }
-        .hide { display: none !important; }
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        /* Neo-Brutalism Design */
+        body { background-color: #00E5FF; font-family: 'Courier New', Courier, monospace; }
+        .brutal-card {
+            background: white;
+            border: 4px solid black;
+            box-shadow: 10px 10px 0px black;
+        }
+        .brutal-input {
+            border: 3px solid black;
+            padding: 10px;
+            width: 100%;
+            outline: none;
+            font-weight: bold;
+        }
+        .brutal-btn {
+            background: #FF3D00;
+            color: white;
+            border: 3px solid black;
+            padding: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            box-shadow: 4px 4px 0px black;
+            cursor: pointer;
+        }
+        .brutal-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px black;
+        }
+        .loading-dots:after { content: '...'; animation: dots 1s steps(5, end) infinite; }
+        @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900">
+<body class="p-6">
 
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center">
-        <div class="loader w-10 h-10 border-4 border-slate-200 rounded-full mb-4"></div>
-        <p id="loading-text" class="text-slate-500 font-medium animate-pulse">Sinkronisasi Database...</p>
-    </div>
+    <div id="app" class="max-w-md mx-auto">
+        <h1 class="text-5xl font-black mb-8 text-center bg-white border-4 border-black p-2 shadow-[8px_8px_0px_black]">CLOUDPAY.</h1>
 
-    <!-- Auth Container -->
-    <div id="auth-container" class="min-h-screen flex items-center justify-center p-6 bg-white hide">
-        <div class="w-full max-w-md">
-            <div class="text-center mb-8">
-                <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-blue-200">
-                    <i class="fas fa-database text-white text-3xl"></i>
+        <div id="auth-section" class="brutal-card p-6">
+            <h2 class="text-2xl font-black mb-4 uppercase">Login / Register</h2>
+            <div class="space-y-4">
+                <input id="u_name" type="text" placeholder="USERNAME" class="brutal-input">
+                <input id="u_pw" type="password" placeholder="PASSWORD" class="brutal-input">
+                <input id="u_wa" type="number" placeholder="NOMOR WHATSAPP (62...)" class="brutal-input">
+                <button onclick="handleAuth()" class="brutal-btn w-full bg-yellow-400 !text-black">MASUK SEKARANG</button>
+            </div>
+        </div>
+
+        <div id="main-section" class="hidden space-y-6">
+            <div class="brutal-card p-4 bg-white flex justify-between items-center">
+                <div>
+                    <p class="text-sm">USER: <span id="display-user" class="font-black"></span></p>
+                    <p class="text-3xl font-black text-green-600">Rp <span id="display-balance">0</span></p>
                 </div>
-                <h1 class="text-2xl font-bold tracking-tight text-slate-800">Cloudpay Cloud</h1>
-                <p id="auth-subtitle" class="text-slate-400 text-sm">Data tersimpan aman di Cloud Database</p>
+                <button onclick="logout()" class="text-xs bg-black text-white p-1">LOGOUT</button>
             </div>
 
-            <!-- Login -->
-            <form id="login-form" class="space-y-4">
-                <div class="space-y-2">
-                    <label class="text-xs font-bold text-slate-400 uppercase ml-1">Akses Akun</label>
-                    <input type="tel" id="login-phone" placeholder="Nomor WhatsApp (628...)" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-                    <input type="password" id="login-pass" placeholder="Password Akun" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+            <div class="brutal-card p-6 bg-pink-300">
+                <h3 class="text-xl font-black mb-2">TOP UP SALDO</h3>
+                <p class="text-xs mb-3">Min. Top Up 100 | QRIS All Payment</p>
+                <input id="topup-amt" type="number" value="100" class="brutal-input mb-4">
+                <button id="btn-topup" onclick="generateQR()" class="brutal-btn w-full bg-blue-500">GENERATE QRIS</button>
+                
+                <div id="qr-container" class="mt-6 hidden text-center bg-white border-4 border-black p-4">
+                    <p class="text-sm font-black mb-2">SCAN UNTUK BAYAR</p>
+                    <img id="qr-img" src="" alt="QRIS" class="mx-auto border-2 border-black mb-2">
+                    <p id="status-text" class="text-xs font-bold text-red-600 loading-dots">MENUNGGU PEMBAYARAN</p>
                 </div>
-                <button type="submit" id="btn-login" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-100 active:scale-95 transition-all">Masuk ke Sistem</button>
-                <p class="text-center text-sm text-slate-500">Baru di sini? <button type="button" onclick="toggleAuth('reg')" class="text-blue-600 font-bold">Buat Akun Cloud</button></p>
-            </form>
+            </div>
 
-            <!-- Register -->
-            <form id="register-form" class="space-y-4 hide">
-                <div class="space-y-2">
-                    <label class="text-xs font-bold text-slate-400 uppercase ml-1">Pendaftaran Baru</label>
-                    <input type="text" id="reg-name" placeholder="Nama Lengkap" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-                    <input type="tel" id="reg-phone" placeholder="Nomor WhatsApp" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-                    <input type="password" id="reg-pass" placeholder="Buat Password" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-                </div>
-                <button type="submit" id="btn-reg" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all">Daftar & Simpan</button>
-                <p class="text-center text-sm text-slate-500">Sudah punya akun? <button type="button" onclick="toggleAuth('log')" class="text-blue-600 font-bold">Login</button></p>
-            </form>
+            <div class="brutal-card p-6 bg-green-200">
+                <h3 class="text-xl font-black mb-2">WITHDRAW</h3>
+                <p class="text-[10px] mb-3">Min. 10.000 | Admin: 1.000</p>
+                <input id="wd-amt" type="number" placeholder="JUMLAH TARIK" class="brutal-input mb-4">
+                <button onclick="handleWD()" class="brutal-btn w-full bg-black text-white">TARIK SALDO</button>
+            </div>
         </div>
     </div>
 
-    <!-- Main Dashboard -->
-    <div id="app-container" class="min-h-screen pb-24 hide">
-        <header class="bg-white/80 border-b p-4 sticky top-0 z-50 glass flex justify-between items-center">
-            <div>
-                <h2 class="text-xl font-bold text-blue-600 flex items-center gap-2">
-                    <i class="fas fa-cloud text-sm"></i> Cloudpay
-                </h2>
-                <p id="user-display" class="text-[10px] text-slate-400 font-bold uppercase tracking-widest"></p>
-            </div>
-            <button onclick="logout()" class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center active:scale-90 transition-all">
-                <i class="fas fa-power-off"></i>
-            </button>
-        </header>
-
-        <main class="max-w-md mx-auto p-4 space-y-6">
-            <!-- Balance Card -->
-            <section id="view-home" class="view">
-                <div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-[2rem] p-8 text-white shadow-2xl shadow-blue-200 mb-8 relative overflow-hidden">
-                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
-                    <p class="text-blue-100 text-xs font-bold mb-2 tracking-widest">SALDO TERSEDIA</p>
-                    <h2 id="balance-display" class="text-4xl font-bold mb-8">Rp 0</h2>
-                    <div class="flex gap-4">
-                        <button onclick="switchView('topup')" class="flex-1 bg-white text-blue-600 py-3 rounded-2xl font-bold text-sm shadow-inner">Top Up</button>
-                        <button onclick="switchView('withdraw')" class="flex-1 bg-blue-500/50 py-3 rounded-2xl font-bold text-sm border border-white/20">Tarik</button>
-                    </div>
-                </div>
-
-                <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
-                    <i class="fas fa-history text-blue-500"></i> Riwayat Database
-                </h3>
-                <div id="history-list" class="space-y-3"></div>
-            </section>
-
-            <!-- TopUp View -->
-            <section id="view-topup" class="view hide">
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
-                    <h3 class="font-bold mb-4">Isi Saldo Otomatis</h3>
-                    <div id="qr-init">
-                        <div class="relative mb-4">
-                            <span class="absolute left-4 top-4 font-bold text-slate-400">Rp</span>
-                            <input type="number" id="topup-amt" placeholder="0" class="w-full pl-12 p-4 bg-slate-50 rounded-2xl outline-none border border-slate-100 text-xl font-bold">
-                        </div>
-                        <button onclick="reqQRIS()" id="btn-qr" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all">Generate QRIS</button>
-                    </div>
-                    <div id="qr-display" class="hide text-center space-y-4">
-                        <div class="bg-white p-4 border-2 border-blue-50 rounded-3xl inline-block shadow-inner">
-                            <img id="qr-img" class="mx-auto w-56 h-56 object-contain">
-                        </div>
-                        <p id="qr-info" class="font-bold text-blue-600 text-lg"></p>
-                        <div class="flex items-center justify-center gap-2 text-slate-400 text-[10px] animate-pulse">
-                            <i class="fas fa-sync fa-spin"></i> Menunggu pembayaran otomatis...
-                        </div>
-                        <button onclick="cancelQR()" class="text-sm font-bold text-red-400">Batalkan Pesanan</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- WD View -->
-            <section id="view-withdraw" class="view hide">
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
-                    <h3 class="font-bold mb-4">Penarikan Dana</h3>
-                    <form id="wd-form" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-3">
-                            <input type="text" id="wd-bank" placeholder="Bank/E-Wallet" required class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 outline-none text-sm">
-                            <input type="text" id="wd-acc" placeholder="No Rekening" required class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 outline-none text-sm">
-                        </div>
-                        <input type="number" id="wd-amt" placeholder="Nominal Tarik" required class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 outline-none font-bold text-lg">
-                        <button type="submit" id="btn-wd" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all">Ajukan Penarikan</button>
-                    </form>
-                </div>
-            </section>
-        </main>
-
-        <!-- Bottom Nav -->
-        <nav class="fixed bottom-6 left-6 right-6 bg-white/90 border border-slate-100 flex justify-around p-4 rounded-[2rem] max-w-md mx-auto z-[60] shadow-2xl glass">
-            <button onclick="switchView('home')" class="nav-icon text-blue-600"><i class="fas fa-home text-xl"></i></button>
-            <button onclick="switchView('topup')" class="nav-icon text-slate-300"><i class="fas fa-qrcode text-xl"></i></button>
-            <button onclick="switchView('withdraw')" class="nav-icon text-slate-300"><i class="fas fa-wallet text-xl"></i></button>
-        </nav>
-    </div>
-
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        // Import Firebase dari CDN
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+        // Konfigurasi Database Sesuai Prompt
         const firebaseConfig = {
             apiKey: "AIzaSyD1OHn2utYY881b504XEgMAwmhrglqtinQ",
             authDomain: "sedabase.firebaseapp.com",
+            databaseURL: "https://sedabase-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "sedabase",
             storageBucket: "sedabase.firebasestorage.app",
             messagingSenderId: "921144451877",
@@ -155,236 +101,131 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
-        const appId = "cloudpay_final_v2"; // AppID baru untuk database bersih
+        const db = getDatabase(app);
         const API_KEY = "rapay_jur337mgb";
-        const BASE_URL = "https://bior-beta.vercel.app/api/pay";
+        const BASE_API = "https://bior-beta.vercel.app/api/pay";
 
-        let profile = null;
-        let checkInt = null;
-        let isSystemReady = false;
+        let currentUser = null;
 
-        // UI Helpers
-        const show = (id) => document.getElementById(id)?.classList.remove('hide');
-        const hide = (id) => document.getElementById(id)?.classList.add('hide');
+        // AUTH HANDLER
+        window.handleAuth = async () => {
+            const user = document.getElementById('u_name').value.trim();
+            const pw = document.getElementById('u_pw').value;
+            const wa = document.getElementById('u_wa').value;
 
-        // Main Inisialisasi
-        async function init() {
-            try {
-                // Auth Anonymously sebagai gerbang masuk Firebase
-                await signInAnonymously(auth);
-                isSystemReady = true;
-                
-                const savedPhone = localStorage.getItem('cp_phone');
-                if (savedPhone) {
-                    await syncProfile(savedPhone);
+            if(!user || !pw) return alert("Username & Password wajib diisi!");
+
+            const userRef = ref(db, 'users/' + user);
+            const snapshot = await get(userRef);
+
+            if (snapshot.exists()) {
+                if(snapshot.val().password === pw) {
+                    initApp(user);
                 } else {
-                    hide('loading-screen');
-                    show('auth-container');
+                    alert("Password Salah!");
                 }
-            } catch (e) {
-                document.getElementById('loading-text').innerText = "Gagal terhubung ke Cloud.";
+            } else {
+                if(!wa) return alert("Daftar baru wajib isi nomor WA!");
+                await set(userRef, { username: user, password: pw, wa: wa, balance: 0 });
+                initApp(user);
             }
+        };
+
+        function initApp(user) {
+            currentUser = user;
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('main-section').classList.remove('hidden');
+            document.getElementById('display-user').innerText = user;
+            
+            // Sync Saldo Realtime
+            onValue(ref(db, `users/${user}/balance`), (snap) => {
+                document.getElementById('display-balance').innerText = (snap.val() || 0).toLocaleString('id-ID');
+            });
         }
 
-        // Sinkronisasi data dari Database (Firestore)
-        async function syncProfile(phone) {
-            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', phone);
-            try {
-                const snap = await getDoc(docRef);
-                if (!snap.exists()) {
-                    logout();
-                    return;
-                }
-
-                // Real-time listener: Saldo berubah otomatis jika admin edit di DB
-                onSnapshot(docRef, (s) => {
-                    profile = s.data();
-                    document.getElementById('user-display').innerText = profile.name;
-                    document.getElementById('balance-display').innerText = "Rp " + profile.balance.toLocaleString('id-ID');
-                    hide('loading-screen');
-                    hide('auth-container');
-                    show('app-container');
-                });
-
-                // Sinkronisasi Riwayat
-                const txRef = collection(db, 'artifacts', appId, 'public', 'data', 'users', phone, 'tx');
-                onSnapshot(txRef, (snap) => {
-                    const txs = snap.docs.map(d => d.data()).sort((a,b) => (b.time?.seconds || 0) - (a.time?.seconds || 0));
-                    renderHistory(txs);
-                });
-            } catch (e) {
-                alert("Gagal sinkron data.");
-                logout();
-            }
-        }
-
-        // Login Logika
-        document.getElementById('login-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const phone = document.getElementById('login-phone').value;
-            const pass = document.getElementById('login-pass').value;
-            const btn = document.getElementById('btn-login');
-            
-            btn.disabled = true; btn.innerText = "Memvalidasi Database...";
-            
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', phone);
-                const snap = await getDoc(docRef);
-                
-                if (snap.exists() && snap.data().pass === pass) {
-                    localStorage.setItem('cp_phone', phone);
-                    await syncProfile(phone);
-                } else {
-                    alert("Nomor WA atau Password salah.");
-                    btn.disabled = false; btn.innerText = "Masuk ke Sistem";
-                }
-            } catch (err) {
-                alert("Kesalahan Jaringan Database.");
-                btn.disabled = false;
-            }
-        };
-
-        // Pendaftaran Logika (Simpan ke Database)
-        document.getElementById('register-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const phone = document.getElementById('reg-phone').value;
-            const name = document.getElementById('reg-name').value;
-            const pass = document.getElementById('reg-pass').value;
-            const btn = document.getElementById('btn-reg');
-            
-            if (!isSystemReady) return alert("Menunggu Cloud Ready...");
-            btn.disabled = true; btn.innerText = "Menyimpan ke Cloud...";
-
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', phone);
-                const snap = await getDoc(docRef);
-                if (snap.exists()) {
-                    alert("Nomor WA sudah terdaftar di sistem kami.");
-                } else {
-                    // Simpan data permanen di Database Firestore
-                    await setDoc(docRef, { 
-                        name, 
-                        phone, 
-                        pass, 
-                        balance: 0, 
-                        role: 'user',
-                        time: serverTimestamp() 
-                    });
-                    localStorage.setItem('cp_phone', phone);
-                    await syncProfile(phone);
-                }
-            } catch (err) {
-                alert("Gagal mendaftar: " + err.message);
-            } finally {
-                btn.disabled = false; btn.innerText = "Daftar & Simpan";
-            }
-        };
-
-        window.toggleAuth = (m) => {
-            if (m === 'reg') { hide('login-form'); show('register-form'); }
-            else { show('login-form'); hide('register-form'); }
-        };
-
-        window.logout = () => { localStorage.clear(); location.reload(); };
-
-        window.switchView = (v) => {
-            document.querySelectorAll('.view').forEach(e => e.classList.add('hide'));
-            show('view-' + v);
-            // Update Nav Icons
-            document.querySelectorAll('.nav-icon').forEach(i => i.classList.replace('text-blue-600', 'text-slate-300'));
-            event.currentTarget.classList.replace('text-slate-300', 'text-blue-600');
-        };
-
-        // QRIS & Payment Logic
-        window.reqQRIS = async () => {
+        // TOPUP QRIS
+        window.generateQR = async () => {
             const amt = parseInt(document.getElementById('topup-amt').value);
-            if (amt < 100) return alert("Minimal Top Up Rp 100");
-            const btn = document.getElementById('btn-qr');
-            btn.disabled = true; btn.innerText = "Meminta QRIS...";
-
-            try {
-                const res = await fetch(`${BASE_URL}?key=${API_KEY}&amt=${amt}`);
-                const data = await res.json();
-                if (data.success) {
-                    document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${data.qr}`;
-                    document.getElementById('qr-info').innerText = "Bayar: Rp " + amt.toLocaleString('id-ID');
-                    hide('qr-init'); show('qr-display');
-                    startPaymentCheck(data.trxId, amt);
-                }
-            } catch (e) { alert("API Pembayaran Offline."); }
-            finally { btn.disabled = false; btn.innerText = "Generate QRIS"; }
-        };
-
-        function startPaymentCheck(trxId, amt) {
-            checkInt = setInterval(async () => {
-                try {
-                    const r = await fetch(`${BASE_URL}?action=check&trxId=${trxId}`);
-                    const d = await r.json();
-                    if (d.success && d.paid) {
-                        clearInterval(checkInt);
-                        const phone = localStorage.getItem('cp_phone');
-                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', phone);
-                        
-                        // Update saldo permanen di DB
-                        await updateDoc(docRef, { balance: (profile.balance || 0) + amt });
-                        // Simpan riwayat di DB
-                        await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'users', phone, 'tx'), {
-                            type: 'topup', amt: amt, status: 'Lunas', time: serverTimestamp()
-                        });
-                        
-                        alert("Pembayaran Berhasil! Saldo ditambahkan ke Cloud.");
-                        cancelQR(); switchView('home');
-                    }
-                } catch (e) {}
-            }, 6000);
-        }
-
-        window.cancelQR = () => { clearInterval(checkInt); hide('qr-display'); show('qr-init'); };
-
-        document.getElementById('wd-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const amt = parseInt(document.getElementById('wd-amt').value);
-            if (amt > profile.balance || amt < 10000) return alert("Saldo tidak cukup (Min WD 10rb)");
+            const btn = document.getElementById('btn-topup');
             
-            const btn = document.getElementById('btn-wd');
-            btn.disabled = true; btn.innerText = "Mengirim Permintaan...";
+            if(amt < 100) return alert("Minimal Top Up Rp 100!");
+
+            btn.disabled = true;
+            btn.innerText = "GENERATING...";
 
             try {
-                const phone = localStorage.getItem('cp_phone');
-                // Potong saldo di DB
-                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'users', phone), { balance: profile.balance - amt });
-                // Simpan transaksi WD di DB
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'users', phone, 'tx'), {
-                    type: 'wd', amt: amt, status: 'Pending', bank: document.getElementById('wd-bank').value, acc: document.getElementById('wd-acc').value, time: serverTimestamp()
-                });
-                alert("Penarikan Sedang Diproses!"); switchView('home');
-            } catch (e) { alert("Database Error."); }
-            finally { btn.disabled = false; btn.innerText = "Ajukan Penarikan"; }
+                const res = await fetch(`${BASE_API}?key=${API_KEY}&amt=${amt}`);
+                const data = await res.json();
+
+                if(data.success) {
+                    document.getElementById('qr-container').classList.remove('hidden');
+                    // Menggunakan QR Server untuk render string QRIS dari API
+                    document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(data.qr)}`;
+                    
+                    // Simpan data transaksi sementara ke DB
+                    await set(ref(db, 'transactions/' + data.trxId), {
+                        username: currentUser,
+                        amount: amt,
+                        status: 'pending',
+                        timestamp: Date.now()
+                    });
+
+                    startAutoCheck(data.trxId, amt);
+                }
+            } catch (err) {
+                alert("Gagal koneksi ke API!");
+                btn.disabled = false;
+                btn.innerText = "GENERATE QRIS";
+            }
         };
 
-        function renderHistory(txs) {
-            const list = document.getElementById('history-list');
-            list.innerHTML = txs.map(t => `
-                <div class="bg-white p-4 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center ${t.type==='topup'?'bg-green-50 text-green-500':'bg-red-50 text-red-500'}">
-                            <i class="fas ${t.type==='topup'?'fa-plus':'fa-minus'} text-xs"></i>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold">${t.type==='topup'?'Top Up Cloud':'Penarikan Cloud'}</p>
-                            <p class="text-[8px] text-slate-400 font-bold uppercase">${t.time ? new Date(t.time.seconds*1000).toLocaleString('id-ID') : 'Sinkronisasi...'}</p>
-                        </div>
-                    </div>
-                    <span class="font-bold text-sm ${t.type==='topup'?'text-green-600':'text-red-600'}">${t.type==='topup'?'+':'-'} Rp ${t.amt.toLocaleString()}</span>
-                </div>
-            `).join('') || '<div class="text-center py-12 text-slate-300 text-xs font-medium">Belum ada riwayat database.</div>';
+        // CEK STATUS OTOMATIS
+        function startAutoCheck(trxId, amount) {
+            const checker = setInterval(async () => {
+                try {
+                    const res = await fetch(`${BASE_API}?action=check&trxId=${trxId}`);
+                    const data = await res.json();
+
+                    if(data.paid) {
+                        clearInterval(checker);
+                        
+                        const userRef = ref(db, `users/${currentUser}`);
+                        const snap = await get(userRef);
+                        const newBalance = (snap.val().balance || 0) + amount;
+                        
+                        await update(userRef, { balance: newBalance });
+                        await update(ref(db, `transactions/${trxId}`), { status: 'success' });
+                        
+                        alert("PEMBAYARAN DITERIMA! Saldo telah ditambahkan.");
+                        document.getElementById('qr-container').classList.add('hidden');
+                        document.getElementById('btn-topup').disabled = false;
+                        document.getElementById('btn-topup').innerText = "GENERATE QRIS";
+                    }
+                } catch (e) { console.error("Checking error..."); }
+            }, 5000); // Cek setiap 5 detik
         }
 
-        init();
+        // WITHDRAW HANDLER
+        window.handleWD = async () => {
+            const amt = parseInt(document.getElementById('wd-amt').value);
+            if(amt < 10000) return alert("Minimal Withdraw Rp 10.000");
+
+            const userRef = ref(db, `users/${currentUser}`);
+            const snap = await get(userRef);
+            const currentBal = snap.val().balance || 0;
+
+            if(currentBal < amt) return alert("Saldo tidak cukup!");
+
+            const potongAdmin = 1000;
+            const yangDiterima = amt - potongAdmin;
+
+            if(confirm(`Konfirmasi Withdraw Rp ${amt.toLocaleString()}?\nAdmin: 1.000\nTotal Cair: ${yangDiterima.toLocaleString()}`)) {
+                await update(userRef, { balance: currentBal - amt });
+                alert(`Permintaan Withdraw Berhasil! Silakan tunggu admin memproses ke nomor WA: ${snap.val().wa}`);
+            }
+        };
+
+        window.logout = () => location.reload();
     </script>
 </body>
 </html>
-
