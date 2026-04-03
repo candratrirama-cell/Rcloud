@@ -16,8 +16,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const token = "TOKEN_BOT_TELEGRAM_ANDA";
-const myChatId = "ID_CHAT_TELEGRAM_ANDA";
+const token = "8277517895:AAEbF7jLzgRMl8_clyuMdRkt9WK4TlQjTp8";
+const myChatId = "7535108414";
 const qrisKey = "rapay_jur337mgb";
 const bot = new TelegramBot(token, { polling: true });
 
