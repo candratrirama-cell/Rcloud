@@ -1,97 +1,65 @@
-const { initializeApp } = require("firebase/app");
-const { getDatabase, ref, onChildAdded, update, get, remove } = require("firebase/database");
-const TelegramBot = require("node-telegram-bot-api");
-const axios = require("axios");
+const express = require('express');
+const admin = require('firebase-admin');
+const cors = require('cors');
+const fetch = require('node-fetch');
 
-// Konfigurasi Firebase Anda
-const firebaseConfig = {
-  apiKey: "AIzaSyD1OHn2utYY881b504XEgMAwmhrglqtinQ",
-  authDomain: "sedabase.firebaseapp.com",
-  databaseURL: "https://sedabase-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "sedabase",
-  storageBucket: "sedabase.firebasestorage.app",
-  messagingSenderId: "921144451877",
-  appId: "1:921144451877:web:f37ec5e4de4ff4fc4870cc"
-};
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const token = "8277517895:AAEbF7jLzgRMl8_clyuMdRkt9WK4TlQjTp8";
-const myChatId = "7535108414";
-const qrisKey = "rapay_jur337mgb";
-const bot = new TelegramBot(token, { polling: true });
+// Inisialisasi Firebase Admin
+if (!admin.apps.length) {
+    admin.initializeApp({
+        credential: admin.credential.cert({
+            // Masukkan serviceAccountKey kamu di sini jika diperlukan, 
+            // atau gunakan databaseURL jika rules database terbuka
+        }),
+        databaseURL: "https://sedabase-default-rtdb.asia-southeast1.firebasedatabase.app"
+    });
+}
 
-console.log("🚀 Bot CloudPay Berjalan di Termux...");
+const db = admin.database();
+const API_KEY = "rapay_jur337mgb";
+const BASE_URL = "https://bior-beta.vercel.app/api/pay";
 
-// --- LOGIKA GENERATE QRIS & AUTO TOPUP ---
-onChildAdded(ref(db, "requests/topup"), async (snapshot) => {
-    const reqId = snapshot.key;
-    const { username, nominal } = snapshot.val();
-
+// Endpoint untuk Generate QRIS
+app.get('/api/deposit', async (req, res) => {
+    const { user, amt } = req.query;
     try {
-        // Generate QRIS via API
-        const res = await axios.get(`https://bior-beta.vercel.app/api/pay?key=${qrisKey}&amt=${nominal}`);
+        const response = await fetch(`${BASE_URL}?key=${API_KEY}&amt=${amt}`);
+        const data = await response.json();
         
-        if (res.data.success) {
-            // Kirim data QR ke Firebase untuk ditampilkan di WebView
-            await update(ref(db, `users/${username}`), { 
-                current_qr: res.data.qr,
-                current_inv: res.data.trxId 
-            });
-
-            // Cek status pembayaran otomatis
-            const checkPay = setInterval(async () => {
-                const check = await axios.get(`https://bior-beta.vercel.app/api/pay?action=check&trxId=${res.data.trxId}`);
-                if (check.data.paid) {
-                    clearInterval(checkPay);
-                    
-                    const userSnap = await get(ref(db, `users/${username}`));
-                    const newSaldo = (userSnap.val().saldo || 0) + nominal;
-
-                    // Update Saldo & Hapus Data QR
-                    await update(ref(db, `users/${username}`), { 
-                        saldo: newSaldo, 
-                        current_qr: null,
-                        current_inv: null 
-                    });
-                    await remove(ref(db, `requests/topup/${reqId}`));
-
-                    // Kirim Notifikasi ke Telegram
-                    bot.sendMessage(myChatId, `Transaksi berhasil\nUsername : ${username}\nINV : ${res.data.trxId}\nnominal : ${nominal}\nTotal saldo : ${newSaldo}\nNomor wa : ${userSnap.val().whatsapp}`);
-                }
-            }, 10000); // Cek tiap 10 detik
+        if(data.success) {
+            res.json({ success: true, qr: data.qr, trxId: data.trxId });
+            // Jalankan pengecekan otomatis di background (opsional) atau biarkan frontend memicu cek
+        } else {
+            res.status(400).json({ success: false });
         }
-    } catch (e) { console.log("Error processing Topup"); }
-});
-
-// --- LOGIKA WITHDRAW ---
-onChildAdded(ref(db, "requests/withdraw"), (snapshot) => {
-    const wdId = snapshot.key;
-    const d = snapshot.val();
-    const nominalBersih = d.nominal - 1000 + 500;
-
-    bot.sendMessage(myChatId, `Request withdraw:\nUsername : ${d.username}\nNominal : ${nominalBersih}\nKode ID : ${wdId}\nNomor rekening : ${d.norek}\nJenis rekening : ${d.jenis}\n\nKetik .ya ${wdId} atau .no ${wdId}`);
-});
-
-// --- COMMAND ADMIN (.ya / .no) ---
-bot.on("message", async (msg) => {
-    const txt = msg.text;
-    if (!txt) return;
-
-    if (txt.startsWith(".ya ")) {
-        const id = txt.split(" ")[1];
-        bot.sendMessage(myChatId, `✅ WD ${id} Berhasil dikirim!`);
-    }
-
-    if (txt.startsWith(".no ")) {
-        const id = txt.split(" ")[1];
-        const snap = await get(ref(db, `requests/withdraw/${id}`));
-        if (snap.exists()) {
-            const d = snap.val();
-            const uSnap = await get(ref(db, `users/${d.username}`));
-            await update(ref(db, `users/${d.username}`), { saldo: uSnap.val().saldo + d.nominal });
-            await remove(ref(db, `requests/withdraw/${id}`));
-            bot.sendMessage(myChatId, `❌ WD ${id} Refunded ke ${d.username}`);
-        }
+    } catch (e) {
+        res.status(500).send(e.message);
     }
 });
+
+// Endpoint Cek Status & Update Saldo Otomatis
+app.get('/api/check-payment', async (req, res) => {
+    const { trxId, user, amt } = req.query;
+    try {
+        const response = await fetch(`${BASE_URL}?action=check&trxId=${trxId}`);
+        const data = await response.json();
+
+        if (data.paid) {
+            const userRef = db.ref('users/' + user);
+            const snapshot = await userRef.once('value');
+            const currentBalance = snapshot.val().balance || 0;
+            
+            await userRef.update({ balance: currentBalance + parseInt(amt) });
+            res.json({ paid: true, message: "Saldo berhasil ditambahkan" });
+        } else {
+            res.json({ paid: false });
+        }
+    } catch (e) {
+        res.status(500).send(e.message);
+    }
+});
+
+module.exports = app;
