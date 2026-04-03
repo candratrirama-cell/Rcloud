@@ -3,89 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloudpay - PPOB Ecosystem</title>
+    <title>Cloudpay Cloud - Masuk Akun</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Neo-Brutalism Design */
-        body { background-color: #00E5FF; font-family: 'Courier New', Courier, monospace; }
-        .brutal-card {
-            background: white;
-            border: 4px solid black;
-            box-shadow: 10px 10px 0px black;
-        }
-        .brutal-input {
-            border: 3px solid black;
-            padding: 10px;
-            width: 100%;
-            outline: none;
-            font-weight: bold;
-        }
-        .brutal-btn {
-            background: #FF3D00;
-            color: white;
-            border: 3px solid black;
-            padding: 12px;
-            font-weight: 900;
-            text-transform: uppercase;
-            box-shadow: 4px 4px 0px black;
-            cursor: pointer;
-        }
-        .brutal-btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px black;
-        }
-        .loading-dots:after { content: '...'; animation: dots 1s steps(5, end) infinite; }
-        @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } }
+        /* Gaya dasar dan animasi minimal */
+        body { background-color: #F6F8FB; }
+        .loading-dots:after { content: '.'; animation: dots 1s steps(5, end) infinite; }
+        @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } 80%, 100% { content: ''; } }
     </style>
 </head>
-<body class="p-6">
+<body>
 
-    <div id="app" class="max-w-md mx-auto">
-        <h1 class="text-5xl font-black mb-8 text-center bg-white border-4 border-black p-2 shadow-[8px_8px_0px_black]">CLOUDPAY.</h1>
-
-        <div id="auth-section" class="brutal-card p-6">
-            <h2 class="text-2xl font-black mb-4 uppercase">Login / Register</h2>
-            <div class="space-y-4">
-                <input id="u_name" type="text" placeholder="USERNAME" class="brutal-input">
-                <input id="u_pw" type="password" placeholder="PASSWORD" class="brutal-input">
-                <input id="u_wa" type="number" placeholder="NOMOR WHATSAPP (62...)" class="brutal-input">
-                <button onclick="handleAuth()" class="brutal-btn w-full bg-yellow-400 !text-black">MASUK SEKARANG</button>
+    <div id="app" class="min-h-screen flex flex-col justify-center items-center p-4">
+        
+        <div id="auth-section" class="w-full max-w-sm bg-white p-10 rounded-[35px] shadow-lg flex flex-col items-center">
+            
+            <div class="bg-[#2962FF] p-4 rounded-3xl mb-6 shadow-md shadow-blue-200">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 18C20 19.1 16.42 20 12 20C7.58 20 4 19.1 4 18V13.59C5.36 14.47 8.52 15 12 15C15.48 15 18.64 14.47 20 13.59V18ZM20 8.5C20 9.6 16.42 10.5 12 10.5C7.58 10.5 4 9.6 4 8.5C4 7.4 7.58 6.5 12 6.5C16.42 6.5 20 7.4 20 8.5ZM12 4C17.52 4 22 5.79 22 8V18C22 20.21 17.52 22 12 22C6.48 22 2 20.21 2 18V8C2 5.79 6.48 4 12 4Z" fill="white"/>
+                    <path d="M20 13.5C20 14.6 16.42 15.5 12 15.5C7.58 15.5 4 14.6 4 13.5" fill="white" fill-opacity="0.3"/>
+                </svg>
             </div>
+
+            <h1 class="text-3xl font-bold text-[#101010] mb-1">Cloudpay Cloud</h1>
+            <p class="text-sm text-gray-500 mb-8 text-center">Data tersimpan aman di server pusat</p>
+
+            <div class="space-y-4 w-full">
+                <input id="u_wa" type="number" placeholder="Nomor WhatsApp (62...)" 
+                       class="w-full bg-[#F3F6F9] text-[#101010] p-4 rounded-xl outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-blue-300 transition">
+                
+                <input id="u_name" type="text" placeholder="Username (Untuk Daftar Baru)" 
+                       class="w-full bg-[#F3F6F9] text-[#101010] p-4 rounded-xl outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-blue-300 transition">
+                
+                <input id="u_pw" type="password" placeholder="Password Akun" 
+                       class="w-full bg-[#F3F6F9] text-[#101010] p-4 rounded-xl outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-blue-300 transition">
+                
+                <button onclick="handleAuth()" id="btn-auth"
+                        class="w-full bg-[#2962FF] text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-blue-200 hover:bg-blue-700 active:scale-[0.98] transition-all">
+                    Masuk Akun
+                </button>
+            </div>
+
+            <p class="mt-8 text-gray-600 text-sm">
+                Belum punya akun? <a href="#" onclick="alert('Isi formulir lalu tekan Masuk Akun untuk mendaftar otomatis.')" class="text-[#2962FF] font-semibold hover:underline">Daftar</a>
+            </p>
         </div>
 
-        <div id="main-section" class="hidden space-y-6">
-            <div class="brutal-card p-4 bg-white flex justify-between items-center">
+        <div id="main-section" class="hidden w-full max-w-sm space-y-6">
+            
+            <div class="bg-white p-6 rounded-3xl shadow-lg border border-gray-100 flex justify-between items-center">
                 <div>
-                    <p class="text-sm">USER: <span id="display-user" class="font-black"></span></p>
-                    <p class="text-3xl font-black text-green-600">Rp <span id="display-balance">0</span></p>
+                    <p class="text-gray-500 text-xs">Selamat Datang,</p>
+                    <p id="display-user" class="font-bold text-lg text-gray-800">...</p>
+                    <p class="mt-2 text-gray-400 text-xs">Saldo Anda:</p>
+                    <p class="text-3xl font-extrabold text-[#2962FF]">Rp <span id="display-balance">0</span></p>
                 </div>
-                <button onclick="logout()" class="text-xs bg-black text-white p-1">LOGOUT</button>
+                <button onclick="logout()" class="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full hover:bg-gray-200 transition">LOGOUT</button>
             </div>
 
-            <div class="brutal-card p-6 bg-pink-300">
-                <h3 class="text-xl font-black mb-2">TOP UP SALDO</h3>
-                <p class="text-xs mb-3">Min. Top Up 100 | QRIS All Payment</p>
-                <input id="topup-amt" type="number" value="100" class="brutal-input mb-4">
-                <button id="btn-topup" onclick="generateQR()" class="brutal-btn w-full bg-blue-500">GENERATE QRIS</button>
+            <div class="grid grid-cols-2 gap-4">
                 
-                <div id="qr-container" class="mt-6 hidden text-center bg-white border-4 border-black p-4">
-                    <p class="text-sm font-black mb-2">SCAN UNTUK BAYAR</p>
-                    <img id="qr-img" src="" alt="QRIS" class="mx-auto border-2 border-black mb-2">
-                    <p id="status-text" class="text-xs font-bold text-red-600 loading-dots">MENUNGGU PEMBAYARAN</p>
-                </div>
-            </div>
+                <button onclick="toggleModal('modal-topup')" class="bg-white p-6 rounded-3xl shadow-lg border border-gray-100 text-center flex flex-col items-center hover:border-blue-200 transition">
+                    <div class="bg-blue-100 p-3 rounded-full mb-3 text-blue-600">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </div>
+                    <span class="font-bold text-gray-800">Top Up</span>
+                </button>
 
-            <div class="brutal-card p-6 bg-green-200">
-                <h3 class="text-xl font-black mb-2">WITHDRAW</h3>
-                <p class="text-[10px] mb-3">Min. 10.000 | Admin: 1.000</p>
-                <input id="wd-amt" type="number" placeholder="JUMLAH TARIK" class="brutal-input mb-4">
-                <button onclick="handleWD()" class="brutal-btn w-full bg-black text-white">TARIK SALDO</button>
+                <button onclick="toggleModal('modal-wd')" class="bg-white p-6 rounded-3xl shadow-lg border border-gray-100 text-center flex flex-col items-center hover:border-red-200 transition">
+                    <div class="bg-red-100 p-3 rounded-full mb-3 text-red-600">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    </div>
+                    <span class="font-bold text-gray-800">Withdraw</span>
+                </button>
+            </div>
+            
+            <p class="text-center text-gray-400 text-xs pt-4">© 2023 Cloudpay Cloud. All Rights Reserved.</p>
+        </div>
+    </div>
+
+    <div id="modal-topup" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-sm relative">
+            <button onclick="toggleModal('modal-topup')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800">&times;</button>
+            <h3 class="text-2xl font-bold mb-1">Top Up Saldo</h3>
+            <p class="text-sm text-gray-500 mb-6">Min. Rp 100 via QRIS Otomatis</p>
+            
+            <input id="topup-amt" type="number" value="1000" class="w-full bg-[#F3F6F9] p-4 rounded-xl mb-4 font-bold text-xl outline-none" placeholder="Jumlah Topup">
+            <button onclick="generateQR()" id="btn-topup" class="w-full bg-[#2962FF] text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition">Buat QRIS</button>
+            
+            <div id="qr-container" class="mt-6 hidden text-center border-t border-gray-100 pt-6">
+                <p class="text-xs text-gray-500 mb-3">Silakan Scan QRIS Dibawah:</p>
+                <img id="qr-img" src="" alt="QRIS" class="mx-auto border-4 border-white shadow-lg rounded-xl mb-3">
+                <p id="status-text" class="text-sm font-semibold text-blue-600 loading-dots">Menunggu pembayaran</p>
             </div>
         </div>
     </div>
 
+    <div id="modal-wd" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-sm relative">
+            <button onclick="toggleModal('modal-wd')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800">&times;</button>
+            <h3 class="text-2xl font-bold mb-1">Withdraw Saldo</h3>
+            <p class="text-sm text-gray-500 mb-6">Min. Rp 10.000 (Admin Rp 1.000)</p>
+            
+            <input id="wd-amt" type="number" placeholder="Jumlah Tarik (Misal: 50000)" class="w-full bg-[#F3F6F9] p-4 rounded-xl mb-4 font-bold text-xl outline-none">
+            <button onclick="handleWD()" class="w-full bg-red-600 text-white py-4 rounded-xl font-bold hover:bg-red-700 transition">Tarik Saldo</button>
+        </div>
+    </div>
+
     <script type="module">
-        // Import Firebase dari CDN
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
@@ -105,53 +130,78 @@
         const API_KEY = "rapay_jur337mgb";
         const BASE_API = "https://bior-beta.vercel.app/api/pay";
 
-        let currentUser = null;
+        let currentUserKey = null; // Kita pakai WA sebagai Key Database sekarang agar seragam
 
-        // AUTH HANDLER
+        // Utility: Toggle Modal
+        window.toggleModal = (modalId) => {
+            document.getElementById(modalId).classList.toggle('hidden');
+        }
+
+        // --- AUTH HANDLER (DIPERBARUI) ---
         window.handleAuth = async () => {
-            const user = document.getElementById('u_name').value.trim();
+            const wa = document.getElementById('u_wa').value.trim();
             const pw = document.getElementById('u_pw').value;
-            const wa = document.getElementById('u_wa').value;
+            const uname = document.getElementById('u_name').value.trim();
+            const btn = document.getElementById('btn-auth');
 
-            if(!user || !pw) return alert("Username & Password wajib diisi!");
+            if(!wa || !pw) return alert("Nomor WA dan Password wajib diisi!");
 
-            const userRef = ref(db, 'users/' + user);
+            btn.disabled = true;
+            btn.innerText = "Memproses...";
+
+            // Kita cari user berdasarkan nomor WA di database
+            const userRef = ref(db, 'users/' + wa); 
             const snapshot = await get(userRef);
 
             if (snapshot.exists()) {
+                // Proses LOGIN
                 if(snapshot.val().password === pw) {
-                    initApp(user);
+                    initApp(wa, snapshot.val().username);
                 } else {
                     alert("Password Salah!");
+                    btn.disabled = false;
+                    btn.innerText = "Masuk Akun";
                 }
             } else {
-                if(!wa) return alert("Daftar baru wajib isi nomor WA!");
-                await set(userRef, { username: user, password: pw, wa: wa, balance: 0 });
-                initApp(user);
+                // Proses DAFTAR OTOMATIS
+                if(!uname) {
+                    alert("Nomor WA belum terdaftar. Silakan isi Username juga untuk mendaftar.");
+                    btn.disabled = false;
+                    btn.innerText = "Masuk Akun";
+                    return;
+                }
+                if(confirm(`Nomor WA belum terdaftar. Daftarkan akun baru dengan username "${uname}"?`)) {
+                    await set(userRef, { username: uname, password: pw, wa: wa, balance: 0 });
+                    initApp(wa, uname);
+                } else {
+                    btn.disabled = false;
+                    btn.innerText = "Masuk Akun";
+                }
             }
         };
 
-        function initApp(user) {
-            currentUser = user;
+        function initApp(wa, uname) {
+            currentUserKey = wa; // Simpan key untuk referensi db
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('main-section').classList.remove('hidden');
-            document.getElementById('display-user').innerText = user;
+            document.getElementById('display-user').innerText = uname;
             
             // Sync Saldo Realtime
-            onValue(ref(db, `users/${user}/balance`), (snap) => {
-                document.getElementById('display-balance').innerText = (snap.val() || 0).toLocaleString('id-ID');
+            onValue(ref(db, `users/${wa}/balance`), (snap) => {
+                const bal = snap.val() || 0;
+                document.getElementById('display-balance').innerText = bal.toLocaleString('id-ID');
             });
         }
 
-        // TOPUP QRIS
+        // --- TOPUP QRIS LOGIC (TETAP) ---
         window.generateQR = async () => {
             const amt = parseInt(document.getElementById('topup-amt').value);
             const btn = document.getElementById('btn-topup');
             
-            if(amt < 100) return alert("Minimal Top Up Rp 100!");
+            if(isNaN(amt) || amt < 100) return alert("Minimal Top Up Rp 100!");
 
             btn.disabled = true;
-            btn.innerText = "GENERATING...";
+            btn.innerText = "Membuat QRIS...";
 
             try {
                 const res = await fetch(`${BASE_API}?key=${API_KEY}&amt=${amt}`);
@@ -159,27 +209,31 @@
 
                 if(data.success) {
                     document.getElementById('qr-container').classList.remove('hidden');
-                    // Menggunakan QR Server untuk render string QRIS dari API
-                    document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(data.qr)}`;
+                    // Render QRIS
+                    document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=10&data=${encodeURIComponent(data.qr)}`;
                     
-                    // Simpan data transaksi sementara ke DB
+                    // Catat Transaksi di DB
                     await set(ref(db, 'transactions/' + data.trxId), {
-                        username: currentUser,
+                        username_key: currentUserKey,
                         amount: amt,
                         status: 'pending',
                         timestamp: Date.now()
                     });
 
                     startAutoCheck(data.trxId, amt);
+                    btn.innerText = "QRIS Siap";
+                } else {
+                    alert("Gagal membuat QRIS. Coba lagi.");
+                    btn.disabled = false;
+                    btn.innerText = "Buat QRIS";
                 }
             } catch (err) {
                 alert("Gagal koneksi ke API!");
                 btn.disabled = false;
-                btn.innerText = "GENERATE QRIS";
+                btn.innerText = "Buat QRIS";
             }
         };
 
-        // CEK STATUS OTOMATIS
         function startAutoCheck(trxId, amount) {
             const checker = setInterval(async () => {
                 try {
@@ -189,28 +243,29 @@
                     if(data.paid) {
                         clearInterval(checker);
                         
-                        const userRef = ref(db, `users/${currentUser}`);
+                        // Update Saldo User
+                        const userRef = ref(db, `users/${currentUserKey}`);
                         const snap = await get(userRef);
                         const newBalance = (snap.val().balance || 0) + amount;
                         
                         await update(userRef, { balance: newBalance });
                         await update(ref(db, `transactions/${trxId}`), { status: 'success' });
                         
-                        alert("PEMBAYARAN DITERIMA! Saldo telah ditambahkan.");
-                        document.getElementById('qr-container').classList.add('hidden');
-                        document.getElementById('btn-topup').disabled = false;
-                        document.getElementById('btn-topup').innerText = "GENERATE QRIS";
+                        alert(`TOP UP SUKSES! Rp ${amount.toLocaleString('id-ID')} masuk ke saldo.`);
+                        location.reload(); // Reload untuk reset state
                     }
                 } catch (e) { console.error("Checking error..."); }
-            }, 5000); // Cek setiap 5 detik
+            }, 5000); // Cek tiap 5 detik
         }
 
-        // WITHDRAW HANDLER
+        // --- WITHDRAW LOGIC (TETAP) ---
         window.handleWD = async () => {
-            const amt = parseInt(document.getElementById('wd-amt').value);
-            if(amt < 10000) return alert("Minimal Withdraw Rp 10.000");
+            const amtInput = document.getElementById('wd-amt').value;
+            const amt = parseInt(amtInput);
+            
+            if(isNaN(amt) || amt < 10000) return alert("Minimal Withdraw Rp 10.000");
 
-            const userRef = ref(db, `users/${currentUser}`);
+            const userRef = ref(db, `users/${currentUserKey}`);
             const snap = await get(userRef);
             const currentBal = snap.val().balance || 0;
 
@@ -219,9 +274,10 @@
             const potongAdmin = 1000;
             const yangDiterima = amt - potongAdmin;
 
-            if(confirm(`Konfirmasi Withdraw Rp ${amt.toLocaleString()}?\nAdmin: 1.000\nTotal Cair: ${yangDiterima.toLocaleString()}`)) {
+            if(confirm(`Konfirmasi Withdraw?\n\nNominal: Rp ${amt.toLocaleString()}\nAdmin: Rp ${potongAdmin.toLocaleString()}\nNet Diterima: Rp ${yangDiterima.toLocaleString()}\n\nDana akan dikirim ke nomor WA terdaftar.`)) {
                 await update(userRef, { balance: currentBal - amt });
-                alert(`Permintaan Withdraw Berhasil! Silakan tunggu admin memproses ke nomor WA: ${snap.val().wa}`);
+                alert(`Permintaan Withdraw Berhasil Dicatat!\nAdmin akan segera memproses dana ke nomor WA Anda.`);
+                location.reload();
             }
         };
 
