@@ -14,6 +14,7 @@
         .fade-in { animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         canvas { max-width: 100%; height: auto; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        select { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; }
     </style>
 </head>
 <body class="overflow-x-hidden">
@@ -25,16 +26,15 @@
             <div class="bg-[#2962FF] w-20 h-20 rounded-[25px] flex items-center justify-center mb-4 mx-auto shadow-xl shadow-blue-200">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 4.02 2 6.5v11c0 2.48 4.48 4.5 10 4.5s10-2.02 10-4.5v-11C22 4.02 17.52 2 12 2z"/></svg>
             </div>
-            <h2 class="text-xl font-black text-gray-800">CLOUDPAY</h2>
+            <h2 class="text-xl font-black text-gray-800 tracking-tighter">CLOUDPAY</h2>
         </div>
     </div>
 
     <div id="login-section" class="hidden flex flex-col items-center justify-center min-h-screen p-6 fade-in">
         <div class="w-full bg-white p-8 rounded-[40px] shadow-2xl border border-gray-100 flex flex-col items-center">
             <h1 class="text-2xl font-extrabold text-gray-900 mb-2">Masuk Akun</h1>
-            <p class="text-sm text-gray-400 mb-8 text-center px-4">Silakan masuk untuk melanjutkan transaksi</p>
-            <div class="w-full space-y-4">
-                <input id="login_wa" type="number" placeholder="Nomor WhatsApp (62...)" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
+            <div class="w-full space-y-4 mt-6">
+                <input id="login_wa" type="number" placeholder="Nomor WhatsApp" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
                 <input id="login_pw" type="password" placeholder="Password Akun" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
                 <button onclick="processLogin()" id="btn-login" class="btn-grad w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg">Masuk Sekarang</button>
             </div>
@@ -45,11 +45,10 @@
     <div id="register-section" class="hidden flex flex-col items-center justify-center min-h-screen p-6 fade-in">
         <div class="w-full bg-white p-8 rounded-[40px] shadow-2xl border border-gray-100 flex flex-col items-center">
             <h1 class="text-2xl font-extrabold text-gray-900 mb-2">Daftar Akun</h1>
-            <p class="text-sm text-gray-400 mb-8 text-center px-4">Buat akun Cloudpay baru secara gratis</p>
-            <div class="w-full space-y-4">
-                <input id="reg_wa" type="number" placeholder="Nomor WhatsApp Aktif" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
-                <input id="reg_name" type="text" placeholder="Nama Lengkap / Username" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
-                <input id="reg_pw" type="password" placeholder="Buat Password Baru" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
+            <div class="w-full space-y-4 mt-6">
+                <input id="reg_wa" type="number" placeholder="Nomor WhatsApp" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
+                <input id="reg_name" type="text" placeholder="Username" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
+                <input id="reg_pw" type="password" placeholder="Buat Password" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
                 <button onclick="processRegister()" id="btn-reg" class="btn-grad w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg">Daftar Akun</button>
             </div>
             <p class="mt-8 text-sm text-gray-500">Sudah punya akun? <span onclick="showAuthPage('login')" class="text-blue-600 font-bold cursor-pointer">Masuk</span></p>
@@ -63,20 +62,17 @@
                 <h2 class="font-extrabold text-xl italic tracking-tighter">CLOUDPAY.</h2>
                 <span id="display-user" class="text-[10px] font-bold bg-blue-100 text-blue-600 px-3 py-1 rounded-full uppercase">...</span>
             </div>
-
             <div class="bg-gray-900 p-7 rounded-[40px] text-white shadow-2xl relative overflow-hidden">
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Saldo Tersedia</p>
+                <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Saldo Tersedia</p>
                 <h3 class="text-4xl font-extrabold tracking-tight">Rp <span id="display-balance">0</span></h3>
                 <div class="mt-8 flex gap-3">
                     <button onclick="switchTab('qris')" class="flex-1 bg-blue-600 py-3.5 rounded-2xl font-bold text-sm">Top Up</button>
                     <button onclick="switchTab('wd')" class="flex-1 bg-white/10 py-3.5 rounded-2xl font-bold text-sm backdrop-blur-md">Tarik Dana</button>
                 </div>
-                <div class="absolute -right-4 -top-4 w-32 h-32 bg-blue-500 rounded-full blur-[70px] opacity-20"></div>
             </div>
-
             <div class="grid grid-cols-2 gap-4">
                 <div class="bg-white p-5 rounded-[30px] border border-gray-100 shadow-sm text-center">
-                    <p class="text-[9px] font-bold text-gray-400 uppercase">Total Masuk</p>
+                    <p class="text-[9px] font-bold text-gray-400 uppercase">Total Top Up</p>
                     <p class="text-lg font-extrabold text-green-500">Rp <span id="stat-in">0</span></p>
                 </div>
                 <div class="bg-white p-5 rounded-[30px] border border-gray-100 shadow-sm text-center">
@@ -103,39 +99,40 @@
             <div id="qr-display" class="hidden fade-in">
                 <canvas id="qris-canvas" width="400" height="550" class="mx-auto mb-6"></canvas>
                 <div class="space-y-4">
-                    <p class="text-blue-600 font-bold animate-pulse text-sm">Menunggu Pembayaran...</p>
+                    <p class="text-blue-600 font-bold animate-pulse text-sm uppercase tracking-widest">Menunggu Pembayaran</p>
                     <button onclick="cancelQR()" class="w-full py-4 rounded-3xl bg-red-50 text-red-600 font-extrabold border border-red-100">BATALKAN</button>
                 </div>
             </div>
         </div>
 
         <div id="page-wd" class="hidden p-6 fade-in min-h-screen">
-            <h2 class="text-2xl font-extrabold mb-6 text-red-600">Tarik Dana</h2>
-            <div class="bg-white p-6 rounded-[35px] border border-gray-100 shadow-sm mb-6">
-                <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">Jumlah WD (Min. 10.000)</p>
-                <input id="wd-amt" type="number" placeholder="0" class="w-full text-3xl font-extrabold outline-none text-red-600 bg-transparent">
+            <h2 class="text-2xl font-extrabold mb-2 text-red-600">Tarik Dana</h2>
+            <p class="text-xs text-gray-400 mb-6 font-bold uppercase tracking-tight">Penarikan Only DANA / GOPAY</p>
+            
+            <div class="space-y-4 mb-6">
+                <div class="bg-white p-6 rounded-[35px] border border-gray-100 shadow-sm">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">Pilih E-Wallet</p>
+                    <select id="wd-wallet" class="w-full text-xl font-bold outline-none bg-transparent">
+                        <option value="DANA">DANA</option>
+                        <option value="GOPAY">GOPAY</option>
+                    </select>
+                </div>
+
+                <div class="bg-white p-6 rounded-[35px] border border-gray-100 shadow-sm">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">Jumlah WD (Min. 10.000)</p>
+                    <input id="wd-amt" type="number" placeholder="0" class="w-full text-3xl font-extrabold outline-none text-red-600 bg-transparent">
+                </div>
             </div>
-            <button onclick="handleWD()" class="w-full py-5 rounded-3xl bg-gray-900 text-white font-bold text-lg">Konfirmasi Penarikan</button>
+
+            <button onclick="handleWD()" class="w-full py-5 rounded-3xl bg-gray-900 text-white font-bold text-lg shadow-xl">Konfirmasi Penarikan</button>
         </div>
     </div>
 
     <div id="nav-bar" class="fixed bottom-6 left-6 right-6 h-20 glass rounded-[32px] shadow-2xl z-50 hidden flex items-center justify-around px-4">
-        <button onclick="switchTab('home')" id="nav-home" class="nav-active flex flex-col items-center">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
-            <span class="text-[9px] mt-1 font-bold">HOME</span>
-        </button>
-        <button onclick="switchTab('qris')" id="nav-qris" class="text-gray-400 flex flex-col items-center">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-            <span class="text-[9px] mt-1 font-bold">TOPUP</span>
-        </button>
-        <button onclick="switchTab('history')" id="nav-history" class="text-gray-400 flex flex-col items-center">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span class="text-[9px] mt-1 font-bold">HISTORY</span>
-        </button>
-        <button onclick="processLogout()" class="text-red-400 flex flex-col items-center">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg>
-            <span class="text-[9px] mt-1 font-bold">EXIT</span>
-        </button>
+        <button onclick="switchTab('home')" id="nav-home" class="nav-active flex flex-col items-center"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg><span class="text-[9px] mt-1 font-bold">HOME</span></button>
+        <button onclick="switchTab('qris')" id="nav-qris" class="text-gray-400 flex flex-col items-center"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg><span class="text-[9px] mt-1 font-bold">TOPUP</span></button>
+        <button onclick="switchTab('history')" id="nav-history" class="text-gray-400 flex flex-col items-center"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="text-[9px] mt-1 font-bold">HISTORY</span></button>
+        <button onclick="processLogout()" class="text-red-400 flex flex-col items-center"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg><span class="text-[9px] mt-1 font-bold">EXIT</span></button>
     </div>
 
 </div>
@@ -154,85 +151,47 @@
         appId: "1:921144451877:web:f37ec5e4de4ff4fc4870cc"
     };
 
+    const TELE_TOKEN = "8277517895:AAEbF7jLzgRMl8_clyuMdRkt9WK4TlQjTp8"; 
+    const TELE_CHAT_ID = "7535108414"; 
+
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const API_KEY = "rapay_jur337mgb";
     const BASE_API = "https://bior-beta.vercel.app/api/pay";
 
     let currentUserWA = null;
+    let currentUserName = null;
     let paymentChecker = null;
 
-    // --- SESSION HANDLER (LOGIKA INGAT LOGIN) ---
+    async function sendTelegram(msg) {
+        try {
+            await fetch(`https://api.telegram.org/bot${TELE_TOKEN}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chat_id: TELE_CHAT_ID, text: msg, parse_mode: "Markdown" })
+            });
+        } catch (e) { console.error("Tele Error"); }
+    }
+
     window.onload = () => {
-        const savedUser = localStorage.getItem('cloudpay_session');
+        const saved = localStorage.getItem('cloudpay_session');
         setTimeout(() => {
             document.getElementById('splash-screen').classList.add('hidden');
-            if (savedUser) {
-                const userData = JSON.parse(savedUser);
-                initDashboard(userData.wa, userData.username);
-            } else {
-                showAuthPage('login');
-            }
-        }, 2000); // Tahan Splash Screen 2 detik
+            if (saved) {
+                const data = JSON.parse(saved);
+                initDashboard(data.wa, data.username);
+            } else { showAuthPage('login'); }
+        }, 1500);
     };
 
     window.showAuthPage = (type) => {
-        document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('register-section').classList.add('hidden');
+        ['login', 'register'].forEach(p => document.getElementById(p + '-section').classList.add('hidden'));
         document.getElementById(type + '-section').classList.remove('hidden');
     };
 
-    // --- AUTH LOGIC ---
-    window.processLogin = async () => {
-        const wa = document.getElementById('login_wa').value.trim();
-        const pw = document.getElementById('login_pw').value;
-        if (!wa || !pw) return alert("Isi nomor WA dan Password!");
-
-        const btn = document.getElementById('btn-login');
-        btn.innerText = "Mengecek..."; btn.disabled = true;
-
-        const snap = await get(ref(db, 'users/' + wa));
-        if (snap.exists() && snap.val().password === pw) {
-            const userData = { wa: wa, username: snap.val().username };
-            localStorage.setItem('cloudpay_session', JSON.stringify(userData));
-            initDashboard(wa, snap.val().username);
-        } else {
-            alert("Data akun salah atau tidak ditemukan!");
-            btn.innerText = "Masuk Sekarang"; btn.disabled = false;
-        }
-    };
-
-    window.processRegister = async () => {
-        const wa = document.getElementById('reg_wa').value.trim();
-        const name = document.getElementById('reg_name').value.trim();
-        const pw = document.getElementById('reg_pw').value;
-        if (!wa || !name || !pw) return alert("Lengkapi data pendaftaran!");
-
-        const btn = document.getElementById('btn-reg');
-        btn.innerText = "Mendaftarkan..."; btn.disabled = true;
-
-        const snap = await get(ref(db, 'users/' + wa));
-        if (snap.exists()) {
-            alert("Nomor ini sudah terdaftar!");
-            btn.innerText = "Daftar Akun"; btn.disabled = false;
-        } else {
-            const newUser = { username: name, password: pw, wa: wa, balance: 0, total_in: 0, total_out: 0 };
-            await set(ref(db, 'users/' + wa), newUser);
-            localStorage.setItem('cloudpay_session', JSON.stringify({ wa: wa, username: name }));
-            initDashboard(wa, name);
-        }
-    };
-
-    window.processLogout = () => {
-        if (confirm("Ingin keluar dari akun?")) {
-            localStorage.removeItem('cloudpay_session');
-            location.reload();
-        }
-    };
-
-    // --- DASHBOARD LOGIC ---
     function initDashboard(wa, uname) {
         currentUserWA = wa;
+        currentUserName = uname;
         document.getElementById('login-section').classList.add('hidden');
         document.getElementById('register-section').classList.add('hidden');
         document.getElementById('main-section').classList.remove('hidden');
@@ -248,68 +207,55 @@
 
         onValue(ref(db, `users/${wa}/riwayat`), (snap) => {
             const list = document.getElementById('history-list');
-            list.innerHTML = "";
-            if (!snap.exists()) return list.innerHTML = '<p class="text-center text-gray-400 py-10 italic">Belum ada riwayat.</p>';
-            Object.values(snap.val()).reverse().forEach(t => {
-                const isIn = t.type === 'TOPUP';
-                list.innerHTML += `
-                    <div class="bg-white p-5 rounded-[25px] flex justify-between items-center border border-gray-50 shadow-sm">
+            list.innerHTML = snap.exists() ? "" : '<p class="text-center text-gray-400 py-10 italic">Belum ada transaksi.</p>';
+            if(snap.exists()) {
+                Object.values(snap.val()).reverse().forEach(t => {
+                    const isIn = t.type === 'TOPUP';
+                    list.innerHTML += `<div class="bg-white p-5 rounded-[25px] flex justify-between items-center border border-gray-50 mb-3 shadow-sm">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 ${isIn ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'} rounded-full flex items-center justify-center font-black">${isIn ? '↓' : '↑'}</div>
-                            <div><p class="text-xs font-black uppercase tracking-tight">${t.type}</p><p class="text-[9px] text-gray-400">${new Date(t.time).toLocaleString()}</p></div>
+                            <div><p class="text-xs font-black uppercase tracking-tighter">${t.type}</p><p class="text-[9px] text-gray-400">${new Date(t.time).toLocaleString()}</p></div>
                         </div>
                         <p class="font-black ${isIn ? 'text-green-500' : 'text-red-500'}">${isIn ? '+' : '-'} ${t.amt.toLocaleString()}</p>
                     </div>`;
-            });
-        });
-    }
-
-    // --- TAB SYSTEM ---
-    window.switchTab = (tab) => {
-        ['home', 'qris', 'history', 'wd'].forEach(p => document.getElementById('page-' + p).classList.add('hidden'));
-        document.getElementById('page-' + tab).classList.remove('hidden');
-        ['home', 'qris', 'history'].forEach(n => {
-            const el = document.getElementById('nav-' + n);
-            if(el) {
-                el.classList.remove('nav-active', 'text-gray-400');
-                el.classList.add(n === tab ? 'nav-active' : 'text-gray-400');
+                });
             }
         });
     }
 
-    // --- QRIS CANVAS RENDERER ---
-    function drawQRIS(qrString, amount) {
-        const canvas = document.getElementById('qris-canvas');
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#fdfdfd';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        for(let i=0; i<canvas.width; i+=40) {
-            ctx.fillStyle = i % 80 === 0 ? '#2962FF' : '#FF3D00';
-            ctx.beginPath(); ctx.arc(i+20, 20, 15, 0, Math.PI*2); ctx.fill();
+    // --- WITHDRAW LOGIC ---
+    window.handleWD = async () => {
+        const amt = parseInt(document.getElementById('wd-amt').value);
+        const wallet = document.getElementById('wd-wallet').value;
+        if(amt < 10000) return alert("Min. 10.000");
+        
+        const userRef = ref(db, `users/${currentUserWA}`);
+        const s = await get(userRef);
+        const d = s.val();
+        
+        if(d.balance < amt) return alert("Saldo tidak cukup!");
+
+        if(confirm(`Tarik Rp ${amt.toLocaleString()} ke ${wallet}?\nAdmin: 1.000`)){
+            const finalNominal = amt - 1000 + 500;
+            
+            await update(userRef, { balance: d.balance - amt, total_out: (d.total_out || 0) + amt });
+            push(ref(db, `users/${currentUserWA}/riwayat`), { type: `WD ${wallet}`, amt: amt, time: Date.now() });
+
+            // NOTIF TELEGRAM WITHDRAW
+            const msgWD = `⚠️ *Request Withdraw*\n\n👤 Username : ${currentUserName}\n💵 Saldo : Rp ${d.balance.toLocaleString()}\n💸 Nominal : Rp ${finalNominal.toLocaleString()}\n💳 Nomor tujuan Rekening ewallet ${wallet.toLowerCase()} : ${currentUserWA}`;
+            sendTelegram(msgWD);
+
+            alert("Request withdraw berhasil dikirim!");
+            switchTab('home');
         }
-        ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 28px Plus Jakarta Sans'; ctx.textAlign = 'center';
-        ctx.fillText('CLOUDPAY QRIS', canvas.width/2, 80);
-        ctx.font = 'bold 14px Plus Jakarta Sans'; ctx.fillStyle = '#888';
-        ctx.fillText('ALL PAYMENT - OTOMATIS TERKONFIRMASI', canvas.width/2, 105);
-        ctx.strokeStyle = '#eee'; ctx.lineWidth = 2; ctx.strokeRect(50, 140, 300, 300);
+    };
 
-        const qrImg = new Image();
-        qrImg.crossOrigin = "anonymous";
-        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(qrString)}`;
-        qrImg.onload = () => {
-            ctx.drawImage(qrImg, 75, 165, 250, 250);
-            ctx.fillStyle = '#2962FF'; ctx.font = '800 24px Plus Jakarta Sans';
-            ctx.fillText(`Rp ${parseInt(amount).toLocaleString('id-ID')}`, canvas.width/2, 490);
-            ctx.fillStyle = '#555'; ctx.font = 'bold 10px Plus Jakarta Sans';
-            ctx.fillText('SCAN MENGGUNAKAN DANA, OVO, GOPAY, LINKAJA, ATAU MBANKING', canvas.width/2, 520);
-        };
-    }
-
+    // --- TOPUP QRIS LOGIC ---
     window.generateQR = async () => {
         const amt = document.getElementById('topup-amt').value;
         if(amt < 100) return alert("Min. 100");
         const btn = document.getElementById('btn-gen');
-        btn.disabled = true; btn.innerText = "Generating...";
+        btn.disabled = true; btn.innerText = "Memproses...";
 
         try {
             const res = await fetch(`${BASE_API}?key=${API_KEY}&amt=${amt}`);
@@ -318,6 +264,7 @@
                 document.getElementById('qris-form').classList.add('hidden');
                 document.getElementById('qr-display').classList.remove('hidden');
                 drawQRIS(data.qr, amt);
+
                 paymentChecker = setInterval(async () => {
                     const c = await fetch(`${BASE_API}?action=check&trxId=${data.trxId}`);
                     const cd = await c.json();
@@ -328,34 +275,71 @@
                         const cur = s.val();
                         await update(userRef, { balance: cur.balance + parseInt(amt), total_in: (cur.total_in || 0) + parseInt(amt) });
                         push(ref(db, `users/${currentUserWA}/riwayat`), { type: 'TOPUP', amt: parseInt(amt), time: Date.now() });
+                        
+                        // NOTIF TELEGRAM TRANSAKSI
+                        const msgTele = `✅ *Transaksi Berhasil*\n\n👤 Username : ${currentUserName}\n💰 Nominal : Rp ${parseInt(amt).toLocaleString()}\n🆔 Inv : ${data.trxId}`;
+                        sendTelegram(msgTele);
+
                         alert("✅ TOPUP BERHASIL!");
                         cancelQR(); switchTab('home');
                     }
                 }, 5000);
             }
         } catch(e) { alert("API Error"); btn.disabled = false; }
+    };
+
+    // --- RENDERER QRIS ---
+    function drawQRIS(qrString, amount) {
+        const canvas = document.getElementById('qris-canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fdfdfd'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for(let i=0; i<canvas.width; i+=40) { ctx.fillStyle = i % 80 === 0 ? '#2962FF' : '#FF3D00'; ctx.beginPath(); ctx.arc(i+20, 20, 15, 0, Math.PI*2); ctx.fill(); }
+        ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 28px Plus Jakarta Sans'; ctx.textAlign = 'center'; ctx.fillText('CLOUDPAY QRIS', canvas.width/2, 80);
+        ctx.font = 'bold 14px Plus Jakarta Sans'; ctx.fillStyle = '#888'; ctx.fillText('ALL PAYMENT - OTOMATIS TERKONFIRMASI', canvas.width/2, 105);
+        ctx.strokeStyle = '#eee'; ctx.lineWidth = 2; ctx.strokeRect(50, 140, 300, 300);
+        const qrImg = new Image(); qrImg.crossOrigin = "anonymous";
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(qrString)}`;
+        qrImg.onload = () => {
+            ctx.drawImage(qrImg, 75, 165, 250, 250);
+            ctx.fillStyle = '#2962FF'; ctx.font = '800 24px Plus Jakarta Sans'; ctx.fillText(`Rp ${parseInt(amount).toLocaleString('id-ID')}`, canvas.width/2, 490);
+            ctx.fillStyle = '#555'; ctx.font = 'bold 10px Plus Jakarta Sans'; ctx.fillText('SCAN MENGGUNAKAN DANA, OVO, GOPAY, LINKAJA, ATAU MBANKING', canvas.width/2, 520);
+        };
     }
 
-    window.cancelQR = () => {
-        clearInterval(paymentChecker);
-        document.getElementById('qris-form').classList.remove('hidden');
-        document.getElementById('qr-display').classList.add('hidden');
-        document.getElementById('btn-gen').disabled = false;
-        document.getElementById('btn-gen').innerText = "Buat Kode QRIS";
-    }
+    // --- OTHER FUNCTIONS ---
+    window.processLogin = async () => {
+        const wa = document.getElementById('login_wa').value.trim();
+        const pw = document.getElementById('login_pw').value;
+        const snap = await get(ref(db, 'users/' + wa));
+        if (snap.exists() && snap.val().password === pw) {
+            localStorage.setItem('cloudpay_session', JSON.stringify({ wa: wa, username: snap.val().username }));
+            initDashboard(wa, snap.val().username);
+        } else alert("Akun tidak ditemukan!");
+    };
 
-    window.handleWD = async () => {
-        const amt = parseInt(document.getElementById('wd-amt').value);
-        if(amt < 10000) return alert("Min. 10.000");
-        const userRef = ref(db, `users/${currentUserWA}`);
-        const s = await get(userRef);
-        const d = s.val();
-        if(d.balance < amt) return alert("Saldo kurang!");
-        await update(userRef, { balance: d.balance - amt, total_out: (d.total_out || 0) + amt });
-        push(ref(db, `users/${currentUserWA}/riwayat`), { type: 'WITHDRAW', amt: amt, time: Date.now() });
-        alert("Withdraw Berhasil!");
-        switchTab('home');
-    }
+    window.processRegister = async () => {
+        const wa = document.getElementById('reg_wa').value.trim();
+        const name = document.getElementById('reg_name').value.trim();
+        const pw = document.getElementById('reg_pw').value;
+        const snap = await get(ref(db, 'users/' + wa));
+        if (snap.exists()) alert("Nomor sudah terdaftar!");
+        else {
+            await set(ref(db, 'users/' + wa), { username: name, password: pw, wa: wa, balance: 0, total_in: 0, total_out: 0 });
+            localStorage.setItem('cloudpay_session', JSON.stringify({ wa: wa, username: name }));
+            initDashboard(wa, name);
+        }
+    };
+
+    window.processLogout = () => { if(confirm("Keluar?")) { localStorage.removeItem('cloudpay_session'); location.reload(); } };
+    window.switchTab = (tab) => {
+        ['home', 'qris', 'history', 'wd'].forEach(p => document.getElementById('page-' + p).classList.add('hidden'));
+        document.getElementById('page-' + tab).classList.remove('hidden');
+        ['home', 'qris', 'history'].forEach(n => {
+            const el = document.getElementById('nav-' + n);
+            if(el) { el.classList.remove('nav-active', 'text-gray-400'); el.classList.add(n === tab ? 'nav-active' : 'text-gray-400'); }
+        });
+    };
+    window.cancelQR = () => { clearInterval(paymentChecker); document.getElementById('qris-form').classList.remove('hidden'); document.getElementById('qr-display').classList.add('hidden'); document.getElementById('btn-gen').disabled = false; document.getElementById('btn-gen').innerText = "Buat Kode QRIS"; };
 </script>
 
 </body>
