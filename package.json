@@ -1,7 +1,6 @@
 {
-  "name": "gor-bridge-vercel",
+  "name": "gor-bridge",
   "version": "1.0.0",
-  "main": "api/index.js",
   "dependencies": {
     "axios": "^1.6.0"
   }
