@@ -123,13 +123,42 @@
             </div>
             <button onclick="handleWD()" class="w-full py-5 rounded-3xl bg-gray-900 text-white font-bold text-lg shadow-xl">Konfirmasi Penarikan</button>
         </div>
+
+        <div id="page-about" class="hidden p-6 fade-in min-h-screen">
+            <h2 class="text-2xl font-extrabold mb-6 font-black italic">Tentang</h2>
+            <div class="space-y-4">
+                <div class="bg-white p-6 rounded-[35px] border border-gray-100 shadow-sm text-center">
+                    <div class="bg-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-4 mx-auto shadow-lg">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                    </div>
+                    <h3 class="text-xl font-black text-gray-800">CLOUDPAY</h3>
+                    <p class="text-blue-600 font-bold text-xs">Versi 1.0.1</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-[35px] border border-gray-100 shadow-sm">
+                    <h4 class="text-[10px] font-bold text-gray-400 uppercase mb-2">Deskripsi</h4>
+                    <p class="text-sm text-gray-600 leading-relaxed font-semibold">Cloudpay adalah platform layanan digital terpadu yang memudahkan transaksi top up, pembayaran, dan pengelolaan saldo secara otomatis dan aman.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-[35px] border border-gray-100 shadow-sm flex justify-between items-center">
+                    <div>
+                        <h4 class="text-[10px] font-bold text-gray-400 uppercase">Hubungi Admin</h4>
+                        <p class="text-gray-800 font-bold">62882008519349</p>
+                    </div>
+                    <a href="https://wa.me/62882008519349" class="bg-green-500 p-3 rounded-2xl text-white shadow-lg shadow-green-200">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-2.32 0-4.591 1.042-4.591 3.226 0 1.132.559 2.059 1.466 2.731-.537.063-.926.33-1.112.727-.128.266-.141.564-.038.831.332.86 1.478 1.432 2.662 1.432 1.185 0 2.33-.572 2.662-1.432.103-.267.09-.565-.038-.831-.186-.397-.575-.664-1.112-.727.907-.672 1.466-1.599 1.466-2.731 0-2.184-2.271-3.226-4.591-3.226zM12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="nav-bar" class="fixed bottom-6 left-6 right-6 h-20 glass rounded-[32px] shadow-2xl z-50 hidden flex items-center justify-around px-4">
-        <button onclick="switchTab('home')" id="nav-home" class="nav-active flex flex-col items-center"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg><span class="text-[9px] mt-1 font-bold">HOME</span></button>
-        <button onclick="switchTab('qris')" id="nav-qris" class="text-gray-400 flex flex-col items-center"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg><span class="text-[9px] mt-1 font-bold">TOPUP</span></button>
-        <button onclick="switchTab('history')" id="nav-history" class="text-gray-400 flex flex-col items-center"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="text-[9px] mt-1 font-bold">HISTORY</span></button>
-        <button onclick="processLogout()" class="text-red-400 flex flex-col items-center"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg><span class="text-[9px] mt-1 font-bold">EXIT</span></button>
+    <div id="nav-bar" class="fixed bottom-6 left-6 right-6 h-20 glass rounded-[32px] shadow-2xl z-50 hidden flex items-center justify-around px-2">
+        <button onclick="switchTab('home')" id="nav-home" class="nav-active flex flex-col items-center"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg><span class="text-[8px] mt-1 font-bold">HOME</span></button>
+        <button onclick="switchTab('qris')" id="nav-qris" class="text-gray-400 flex flex-col items-center"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg><span class="text-[8px] mt-1 font-bold">TOPUP</span></button>
+        <button onclick="switchTab('history')" id="nav-history" class="text-gray-400 flex flex-col items-center"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="text-[8px] mt-1 font-bold">RIWAYAT</span></button>
+        <button onclick="switchTab('about')" id="nav-about" class="text-gray-400 flex flex-col items-center"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="text-[8px] mt-1 font-bold">TENTANG</span></button>
+        <button onclick="processLogout()" class="text-red-400 flex flex-col items-center"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg><span class="text-[8px] mt-1 font-bold">EXIT</span></button>
     </div>
 
 </div>
@@ -203,23 +232,22 @@
 
         onValue(ref(db, `users/${wa}/riwayat`), (snap) => {
             const list = document.getElementById('history-list');
-            list.innerHTML = snap.exists() ? "" : '<p class="text-center text-gray-400 py-10 italic">Belum ada transaksi.</p>';
+            list.innerHTML = snap.exists() ? "" : '<p class="text-center text-gray-400 py-10 italic text-sm">Belum ada transaksi.</p>';
             if(snap.exists()) {
                 Object.values(snap.val()).reverse().forEach(t => {
                     const isIn = t.type.includes('TOPUP');
                     list.innerHTML += `<div class="bg-white p-5 rounded-[25px] flex justify-between items-center border border-gray-50 mb-3 shadow-sm">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 ${isIn ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'} rounded-full flex items-center justify-center font-black">${isIn ? '↓' : '↑'}</div>
-                            <div><p class="text-xs font-black uppercase">${t.type}</p><p class="text-[9px] text-gray-400">${new Date(t.time).toLocaleString()}</p></div>
+                            <div><p class="text-[10px] font-black uppercase tracking-tighter">${t.type}</p><p class="text-[9px] text-gray-400">${new Date(t.time).toLocaleString()}</p></div>
                         </div>
-                        <p class="font-black ${isIn ? 'text-green-500' : 'text-red-500'}">${isIn ? '+' : '-'} ${t.amt.toLocaleString()}</p>
+                        <p class="font-black text-sm ${isIn ? 'text-green-500' : 'text-red-500'}">${isIn ? '+' : '-'} ${t.amt.toLocaleString()}</p>
                     </div>`;
                 });
             }
         });
     }
 
-    // --- QRIS AUTO SETTLE (REPAIRED) ---
     window.generateQR = async () => {
         const amt = document.getElementById('topup-amt').value;
         if(amt < 100) return alert("Min. 100");
@@ -236,36 +264,28 @@
                 drawQRIS(data.qr, amt);
 
                 if(paymentChecker) clearInterval(paymentChecker);
-                
                 paymentChecker = setInterval(async () => {
                     try {
                         const c = await fetch(`${BASE_API}?key=${API_KEY}&action=check&trxId=${data.trxId}`);
                         const cd = await c.json();
-                        
                         if(cd.paid || cd.status === "Success") {
                             clearInterval(paymentChecker);
                             const userRef = ref(db, `users/${currentUserWA}`);
                             const s = await get(userRef);
                             const cur = s.val();
-                            
                             const newBal = Number(cur.balance) + Number(amt);
                             const newTotal = Number(cur.total_in || 0) + Number(amt);
-
                             await update(userRef, { balance: newBal, total_in: newTotal });
                             push(ref(db, `users/${currentUserWA}/riwayat`), { type: 'TOPUP QRIS', amt: parseInt(amt), time: Date.now() });
-
                             sendTelegram(`✅ *Transaksi Berhasil*\n\n👤 Username : ${currentUserName}\n💰 Nominal : Rp ${parseInt(amt).toLocaleString()}\n🆔 Inv : ${data.trxId}`);
-                            
-                            alert("✅ TOPUP BERHASIL!");
-                            cancelQR(); switchTab('home');
+                            alert("✅ TOPUP BERHASIL!"); cancelQR(); switchTab('home');
                         }
-                    } catch (err) { console.error("Poll error"); }
+                    } catch (err) { }
                 }, 5000);
             }
         } catch(e) { alert("API Error"); btn.disabled = false; }
     };
 
-    // --- WITHDRAW LOGIC ---
     window.handleWD = async () => {
         const amt = parseInt(document.getElementById('wd-amt').value);
         const wallet = document.getElementById('wd-wallet').value;
@@ -280,12 +300,10 @@
             await update(userRef, { balance: d.balance - amt, total_out: (d.total_out || 0) + amt });
             push(ref(db, `users/${currentUserWA}/riwayat`), { type: `WD ${wallet}`, amt: amt, time: Date.now() });
             sendTelegram(`⚠️ *Request Withdraw*\n\n👤 Username : ${currentUserName}\n💵 Saldo : Rp ${d.balance.toLocaleString()}\n💸 Nominal : Rp ${final.toLocaleString()}\n💳 Nomor tujuan Rekening ewallet ${wallet.toLowerCase()} : ${currentUserWA}`);
-            alert("Request withdraw dikirim!");
-            switchTab('home');
+            alert("Request withdraw dikirim!"); switchTab('home');
         }
     };
 
-    // --- QRIS CANVAS ---
     function drawQRIS(qrString, amount) {
         const canvas = document.getElementById('qris-canvas');
         const ctx = canvas.getContext('2d');
@@ -303,7 +321,6 @@
         };
     }
 
-    // --- AUTH & NAV ---
     window.processLogin = async () => {
         const wa = document.getElementById('login_wa').value.trim();
         const pw = document.getElementById('login_pw').value;
@@ -318,7 +335,7 @@
         const name = document.getElementById('reg_name').value.trim();
         const pw = document.getElementById('reg_pw').value;
         const snap = await get(ref(db, 'users/' + wa));
-        if (snap.exists()) alert("Sudah ada!");
+        if (snap.exists()) alert("Nomor Terdaftar!");
         else {
             await set(ref(db, 'users/' + wa), { username: name, password: pw, wa: wa, balance: 0, total_in: 0, total_out: 0 });
             localStorage.setItem('cloudpay_session', JSON.stringify({ wa: wa, username: name }));
@@ -327,11 +344,14 @@
     };
     window.processLogout = () => { if(confirm("Keluar?")) { localStorage.removeItem('cloudpay_session'); location.reload(); } };
     window.switchTab = (tab) => {
-        ['home', 'qris', 'history', 'wd'].forEach(p => document.getElementById('page-' + p).classList.add('hidden'));
+        ['home', 'qris', 'history', 'wd', 'about'].forEach(p => {
+            const el = document.getElementById('page-' + p);
+            if(el) el.classList.add('hidden');
+        });
         document.getElementById('page-' + tab).classList.remove('hidden');
-        ['home', 'qris', 'history'].forEach(n => {
-            const el = document.getElementById('nav-' + n);
-            if(el) { el.classList.remove('nav-active', 'text-gray-400'); el.classList.add(n === tab ? 'nav-active' : 'text-gray-400'); }
+        ['home', 'qris', 'history', 'about'].forEach(n => {
+            const nav = document.getElementById('nav-' + n);
+            if(nav) { nav.classList.remove('nav-active', 'text-gray-400'); nav.classList.add(n === tab ? 'nav-active' : 'text-gray-400'); }
         });
     };
     window.cancelQR = () => { clearInterval(paymentChecker); document.getElementById('qris-form').classList.remove('hidden'); document.getElementById('qr-display').classList.add('hidden'); document.getElementById('btn-gen').disabled = false; document.getElementById('btn-gen').innerText = "Buat Kode QRIS"; };
