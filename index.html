@@ -14,8 +14,8 @@
         @keyframes spinner { to { transform: rotate(360deg); } }
         .tab-active { color: #2563eb; }
         .tab-inactive { color: #94a3b8; }
-        .hide { display: none; }
-    </script>
+        .hide { display: none !important; }
+    </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
 
@@ -46,7 +46,7 @@
                     <i class="fas fa-lock absolute left-4 top-4 text-slate-300"></i>
                     <input type="password" id="login-pass" placeholder="Password" required class="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
-                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg active:scale-[0.98] transition-all">Masuk Sekarang</button>
+                <button type="submit" id="btn-login-submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg active:scale-[0.98] transition-all">Masuk Sekarang</button>
                 <p class="text-center text-sm text-slate-500 mt-4">Belum punya akun? <button type="button" onclick="toggleAuth('register')" class="text-blue-600 font-bold">Daftar</button></p>
             </form>
 
@@ -55,7 +55,7 @@
                 <input type="text" id="reg-name" placeholder="Nama Lengkap" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
                 <input type="tel" id="reg-phone" placeholder="Nomor WhatsApp (628...)" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
                 <input type="password" id="reg-pass" placeholder="Buat Password" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg">Buat Akun Baru</button>
+                <button type="submit" id="btn-reg-submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg">Buat Akun Baru</button>
                 <p class="text-center text-sm text-slate-500 mt-4">Sudah punya akun? <button type="button" onclick="toggleAuth('login')" class="text-blue-600 font-bold">Login</button></p>
             </form>
         </div>
@@ -76,7 +76,6 @@
         </header>
 
         <main class="max-w-md mx-auto p-4 space-y-6">
-            <!-- Balance Card -->
             <section id="view-home" class="view">
                 <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-6 text-white shadow-xl mb-6">
                     <p class="text-blue-100 text-xs font-medium uppercase tracking-wider mb-1">Total Saldo</p>
@@ -90,40 +89,30 @@
                         </button>
                     </div>
                 </div>
-
+                <!-- ... Info Box ... -->
                 <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
                     <h3 class="font-bold flex items-center gap-2 text-slate-800"><i class="fas fa-info-circle text-blue-500"></i> Informasi</h3>
                     <div class="space-y-2 text-sm text-slate-500">
                         <div class="flex justify-between"><span>Minimal Top Up</span><span class="font-bold text-slate-700">Rp 100</span></div>
                         <div class="flex justify-between"><span>Minimal Withdraw</span><span class="font-bold text-slate-700">Rp 10.000</span></div>
-                        <div class="flex justify-between"><span>Biaya Admin WD</span><span class="font-bold text-slate-700">Rp 1.000</span></div>
                     </div>
                 </div>
             </section>
 
             <!-- TopUp View -->
-            <section id="view-topup" class="view hide animate-in fade-in">
+            <section id="view-topup" class="view hide">
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
                     <h2 class="text-xl font-bold mb-4">Isi Saldo</h2>
                     <div id="topup-initial">
-                        <label class="block text-xs font-bold text-slate-400 mb-2 uppercase">Nominal (Min. 100)</label>
-                        <input type="number" id="topup-amount" placeholder="10000" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl text-xl font-bold outline-none mb-4">
+                        <input type="number" id="topup-amount" placeholder="Nominal (Min. 100)" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl text-xl font-bold outline-none mb-4">
                         <button onclick="generateQRIS()" id="btn-generate" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg">Lanjut Bayar</button>
                     </div>
-                    
                     <div id="topup-qr" class="hide text-center space-y-4">
-                        <div id="qr-container" class="p-4 bg-white border-2 border-blue-50 rounded-2xl inline-block shadow-inner">
-                            <img id="qr-img" src="" class="mx-auto w-[220px]">
-                        </div>
+                        <img id="qr-img" src="" class="mx-auto w-[220px] bg-white p-2 border rounded-xl">
                         <div class="bg-blue-50 p-3 rounded-xl">
-                            <p class="text-xs text-blue-400 font-bold uppercase">Total Pembayaran</p>
                             <p id="qr-total" class="text-xl font-bold text-blue-700">Rp 0</p>
                         </div>
-                        <div class="flex items-center justify-center gap-2 text-blue-500 text-xs font-medium animate-pulse">
-                            <div class="loader w-3 h-3 border-2 border-slate-200 rounded-full"></div>
-                            Menunggu pembayaran otomatis...
-                        </div>
-                        <button onclick="cancelTopUp()" class="text-slate-400 text-xs font-bold hover:underline">Batalkan</button>
+                        <button onclick="cancelTopUp()" class="text-slate-400 text-xs font-bold">Batalkan</button>
                     </div>
                 </div>
             </section>
@@ -135,202 +124,182 @@
                     <form id="wd-form" class="space-y-4">
                         <select id="wd-bank" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none">
                             <option value="">Pilih Bank / E-Wallet</option>
-                            <option>DANA</option><option>GOPAY</option><option>OVO</option><option>SHOPEEPAY</option><option>BCA</option><option>BRI</option>
+                            <option>DANA</option><option>GOPAY</option><option>OVO</option>
                         </select>
                         <input type="text" id="wd-acc" placeholder="No. Rekening / No. HP" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none">
-                        <input type="number" id="wd-amount" placeholder="Nominal (Min. 10.000)" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none">
-                        <p class="text-[10px] text-slate-400 font-medium">* Admin Rp 1.000 akan dipotong dari saldo Anda.</p>
-                        <button type="submit" class="w-full bg-slate-900 text-white font-bold py-4 rounded-xl shadow-lg">Ajukan Penarikan</button>
+                        <input type="number" id="wd-amount" placeholder="Nominal" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none">
+                        <button type="submit" id="btn-wd-submit" class="w-full bg-slate-900 text-white font-bold py-4 rounded-xl shadow-lg">Ajukan Penarikan</button>
                     </form>
                 </div>
             </section>
 
-            <!-- History View -->
             <section id="view-history" class="view hide space-y-3">
                 <h2 class="text-xl font-bold mb-4 px-2">Riwayat Transaksi</h2>
-                <div id="history-list" class="space-y-3">
-                    <!-- Data will be injected here -->
-                    <div class="text-center py-10 text-slate-400 text-sm">Memuat riwayat...</div>
-                </div>
+                <div id="history-list" class="space-y-3"></div>
             </section>
         </main>
 
-        <!-- Navigation Bar -->
-        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 flex justify-around p-3 max-w-md mx-auto z-[60] shadow-2xl">
-            <button onclick="switchView('home')" class="nav-btn tab-active" data-view="home">
-                <div class="flex flex-col items-center gap-1">
-                    <i class="fas fa-wallet text-lg"></i>
-                    <span class="text-[10px] font-bold">Dompet</span>
-                </div>
-            </button>
-            <button onclick="switchView('topup')" class="nav-btn tab-inactive" data-view="topup">
-                <div class="flex flex-col items-center gap-1">
-                    <i class="fas fa-circle-plus text-lg"></i>
-                    <span class="text-[10px] font-bold">Top Up</span>
-                </div>
-            </button>
-            <button onclick="switchView('withdraw')" class="nav-btn tab-inactive" data-view="withdraw">
-                <div class="flex flex-col items-center gap-1">
-                    <i class="fas fa-circle-minus text-lg"></i>
-                    <span class="text-[10px] font-bold">Tarik</span>
-                </div>
-            </button>
-            <button onclick="switchView('history')" class="nav-btn tab-inactive" data-view="history">
-                <div class="flex flex-col items-center gap-1">
-                    <i class="fas fa-history text-lg"></i>
-                    <span class="text-[10px] font-bold">Riwayat</span>
-                </div>
-            </button>
+        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 flex justify-around p-3 max-w-md mx-auto z-[60]">
+            <button onclick="switchView('home')" class="nav-btn tab-active" data-view="home"><i class="fas fa-wallet"></i></button>
+            <button onclick="switchView('topup')" class="nav-btn tab-inactive" data-view="topup"><i class="fas fa-plus-circle"></i></button>
+            <button onclick="switchView('withdraw')" class="nav-btn tab-inactive" data-view="withdraw"><i class="fas fa-minus-circle"></i></button>
+            <button onclick="switchView('history')" class="nav-btn tab-inactive" data-view="history"><i class="fas fa-history"></i></button>
         </nav>
     </div>
 
-    <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-        // CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyD1OHn2utYY881b504XEgMAwmhrglqtinQ",
             authDomain: "sedabase.firebaseapp.com",
-            databaseURL: "https://sedabase-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "sedabase",
             storageBucket: "sedabase.firebasestorage.app",
             messagingSenderId: "921144451877",
             appId: "1:921144451877:web:f37ec5e4de4ff4fc4870cc"
         };
-        const API_KEY = "rapay_jur337mgb";
-        const BASE_URL = "https://bior-beta.vercel.app/api/pay";
-        const APP_ID = "cloudpay_v2";
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const APP_ID = "cloudpay_v2";
+        const API_KEY = "rapay_jur337mgb";
+        const BASE_URL = "https://bior-beta.vercel.app/api/pay";
 
-        // STATE
-        let currentUser = null;
         let currentProfile = null;
         let checkInterval = null;
 
-        // UI HELPERS
-        const show = (id) => document.getElementById(id).classList.remove('hide');
-        const hide = (id) => document.getElementById(id).classList.add('hide');
+        const show = (id) => document.getElementById(id)?.classList.remove('hide');
+        const hide = (id) => document.getElementById(id)?.classList.add('hide');
         const formatIDR = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
 
-        // AUTH LOGIC
+        // Global Auth Logic
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const session = localStorage.getItem('cp_session');
                 if (session) {
-                    currentUser = user;
                     initAppData(session);
                 } else {
                     hide('loading-screen');
                     show('auth-container');
                 }
             } else {
-                signInAnonymously(auth);
+                try {
+                    await signInAnonymously(auth);
+                } catch (e) {
+                    console.error("Auth failed", e);
+                    hide('loading-screen');
+                    show('auth-container');
+                }
             }
         });
 
-        window.toggleAuth = (mode) => {
-            if (mode === 'register') {
-                hide('login-form');
-                show('register-form');
-                document.getElementById('auth-subtitle').innerText = 'Daftar untuk membuat akun baru';
-            } else {
-                show('login-form');
-                hide('register-form');
-                document.getElementById('auth-subtitle').innerText = 'Masuk untuk mengelola saldo Anda';
+        async function initAppData(phone) {
+            const docRef = doc(db, 'artifacts', APP_ID, 'users', phone, 'profile', 'data');
+            try {
+                const snap = await getDoc(docRef);
+                if (!snap.exists()) {
+                    logout();
+                    return;
+                }
+
+                onSnapshot(docRef, (s) => {
+                    if (s.exists()) {
+                        currentProfile = s.data();
+                        document.getElementById('user-display').innerText = `Halo, ${currentProfile.name}`;
+                        document.getElementById('balance-display').innerText = formatIDR(currentProfile.balance || 0);
+                        hide('loading-screen');
+                        hide('auth-container');
+                        show('app-container');
+                    }
+                });
+
+                const txRef = collection(db, 'artifacts', APP_ID, 'users', phone, 'transactions');
+                onSnapshot(txRef, (snap) => {
+                    const list = snap.docs.map(d => ({id: d.id, ...d.data()}));
+                    list.sort((a,b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                    renderHistory(list);
+                });
+            } catch (e) {
+                console.error("Data error", e);
+                logout();
             }
         }
+
+        // Auth Actions
+        document.getElementById('login-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const phone = document.getElementById('login-phone').value;
+            const pass = document.getElementById('login-pass').value;
+            const btn = document.getElementById('btn-login-submit');
+            
+            btn.disabled = true;
+            btn.innerText = "Memproses...";
+            
+            try {
+                const docRef = doc(db, 'artifacts', APP_ID, 'users', phone, 'profile', 'data');
+                const snap = await getDoc(docRef);
+                if (snap.exists() && snap.data().password === pass) {
+                    localStorage.setItem('cp_session', phone);
+                    initAppData(phone);
+                } else {
+                    alert("Nomor WA atau Password salah!");
+                }
+            } catch (err) { alert("Koneksi gagal"); }
+            finally { btn.disabled = false; btn.innerText = "Masuk Sekarang"; }
+        };
 
         document.getElementById('register-form').onsubmit = async (e) => {
             e.preventDefault();
             const name = document.getElementById('reg-name').value;
             const phone = document.getElementById('reg-phone').value;
             const pass = document.getElementById('reg-pass').value;
+            const btn = document.getElementById('btn-reg-submit');
+
+            btn.disabled = true;
+            btn.innerText = "Memproses...";
 
             try {
                 const docRef = doc(db, 'artifacts', APP_ID, 'users', phone, 'profile', 'data');
                 const snap = await getDoc(docRef);
-                if (snap.exists()) return alert("Nomor WA sudah terdaftar!");
-
-                await setDoc(docRef, { name, phone, password: pass, balance: 0, createdAt: serverTimestamp() });
-                localStorage.setItem('cp_session', phone);
-                location.reload();
-            } catch (err) { alert("Error Daftar: " + err.message); }
-        }
-
-        document.getElementById('login-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const phone = document.getElementById('login-phone').value;
-            const pass = document.getElementById('login-pass').value;
-
-            try {
-                const docRef = doc(db, 'artifacts', APP_ID, 'users', phone, 'profile', 'data');
-                const snap = await getDoc(docRef);
-                if (snap.exists() && snap.data().password === pass) {
-                    localStorage.setItem('cp_session', phone);
-                    location.reload();
+                if (snap.exists()) {
+                    alert("Nomor sudah terdaftar!");
                 } else {
-                    alert("Nomor WA atau Password salah!");
+                    await setDoc(docRef, { name, phone, password: pass, balance: 0, createdAt: serverTimestamp() });
+                    localStorage.setItem('cp_session', phone);
+                    initAppData(phone);
                 }
-            } catch (err) { alert("Error Login: " + err.message); }
-        }
+            } catch (err) { alert("Gagal mendaftar"); }
+            finally { btn.disabled = false; btn.innerText = "Buat Akun Baru"; }
+        };
+
+        window.toggleAuth = (mode) => {
+            if (mode === 'register') { hide('login-form'); show('register-form'); }
+            else { show('login-form'); hide('register-form'); }
+        };
 
         window.logout = () => {
             localStorage.removeItem('cp_session');
             location.reload();
-        }
-
-        // APP LOGIC
-        async function initAppData(phone) {
-            const docRef = doc(db, 'artifacts', APP_ID, 'users', phone, 'profile', 'data');
-            
-            // Listen to profile changes (balance, name)
-            onSnapshot(docRef, (snap) => {
-                if (snap.exists()) {
-                    currentProfile = snap.data();
-                    document.getElementById('user-display').innerText = `Halo, ${currentProfile.name}`;
-                    document.getElementById('balance-display').innerText = formatIDR(currentProfile.balance);
-                    hide('loading-screen');
-                    hide('auth-container');
-                    show('app-container');
-                }
-            });
-
-            // Listen to history
-            const txRef = collection(db, 'artifacts', APP_ID, 'users', phone, 'transactions');
-            onSnapshot(txRef, (snap) => {
-                const list = snap.docs.map(d => ({id: d.id, ...d.data()}));
-                list.sort((a,b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-                renderHistory(list);
-            });
-        }
+        };
 
         window.switchView = (target) => {
             document.querySelectorAll('.view').forEach(v => v.classList.add('hide'));
             show('view-' + target);
-
             document.querySelectorAll('.nav-btn').forEach(b => {
-                if (b.dataset.view === target) {
-                    b.classList.replace('tab-inactive', 'tab-active');
-                } else {
-                    b.classList.replace('tab-active', 'tab-inactive');
-                }
+                b.classList.replace(b.dataset.view === target ? 'tab-inactive' : 'tab-active', b.dataset.view === target ? 'tab-active' : 'tab-inactive');
             });
-        }
+        };
 
-        // TOP UP LOGIC
+        // Payment Logic
         window.generateQRIS = async () => {
             const amount = parseInt(document.getElementById('topup-amount').value);
-            if (isNaN(amount) || amount < 100) return alert("Minimal Top Up Rp 100");
-
+            if (amount < 100) return alert("Min. 100");
             const btn = document.getElementById('btn-generate');
             btn.disabled = true;
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Memproses...`;
+            btn.innerText = "Sedang Membuat QRIS...";
 
             try {
                 const res = await fetch(`${BASE_URL}?key=${API_KEY}&amt=${amount}`);
@@ -338,120 +307,63 @@
                 if (data.success) {
                     document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(data.qr)}`;
                     document.getElementById('qr-total').innerText = formatIDR(amount);
-                    hide('topup-initial');
-                    show('topup-qr');
+                    hide('topup-initial'); show('topup-qr');
                     startCheckPayment(data.trxId, amount);
-                } else {
-                    alert("Gagal membuat QRIS. Coba lagi.");
                 }
-            } catch (err) { alert("API Error"); }
-            finally { 
-                btn.disabled = false;
-                btn.innerText = "Lanjut Bayar";
-            }
-        }
+            } catch (e) { alert("API Offline"); }
+            finally { btn.disabled = false; btn.innerText = "Lanjut Bayar"; }
+        };
 
         function startCheckPayment(trxId, amt) {
+            if (checkInterval) clearInterval(checkInterval);
             checkInterval = setInterval(async () => {
                 try {
                     const res = await fetch(`${BASE_URL}?action=check&trxId=${trxId}`);
                     const data = await res.json();
                     if (data.success && data.paid) {
                         clearInterval(checkInterval);
-                        completePayment(amt, trxId);
+                        const phone = localStorage.getItem('cp_session');
+                        const docRef = doc(db, 'artifacts', APP_ID, 'users', phone, 'profile', 'data');
+                        await updateDoc(docRef, { balance: (currentProfile.balance || 0) + amt });
+                        await addDoc(collection(db, 'artifacts', APP_ID, 'users', phone, 'transactions'), {
+                            type: 'topup', amount: amt, status: 'success', createdAt: serverTimestamp()
+                        });
+                        alert("Top Up Berhasil!");
+                        cancelTopUp(); switchView('home');
                     }
                 } catch (e) {}
             }, 6000);
         }
 
-        async function completePayment(amt, trxId) {
-            const phone = localStorage.getItem('cp_session');
-            const docRef = doc(db, 'artifacts', APP_ID, 'users', phone, 'profile', 'data');
-            const newBalance = (currentProfile.balance || 0) + amt;
-            
-            await updateDoc(docRef, { balance: newBalance });
-            await addDoc(collection(db, 'artifacts', APP_ID, 'users', phone, 'transactions'), {
-                type: 'topup',
-                amount: amt,
-                status: 'success',
-                createdAt: serverTimestamp(),
-                trxId: trxId
-            });
+        window.cancelTopUp = () => { clearInterval(checkInterval); hide('topup-qr'); show('topup-initial'); };
 
-            alert("Top Up Berhasil!");
-            cancelTopUp();
-            switchView('home');
-        }
-
-        window.cancelTopUp = () => {
-            clearInterval(checkInterval);
-            hide('topup-qr');
-            show('topup-initial');
-            document.getElementById('topup-amount').value = '';
-        }
-
-        // WITHDRAW LOGIC
         document.getElementById('wd-form').onsubmit = async (e) => {
             e.preventDefault();
             const amt = parseInt(document.getElementById('wd-amount').value);
-            const bank = document.getElementById('wd-bank').value;
-            const acc = document.getElementById('wd-acc').value;
+            if (amt < 10000 || amt > currentProfile.balance) return alert("Saldo tidak cukup atau kurang dari 10rb");
             const phone = localStorage.getItem('cp_session');
-
-            if (amt < 10000) return alert("Minimal Withdraw Rp 10.000");
-            if (amt > currentProfile.balance) return alert("Saldo tidak cukup!");
-
-            try {
-                const docRef = doc(db, 'artifacts', APP_ID, 'users', phone, 'profile', 'data');
-                await updateDoc(docRef, { balance: currentProfile.balance - amt });
-                
-                await addDoc(collection(db, 'artifacts', APP_ID, 'users', phone, 'transactions'), {
-                    type: 'withdraw',
-                    amount: amt,
-                    admin: 1000,
-                    net: amt - 1000,
-                    status: 'pending',
-                    bank: bank,
-                    account: acc,
-                    createdAt: serverTimestamp()
-                });
-
-                alert("Withdraw berhasil diajukan! Akan diproses admin.");
-                document.getElementById('wd-form').reset();
-                switchView('home');
-            } catch (err) { alert("Error WD"); }
-        }
+            await updateDoc(doc(db, 'artifacts', APP_ID, 'users', phone, 'profile', 'data'), { balance: currentProfile.balance - amt });
+            await addDoc(collection(db, 'artifacts', APP_ID, 'users', phone, 'transactions'), {
+                type: 'withdraw', amount: amt, status: 'pending', createdAt: serverTimestamp()
+            });
+            alert("Berhasil diajukan!"); switchView('home');
+        };
 
         function renderHistory(data) {
             const container = document.getElementById('history-list');
-            if (data.length === 0) {
-                container.innerHTML = `<div class="text-center py-10 text-slate-400 text-sm">Belum ada transaksi</div>`;
-                return;
-            }
-
             container.innerHTML = data.map(tx => `
                 <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-slate-50">
-                    <div class="flex gap-3 items-center">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center ${tx.type === 'topup' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}">
-                            <i class="fas ${tx.type === 'topup' ? 'fa-arrow-up' : 'fa-arrow-down'} text-sm"></i>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-slate-800">${tx.type === 'topup' ? 'Top Up Saldo' : 'Penarikan Dana'}</p>
-                            <p class="text-[9px] text-slate-400">${tx.createdAt ? new Date(tx.createdAt.seconds * 1000).toLocaleString('id-ID') : 'Memproses...'}</p>
-                        </div>
+                    <div>
+                        <p class="text-xs font-bold">${tx.type === 'topup' ? 'Top Up' : 'Withdraw'}</p>
+                        <p class="text-[9px] text-slate-400">${tx.createdAt ? new Date(tx.createdAt.seconds * 1000).toLocaleString() : '...'}</p>
                     </div>
                     <div class="text-right">
-                        <p class="text-sm font-bold ${tx.type === 'topup' ? 'text-green-600' : 'text-red-600'}">
-                            ${tx.type === 'topup' ? '+' : '-'}${formatIDR(tx.amount)}
-                        </p>
-                        <span class="text-[8px] px-2 py-0.5 rounded-full font-bold uppercase ${tx.status === 'success' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}">
-                            ${tx.status}
-                        </span>
+                        <p class="text-sm font-bold ${tx.type === 'topup' ? 'text-green-600' : 'text-red-600'}">${formatIDR(tx.amount)}</p>
+                        <p class="text-[8px] uppercase font-bold">${tx.status}</p>
                     </div>
                 </div>
-            `).join('');
+            `).join('') || '<p class="text-center text-slate-400 py-10">Kosong</p>';
         }
-
     </script>
 </body>
 </html>
