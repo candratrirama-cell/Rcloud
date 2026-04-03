@@ -1,8 +1,7 @@
 {
   "version": 2,
-  "name": "cloudpay-frontend",
-  "cleanUrls": true,
-  "framework": null,
+  "public": true,
+  "name": "rcloud-frontend",
   "rewrites": [
     {
       "source": "/(.*)",
