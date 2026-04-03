@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoR 1.1 - Withdraw</title>
+    <style>
+        body { font-family: 'Courier New', Courier, monospace; background: #000; color: #0f0; padding: 20px; }
+        .box { border: 4px solid #0f0; padding: 20px; box-shadow: 10px 10px 0px #0f0; background: #111; }
+        h2 { text-transform: uppercase; border-bottom: 2px solid #0f0; padding-bottom: 10px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 2px solid #0f0; color: #fff; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #0f0; color: #000; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
+        button:active { transform: translate(4px, 4px); box-shadow: none; }
+        .status { margin-top: 15px; font-size: 0.8em; color: yellow; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Withdraw Saldo</h2>
+        <input type="text" id="username" placeholder="USERNAME">
+        <input type="number" id="nominal" placeholder="NOMINAL (MIN 10K)">
+        <input type="text" id="norek" placeholder="NOMOR DANA/GOPAY">
+        <input type="text" id="idpay" placeholder="ID PEMBAYARAN">
+        <button onclick="prosesWD()">Kirim Laporan</button>
+        <div id="msg" class="status"></div>
+    </div>
+
+    <script>
+        async function prosesWD() {
+            const msg = document.getElementById('msg');
+            const data = {
+                username: document.getElementById('username').value,
+                nominal: document.getElementById('nominal').value,
+                norek: document.getElementById('norek').value,
+                idpay: document.getElementById('idpay').value,
+                saldo: "100.000" // Nanti ganti dengan data dinamis
+            };
+
+            msg.innerText = "Sinking data to Termux...";
+
+            try {
+                const res = await fetch('/api/withdraw', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                
+                if (result.status === 'pending') {
+                    msg.innerText = "BERHASIL! Cek WhatsApp Owner untuk konfirmasi.";
+                } else {
+                    msg.innerText = "GAGAL: " + (result.error || "Server Error");
+                }
+            } catch (e) {
+                msg.innerText = "ERROR: Tidak bisa terhubung ke API.";
+            }
+        }
+    </script>
+</body>
+</html>
