@@ -22,7 +22,7 @@
     <div id="splash-screen" class="flex items-center justify-center min-h-screen bg-white z-[100] fixed inset-0">
         <div class="text-center animate-pulse">
             <div class="bg-blue-600 w-20 h-20 rounded-[24px] flex items-center justify-center mb-4 mx-auto shadow-xl text-white text-3xl font-black">C</div>
-            <h2 class="text-xl font-black tracking-tighter">CLOUDPAY</h2>
+            <h2 class="text-xl font-black tracking-tighter uppercase">CLOUDPAY</h2>
         </div>
     </div>
 
@@ -33,17 +33,17 @@
                 <input id="l_wa" type="number" placeholder="WhatsApp" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
                 <input id="l_pw" type="password" placeholder="Password" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
                 <button onclick="doLogin()" class="btn-grad w-full py-4 rounded-2xl text-white font-bold">MASUK</button>
-                <p class="text-center text-xs font-bold text-gray-400">Belum punya akun? <span onclick="toggleAuth(false)" class="text-blue-600">Daftar</span></p>
+                <p class="text-center text-xs font-bold text-gray-400">Belum punya akun? <span onclick="toggleAuth(false)" class="text-blue-600 cursor-pointer">Daftar</span></p>
             </div>
         </div>
         <div id="reg-form" class="hidden bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
-            <h1 class="text-2xl font-black mb-6 italic uppercase">Daftar</h1>
+            <h1 class="text-2xl font-black mb-6 italic uppercase">Daftar Akun</h1>
             <div class="space-y-4">
                 <input id="r_wa" type="number" placeholder="WhatsApp" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
                 <input id="r_name" type="text" placeholder="Username" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
                 <input id="r_pw" type="password" placeholder="Password" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
-                <button onclick="doRegister()" class="btn-grad w-full py-4 rounded-2xl text-white font-bold">DAFTAR</button>
-                <p class="text-center text-xs font-bold text-gray-400">Ada akun? <span onclick="toggleAuth(true)" class="text-blue-600">Login</span></p>
+                <button onclick="doRegister()" class="btn-grad w-full py-4 rounded-2xl text-white font-bold">DAFTAR SEKARANG</button>
+                <p class="text-center text-xs font-bold text-gray-400">Ada akun? <span onclick="toggleAuth(true)" class="text-blue-600 cursor-pointer">Login</span></p>
             </div>
         </div>
     </div>
@@ -78,37 +78,38 @@
             <div id="q_form" class="text-left space-y-4">
                 <h2 class="text-2xl font-black italic uppercase">Deposit Saldo</h2>
                 <div class="bg-white p-8 rounded-[40px] shadow-sm">
-                    <p class="text-[10px] font-black text-gray-400 uppercase">Nominal</p>
+                    <p class="text-[10px] font-black text-gray-400 uppercase mb-2">Input Nominal</p>
                     <input id="q_amt" type="number" value="1000" class="w-full text-4xl font-black outline-none text-blue-600 bg-transparent">
                 </div>
-                <button onclick="genQR()" id="btn_q" class="btn-grad w-full py-5 rounded-[30px] text-white font-bold">GENERATE QRIS</button>
+                <button onclick="genQR()" id="btn_q" class="btn-grad w-full py-5 rounded-[30px] text-white font-bold text-lg shadow-xl uppercase">Generate QRIS</button>
             </div>
             <div id="q_display" class="hidden fade-in">
                 <canvas id="q_canvas" width="400" height="550" class="mx-auto bg-white p-4"></canvas>
-                <p class="text-blue-600 font-black animate-pulse text-[10px] uppercase mt-4">Checking Payment...</p>
-                <button onclick="cancelQR()" class="mt-8 text-red-500 font-black text-[10px] uppercase">Batalkan</button>
+                <p class="text-blue-600 font-black animate-pulse text-[10px] uppercase mt-4">Checking Payment Status...</p>
+                <button onclick="cancelQR()" class="mt-8 text-red-500 font-black text-[10px] uppercase opacity-50">Batalkan Pesanan</button>
             </div>
         </div>
 
         <div id="page-wd" class="hidden p-6 fade-in min-h-screen">
-            <h2 class="text-2xl font-black mb-6 italic text-red-600">WITHDRAW</h2>
+            <h2 class="text-2xl font-black mb-6 italic uppercase text-red-600">Withdrawal</h2>
             <div class="bg-white p-8 rounded-[40px] shadow-sm space-y-6">
                 <div>
-                    <p class="text-[10px] font-black text-gray-400 uppercase">E-Wallet</p>
+                    <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Pilih E-Wallet</p>
                     <select id="wd_method" class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none text-sm">
-                        <option value="DANA">DANA</option><option value="GOPAY">GOPAY</option>
+                        <option value="DANA">DANA</option>
+                        <option value="GOPAY">GOPAY</option>
                     </select>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-400 uppercase">Nomor Tujuan</p>
-                    <input id="wd_target" type="number" placeholder="08..." class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none text-sm">
+                    <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Nomor Tujuan</p>
+                    <input id="wd_target" type="number" placeholder="Contoh: 08..." class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none text-sm">
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-400 uppercase">Nominal</p>
-                    <input id="wd_amt" type="number" placeholder="10000" class="w-full text-3xl font-black outline-none text-red-600 bg-transparent">
+                    <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Nominal (Min. 10k)</p>
+                    <input id="wd_amt" type="number" placeholder="0" class="w-full text-3xl font-black outline-none text-red-600 bg-transparent">
                 </div>
             </div>
-            <button onclick="doWD()" class="w-full py-5 rounded-[30px] bg-gray-900 text-white font-bold mt-8">TARIK DANA</button>
+            <button onclick="doWD()" class="w-full py-5 rounded-[30px] bg-gray-900 text-white font-bold text-lg shadow-2xl mt-8 uppercase">Tarik Dana</button>
         </div>
 
         <div id="page-history" class="hidden p-6 fade-in min-h-screen">
@@ -117,14 +118,14 @@
         </div>
 
         <div id="page-about" class="hidden p-6 fade-in min-h-screen">
-            <div class="bg-white p-8 rounded-[45px] text-center shadow-sm mb-6">
+            <div class="bg-white p-8 rounded-[45px] text-center shadow-sm border border-gray-100 mb-6">
                 <h3 class="font-black text-2xl italic">Cloudpay v1.2.0</h3>
-                <p class="text-gray-400 text-[10px] font-black tracking-widest uppercase">Dev by @maramadhona</p>
+                <p class="text-gray-400 text-[10px] font-black uppercase mt-1">Dev by @maramadhona</p>
             </div>
-            <div class="bg-white p-8 rounded-[45px] shadow-sm">
-                <h4 class="font-black text-xs mb-4 uppercase">Report Problem</h4>
-                <textarea id="rep_txt" placeholder="Jelaskan kendala..." class="w-full h-32 p-5 bg-gray-50 rounded-3xl outline-none text-sm font-semibold mb-4"></textarea>
-                <button onclick="doReport()" id="btn_rep" class="w-full py-4 rounded-2xl bg-blue-600 text-white font-bold text-sm shadow-lg shadow-blue-200">KIRIM LAPORAN</button>
+            <div class="bg-white p-8 rounded-[45px] shadow-sm border border-gray-50">
+                <h4 class="font-black text-xs mb-4 uppercase tracking-widest">Report Problem</h4>
+                <textarea id="rep_txt" placeholder="Jelaskan kendala anda..." class="w-full h-32 p-5 bg-gray-50 rounded-3xl outline-none text-sm font-semibold mb-4"></textarea>
+                <button onclick="doReport()" id="btn_rep" class="w-full py-4 rounded-2xl bg-blue-600 text-white font-bold text-sm uppercase">Kirim Laporan</button>
             </div>
         </div>
     </div>
@@ -139,8 +140,9 @@
 </div>
 
 <script type="module">
+    // IMPORT Firebase dengan runTransaction
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, set, get, update, onValue, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, set, get, update, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyD1OHn2utYY881b504XEgMAwmhrglqtinQ",
@@ -227,57 +229,63 @@
         });
     }
 
-    // --- TOPUP ATOMIC LOCK SYSTEM ---
+    // --- FIX TOP UP DENGAN ATOMIC TRANSACTION ---
     window.genQR = async () => {
-        const amt = document.getElementById('q_amt').value;
+        const amt = parseInt(document.getElementById('q_amt').value);
         if(amt < 100) return alert("Min. 100");
         document.getElementById('btn_q').disabled = true;
+        
         try {
             const d = await apiCall(`/api/generate-qris?amt=${amt}`);
             if(d.success && d.trxId) {
                 document.getElementById('q_form').classList.add('hidden');
                 document.getElementById('q_display').classList.remove('hidden');
                 draw(d.qr, amt);
-                if(checker) clearInterval(checker);
                 
-                isSaving = false; // Reset lock UI
+                if(checker) clearInterval(checker);
+                isSaving = false;
 
                 checker = setInterval(async () => {
-                    if(isSaving) return; // Prevent concurrent calls
+                    if(isSaving) return;
                     const c = await apiCall(`/api/check-qris?trxId=${d.trxId}`);
                     
                     if((c.paid || c.status === "Success") && c.isFirstValid) {
-                        isSaving = true; // LOCK UI IMMEDIATELY
+                        isSaving = true; 
                         clearInterval(checker);
 
-                        // ATOMIC DATABASE LOCK
+                        const userRef = ref(db, `users/${currentUser.wa}`);
                         const lockRef = ref(db, `processed_trxs/${d.trxId}`);
-                        const checkLock = await get(lockRef);
-
-                        if (checkLock.exists()) {
-                            console.log("Transaksi sudah terproses di DB.");
-                            return;
-                        }
 
                         try {
-                            // 1. Write the lock first
-                            await set(lockRef, { user: currentUser.wa, amt, time: Date.now() });
+                            // 1. Cek Lock DB
+                            const lockSnap = await get(lockRef);
+                            if (lockSnap.exists()) return console.log("Locked.");
 
-                            // 2. Fetch fresh user data and update
-                            const userRef = ref(db, `users/${currentUser.wa}`);
-                            const uSnap = await get(userRef);
-                            const uData = uSnap.val();
-
-                            await update(userRef, { 
-                                balance: Number(uData.balance) + Number(amt),
-                                total_in: (Number(uData.total_in) || 0) + Number(amt)
+                            // 2. Jalankan Atomic Transaction untuk Update Saldo
+                            const result = await runTransaction(userRef, (currentData) => {
+                                if (currentData) {
+                                    currentData.balance = (Number(currentData.balance) || 0) + amt;
+                                    currentData.total_in = (Number(currentData.total_in) || 0) + amt;
+                                }
+                                return currentData;
                             });
 
-                            await push(ref(db, `users/${currentUser.wa}/riwayat`), { type: 'TOPUP QRIS', amt: Number(amt), time: Date.now(), trxId: d.trxId });
-                            
-                            await apiCall('/api/tele-notif', 'POST', { message: `✅ *Deposit Sukses*\n\n👤 User: ${currentUser.name}\n💰 Nominal: Rp ${Number(amt).toLocaleString()}\n🆔 Trx: ${d.trxId}` });
+                            if (result.committed) {
+                                // 3. Sukses -> Pasang Kunci & Catat Riwayat
+                                await set(lockRef, { user: currentUser.wa, amt, time: Date.now() });
+                                await push(ref(db, `users/${currentUser.wa}/riwayat`), { 
+                                    type: 'TOPUP QRIS', 
+                                    amt: amt, 
+                                    time: Date.now(),
+                                    trxId: d.trxId 
+                                });
+                                
+                                await apiCall('/api/tele-notif', 'POST', { 
+                                    message: `✅ *DEPOSIT SUKSES*\n\n👤 User: ${currentUser.name}\n💰 Nominal: Rp ${amt.toLocaleString()}\n🆔 Trx: ${d.trxId}` 
+                                });
 
-                            alert("Top Up Sukses!"); cancelQR(); switchTab('home');
+                                alert("Saldo Masuk!"); cancelQR(); switchTab('home');
+                            }
                         } catch (e) { isSaving = false; console.error(e); }
                     }
                 }, 5000);
@@ -289,6 +297,7 @@
         const amt = parseInt(document.getElementById('wd_amt').value), method = document.getElementById('wd_method').value, target = document.getElementById('wd_target').value;
         if(!target || target.length < 8) return alert("Input nomor tujuan!");
         if(amt < 10000) return alert("Min. WD 10rb");
+        
         const r = ref(db, `users/${currentUser.wa}`), s = await get(r);
         if(s.val().balance < amt) return alert("Saldo Kurang!");
 
