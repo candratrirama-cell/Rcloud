@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cloudpay v1.2.6</title>
+    <title>Cloudpay v1.2.7</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -33,7 +33,7 @@
                 <input id="l_wa" type="number" placeholder="WhatsApp" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
                 <input id="l_pw" type="password" placeholder="Password" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
                 <button onclick="doLogin()" class="btn-grad w-full py-4 rounded-2xl text-white font-bold">MASUK</button>
-                <p class="text-center text-xs font-bold text-gray-400 mt-4">Baru di sini? <span onclick="toggleAuth(false)" class="text-blue-600 cursor-pointer">Daftar</span></p>
+                <p class="text-center text-xs font-bold text-gray-400 mt-4">Belum ada akun? <span onclick="toggleAuth(false)" class="text-blue-600 cursor-pointer">Daftar</span></p>
             </div>
         </div>
         <div id="reg-form" class="hidden bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
@@ -42,8 +42,8 @@
                 <input id="r_wa" type="number" placeholder="WhatsApp" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
                 <input id="r_name" type="text" placeholder="Username" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
                 <input id="r_pw" type="password" placeholder="Password" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
-                <button onclick="doRegister()" class="btn-grad w-full py-4 rounded-2xl text-white font-bold">BUAT AKUN</button>
-                <p class="text-center text-xs font-bold text-gray-400 mt-4">Sudah ada akun? <span onclick="toggleAuth(true)" class="text-blue-600 cursor-pointer">Login</span></p>
+                <button onclick="doRegister()" class="btn-grad w-full py-4 rounded-2xl text-white font-bold">DAFTAR</button>
+                <p class="text-center text-xs font-bold text-gray-400 mt-4">Ada akun? <span onclick="toggleAuth(true)" class="text-blue-600 cursor-pointer">Login</span></p>
             </div>
         </div>
     </div>
@@ -55,7 +55,7 @@
                 <span id="u_name" class="text-[10px] font-black bg-white px-4 py-2 rounded-full border border-gray-100 uppercase tracking-widest">...</span>
             </div>
             <div class="bg-gray-900 p-8 rounded-[45px] text-white shadow-2xl relative overflow-hidden">
-                <p class="text-[10px] text-gray-400 font-bold uppercase mb-1 opacity-60">Total Balance</p>
+                <p class="text-[10px] text-gray-400 font-bold uppercase mb-1 opacity-60">Balance</p>
                 <h3 class="text-4xl font-extrabold tracking-tight">Rp <span id="u_bal">0</span></h3>
                 <div class="mt-10 flex gap-3">
                     <button onclick="switchTab('qris')" class="flex-1 bg-blue-600 py-4 rounded-2xl font-bold text-sm">TOP UP</button>
@@ -64,11 +64,11 @@
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div class="bg-white p-6 rounded-[35px] text-center shadow-sm">
-                    <p class="text-[9px] font-bold text-gray-400 uppercase">Total Masuk</p>
+                    <p class="text-[9px] font-bold text-gray-400 uppercase">Total In</p>
                     <p class="text-lg font-black text-green-500">Rp <span id="u_in">0</span></p>
                 </div>
                 <div class="bg-white p-6 rounded-[35px] text-center shadow-sm">
-                    <p class="text-[9px] font-bold text-gray-400 uppercase">Total Keluar</p>
+                    <p class="text-[9px] font-bold text-gray-400 uppercase">Total Out</p>
                     <p class="text-lg font-black text-red-500">Rp <span id="u_out">0</span></p>
                 </div>
             </div>
@@ -81,31 +81,31 @@
                     <p class="text-[10px] font-black text-gray-400 uppercase mb-2">Nominal</p>
                     <input id="q_amt" type="number" value="1000" class="w-full text-4xl font-black outline-none text-blue-600 bg-transparent">
                 </div>
-                <button onclick="genQR()" id="btn_q" class="btn-grad w-full py-5 rounded-[30px] text-white font-bold uppercase shadow-lg">BAYAR SEKARANG</button>
+                <button onclick="genQR()" id="btn_q" class="btn-grad w-full py-5 rounded-[30px] text-white font-bold uppercase shadow-lg">Generate QRIS</button>
             </div>
             <div id="q_display" class="hidden fade-in">
                 <canvas id="q_canvas" width="400" height="550" class="mx-auto bg-white p-4 shadow-xl"></canvas>
-                <p class="text-blue-600 font-black animate-pulse text-[10px] uppercase mt-4">Sistem sedang memverifikasi...</p>
+                <p id="q_status_txt" class="text-blue-600 font-black animate-pulse text-[10px] uppercase mt-4">Menunggu Pembayaran...</p>
                 <button onclick="cancelQR()" class="mt-8 text-red-500 font-black text-[10px] uppercase opacity-50">Batal</button>
             </div>
         </div>
 
         <div id="page-wd" class="hidden p-6 fade-in min-h-screen">
-            <h2 class="text-2xl font-black mb-6 italic uppercase text-red-600">Withdrawal</h2>
+            <h2 class="text-2xl font-black mb-6 italic uppercase text-red-600">Withdraw</h2>
             <div class="bg-white p-8 rounded-[40px] shadow-sm space-y-6">
-                <div><p class="text-[10px] font-black text-gray-400 uppercase mb-2">Metode</p>
+                <div><p class="text-[10px] font-black text-gray-400 uppercase mb-3">Tujuan</p>
                     <select id="wd_method" class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none text-sm">
                         <option value="DANA">DANA</option><option value="GOPAY">GOPAY</option>
                     </select>
                 </div>
-                <div><p class="text-[10px] font-black text-gray-400 uppercase mb-2">Nomor</p>
+                <div><p class="text-[10px] font-black text-gray-400 uppercase mb-3">Nomor</p>
                     <input id="wd_target" type="number" placeholder="08..." class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none text-sm">
                 </div>
-                <div><p class="text-[10px] font-black text-gray-400 uppercase mb-2">Jumlah</p>
+                <div><p class="text-[10px] font-black text-gray-400 uppercase mb-3">Nominal</p>
                     <input id="wd_amt" type="number" placeholder="0" class="w-full text-3xl font-black outline-none text-red-600 bg-transparent">
                 </div>
             </div>
-            <button onclick="doWD()" class="w-full py-5 rounded-[30px] bg-gray-900 text-white font-bold text-lg mt-8 shadow-xl">TARIK SALDO</button>
+            <button onclick="doWD()" class="w-full py-5 rounded-[30px] bg-gray-900 text-white font-bold text-lg shadow-xl mt-8">TARIK SEKARANG</button>
         </div>
 
         <div id="page-history" class="hidden p-6 fade-in min-h-screen">
@@ -114,13 +114,13 @@
         </div>
 
         <div id="page-about" class="hidden p-6 fade-in min-h-screen">
-            <div class="bg-white p-8 rounded-[45px] text-center shadow-sm border border-gray-100 mb-6">
-                <h3 class="font-black text-2xl italic">Cloudpay v1.2.6</h3>
-                <p class="text-gray-400 text-[10px] font-black mt-1 uppercase">Owner: @maramadhona</p>
+            <div class="bg-white p-8 rounded-[45px] text-center shadow-sm mb-6">
+                <h3 class="font-black text-2xl italic">Cloudpay v1.2.7</h3>
+                <p class="text-gray-400 text-[10px] font-black mt-1 uppercase">Dev: @maramadhona</p>
             </div>
             <div class="bg-white p-8 rounded-[45px] shadow-sm border border-gray-50">
-                <h4 class="font-black text-xs mb-4 uppercase">Lapor Masalah</h4>
-                <textarea id="rep_txt" placeholder="Jelaskan di sini..." class="w-full h-32 p-5 bg-gray-50 rounded-3xl outline-none text-sm font-semibold mb-4"></textarea>
+                <h4 class="font-black text-xs mb-4 uppercase">Report Problem</h4>
+                <textarea id="rep_txt" placeholder="Ketik kendala..." class="w-full h-32 p-5 bg-gray-50 rounded-3xl outline-none text-sm font-semibold mb-4"></textarea>
                 <button onclick="doReport()" id="btn_rep" class="w-full py-4 rounded-2xl bg-blue-600 text-white font-bold uppercase">Kirim</button>
             </div>
         </div>
@@ -177,9 +177,10 @@
         const wa = document.getElementById('l_wa').value, pw = document.getElementById('l_pw').value;
         const s = await get(ref(db, 'users/' + wa));
         if (s.exists() && s.val().password === pw) {
-            localStorage.setItem('cp_v12', JSON.stringify({ wa, name: s.val().username }));
-            loadDash(wa, s.val().username);
-        } else alert("WhatsApp atau Password salah!");
+            const dt = { wa, name: s.val().username };
+            localStorage.setItem('cp_v12', JSON.stringify(dt));
+            loadDash(wa, dt.name);
+        } else alert("WhatsApp/Password salah!");
     };
 
     window.doRegister = async () => {
@@ -223,10 +224,10 @@
         });
     }
 
-    // --- TRIPLE LOCK TOP UP ---
+    // --- GEN QR & ANTI-STUCK VERIFY ---
     window.genQR = async () => {
         const amt = parseInt(document.getElementById('q_amt').value);
-        if(amt < 100) return alert("Min. Rp 100");
+        if(amt < 100) return alert("Min. 100");
         document.getElementById('btn_q').disabled = true;
         
         try {
@@ -240,74 +241,78 @@
                 isSavingLocal = false;
 
                 checker = setInterval(async () => {
-                    if(isSavingLocal) return; // UI Lock
+                    if(isSavingLocal) return;
 
                     const c = await apiCall(`/api/check-qris?trxId=${d.trxId}`);
                     
+                    // AUTO-SYNC: Jika sudah pernah sukses di DB, anggap beres
+                    if(c.status === "ALREADY_PROCESSED") {
+                        clearInterval(checker);
+                        alert("Pembayaran Terverifikasi!");
+                        cancelQR();
+                        switchTab('home');
+                        return;
+                    }
+
                     if(c.isFirstValid) {
-                        isSavingLocal = true; // Lock immediately
+                        isSavingLocal = true; 
+                        document.getElementById('q_status_txt').innerText = "MENYIMPAN SALDO...";
                         clearInterval(checker);
 
                         const lockRef = ref(db, `processed_trxs/${d.trxId}`);
                         const userRef = ref(db, `users/${currentUser.wa}`);
 
                         try {
-                            // Cek DB Lock lagi (Atomic)
-                            const lockSnap = await get(lockRef);
-                            if (lockSnap.exists()) return;
-
-                            // Mark as processing
-                            await set(lockRef, { status: "PROCESSING", user: currentUser.wa, time: Date.now() });
-
-                            // Transactional Balance Update
-                            const result = await runTransaction(userRef, (currentData) => {
-                                if (currentData) {
-                                    currentData.balance = (Number(currentData.balance) || 0) + amt;
-                                    currentData.total_in = (Number(currentData.total_in) || 0) + amt;
+                            // Atomic Transaction
+                            await runTransaction(userRef, (cur) => {
+                                if (cur) {
+                                    cur.balance = (Number(cur.balance) || 0) + amt;
+                                    cur.total_in = (Number(cur.total_in) || 0) + amt;
                                 }
-                                return currentData;
+                                return cur;
                             });
 
-                            if (result.committed) {
-                                await update(lockRef, { status: "COMPLETED" });
-                                await push(ref(db, `users/${currentUser.wa}/riwayat`), { 
-                                    type: 'TOPUP QRIS', amt, time: Date.now(), trxId: d.trxId 
-                                });
-                                
-                                await apiCall('/api/tele-notif', 'POST', { 
-                                    message: `✅ *DEPOSIT BERHASIL*\n\n👤 User: ${currentUser.name}\n💰 Nominal: Rp ${amt.toLocaleString()}\n🆔 Trx: ${d.trxId}` 
-                                });
+                            // Finalize Lock
+                            await set(lockRef, { status: "COMPLETED", user: currentUser.wa, time: Date.now() });
 
-                                alert("Saldo berhasil masuk!"); cancelQR(); switchTab('home');
-                            }
+                            await push(ref(db, `users/${currentUser.wa}/riwayat`), { 
+                                type: 'TOPUP QRIS', amt, time: Date.now(), trxId: d.trxId 
+                            });
+                            
+                            await apiCall('/api/tele-notif', 'POST', { 
+                                message: `✅ *DEPOSIT SUKSES*\n\n👤 User: ${currentUser.name}\n💰 Nominal: Rp ${amt.toLocaleString()}\n🆔 Trx: ${d.trxId}` 
+                            });
+
+                            alert("Saldo Berhasil Masuk!");
+                            cancelQR();
+                            switchTab('home');
                         } catch (e) { isSavingLocal = false; console.error(e); }
                     }
                 }, 5000);
             }
-        } catch(e) { alert("Sistem sedang sibuk."); document.getElementById('btn_q').disabled = false; }
+        } catch(e) { alert("Server Error"); document.getElementById('btn_q').disabled = false; }
     };
 
     window.doWD = async () => {
         const amt = parseInt(document.getElementById('wd_amt').value), method = document.getElementById('wd_method').value, target = document.getElementById('wd_target').value;
-        if(!target || target.length < 8) return alert("Nomor tujuan tidak valid!");
-        if(amt < 10000) return alert("Min. WD Rp 10.000");
+        if(!target || target.length < 8) return alert("Nomor tujuan salah!");
+        if(amt < 10000) return alert("Min. 10rb");
         const r = ref(db, `users/${currentUser.wa}`), s = await get(r);
-        if(s.val().balance < amt) return alert("Saldo tidak cukup!");
+        if(s.val().balance < amt) return alert("Saldo Kurang!");
 
-        if(confirm(`Konfirmasi WD Rp ${amt.toLocaleString()} ke ${method} ${target}?`)) {
+        if(confirm(`Konfirmasi WD Rp ${amt.toLocaleString()} ke ${method}?`)) {
             await update(r, { balance: s.val().balance - amt, total_out: (s.val().total_out || 0) + amt });
             push(ref(db, `users/${currentUser.wa}/riwayat`), { type: `WD ${method}`, amt, time: Date.now(), target });
-            await apiCall('/api/tele-notif', 'POST', { message: `⚠️ *REQ WITHDRAW*\n\n👤 User: ${currentUser.name}\n💸 Nominal: Rp ${amt.toLocaleString()}\n💳 Tujuan: ${method} (${target})` });
-            alert("WD sedang diproses admin."); switchTab('home');
+            await apiCall('/api/tele-notif', 'POST', { message: `⚠️ *REQ WD*\n\n👤 User: ${currentUser.name}\n💸 Rp ${amt.toLocaleString()}\n💳 ${method} (${target})` });
+            alert("WD Diproses!"); switchTab('home');
         }
     };
 
     window.doReport = async () => {
         const txt = document.getElementById('rep_txt').value;
-        if(txt.length < 5) return alert("Jelaskan kendala Anda!");
-        const rid = "R-" + Math.random().toString(36).substr(2, 5).toUpperCase();
-        await apiCall('/api/tele-notif', 'POST', { message: `🆘 *LAPORAN*\n\n👤 User: ${currentUser.name}\n📱 WA: ${currentUser.wa}\n📝: ${txt}\n🆔: ${rid}` });
-        alert("Laporan terkirim! ID: " + rid); document.getElementById('rep_txt').value = ""; switchTab('home');
+        if(txt.length < 5) return alert("Tulis kendala!");
+        await apiCall('/api/tele-notif', 'POST', { message: `🆘 *REPORT*\n\n👤 User: ${currentUser.name}\n📝: ${txt}` });
+        alert("Terkirim!"); document.getElementById('rep_txt').value = ""; switchTab('home');
     };
 
     function draw(q, a) {
@@ -333,7 +338,7 @@
     };
 
     window.cancelQR = () => { clearInterval(checker); document.getElementById('q_form').classList.remove('hidden'); document.getElementById('q_display').classList.add('hidden'); document.getElementById('btn_q').disabled = false; };
-    window.doLogout = () => { if(confirm("Keluar dari akun?")) { localStorage.clear(); location.reload(); } };
+    window.doLogout = () => { if(confirm("Keluar?")) { localStorage.clear(); location.reload(); } };
 </script>
 </body>
 </html>
