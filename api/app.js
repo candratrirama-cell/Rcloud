@@ -7,7 +7,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// --- FIREBASE ADMIN CONFIG ---
 if (!admin.apps.length) {
     admin.initializeApp({
         databaseURL: "https://sedabase-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -15,7 +14,6 @@ if (!admin.apps.length) {
 }
 const db = admin.database();
 
-// --- CONFIGURATION ---
 const TELE_TOKEN = "8277517895:AAEbF7jLzgRMl8_clyuMdRkt9WK4TlQjTp8";
 const TELE_CHAT_ID = "7535108414";
 const QRIS_API_KEY = "rapay_jur337mgb";
@@ -32,19 +30,17 @@ app.get('/api/generate-qris', async (req, res) => {
 app.get('/api/check-qris', async (req, res) => {
     const { trxId } = req.query;
     try {
-        // LOCK LEVEL 1: Cek apakah ID sudah sukses di database
         const lockRef = db.ref(`processed_trxs/${trxId}`);
         const snapshot = await lockRef.once('value');
         
+        // Jika sudah ada di DB, beri tahu frontend untuk STOP Verifikasi
         if (snapshot.exists()) {
-            return res.json({ paid: false, status: "ALREADY_PROCESSED" });
+            return res.json({ paid: true, status: "ALREADY_PROCESSED", isFirstValid: false });
         }
 
-        // Cek ke API Bior
         const response = await axios.get(`${QRIS_BASE_URL}?key=${QRIS_API_KEY}&action=check&trxId=${trxId}`);
         const data = response.data;
         
-        // Kirim flag isFirstValid jika benar-benar sukses dan belum pernah diproses
         if (data.paid || data.status === "Success") {
             return res.json({ ...data, isFirstValid: true });
         }
