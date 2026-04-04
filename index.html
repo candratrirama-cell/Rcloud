@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; -webkit-tap-highlight-color: transparent; color: #1E293B; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; color: #1E293B; -webkit-tap-highlight-color: transparent; }
         .liquid-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         .nav-active { color: #2563EB; transform: scale(1.1); transition: 0.3s; }
         .btn-grad { background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%); }
@@ -19,10 +19,9 @@
 <body class="overflow-x-hidden">
 
 <div id="app" class="max-w-md mx-auto min-h-screen pb-32">
-    
     <div id="splash-screen" class="flex items-center justify-center min-h-screen bg-white z-[100] fixed inset-0">
         <div class="text-center animate-pulse">
-            <div class="bg-blue-600 w-20 h-20 rounded-[24px] flex items-center justify-center mb-4 mx-auto shadow-xl shadow-blue-200 text-white text-3xl font-black">C</div>
+            <div class="bg-blue-600 w-20 h-20 rounded-[24px] flex items-center justify-center mb-4 mx-auto shadow-xl text-white text-3xl font-black">C</div>
             <h2 class="text-xl font-black tracking-tighter">CLOUDPAY</h2>
         </div>
     </div>
@@ -31,33 +30,32 @@
         <div id="login-form" class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
             <h1 class="text-2xl font-black mb-6 italic uppercase">Login Cloudpay</h1>
             <div class="space-y-4">
-                <input id="l_wa" type="number" placeholder="Nomor WhatsApp" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
+                <input id="l_wa" type="number" placeholder="WhatsApp" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
                 <input id="l_pw" type="password" placeholder="Password" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
-                <button onclick="doLogin()" class="btn-grad w-full py-4 rounded-2xl text-white font-bold text-lg">MASUK</button>
-                <p class="text-center text-xs font-bold text-gray-400">Belum punya akun? <span onclick="toggleAuth(false)" class="text-blue-600 cursor-pointer">Daftar</span></p>
+                <button onclick="doLogin()" class="btn-grad w-full py-4 rounded-2xl text-white font-bold">MASUK</button>
+                <p class="text-center text-xs font-bold text-gray-400">Belum punya akun? <span onclick="toggleAuth(false)" class="text-blue-600">Daftar</span></p>
             </div>
         </div>
         <div id="reg-form" class="hidden bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
-            <h1 class="text-2xl font-black mb-6 italic uppercase">Daftar Akun</h1>
+            <h1 class="text-2xl font-black mb-6 italic uppercase">Daftar</h1>
             <div class="space-y-4">
-                <input id="r_wa" type="number" placeholder="WhatsApp" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
-                <input id="r_name" type="text" placeholder="Username" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
-                <input id="r_pw" type="password" placeholder="Password" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
-                <button onclick="doRegister()" class="btn-grad w-full py-4 rounded-2xl text-white font-bold text-lg">DAFTAR SEKARANG</button>
-                <p class="text-center text-xs font-bold text-gray-400">Sudah ada akun? <span onclick="toggleAuth(true)" class="text-blue-600 cursor-pointer">Login</span></p>
+                <input id="r_wa" type="number" placeholder="WhatsApp" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
+                <input id="r_name" type="text" placeholder="Username" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
+                <input id="r_pw" type="password" placeholder="Password" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
+                <button onclick="doRegister()" class="btn-grad w-full py-4 rounded-2xl text-white font-bold">DAFTAR</button>
+                <p class="text-center text-xs font-bold text-gray-400">Ada akun? <span onclick="toggleAuth(true)" class="text-blue-600">Login</span></p>
             </div>
         </div>
     </div>
 
     <div id="main-section" class="hidden fade-in">
-        
         <div id="page-home" class="p-6 space-y-6">
             <div class="flex justify-between items-center">
                 <h2 class="font-black text-2xl italic tracking-tighter">CLOUDPAY.</h2>
                 <span id="u_name" class="text-[10px] font-black bg-white px-4 py-2 rounded-full border border-gray-100 uppercase tracking-widest">...</span>
             </div>
             <div class="bg-gray-900 p-8 rounded-[45px] text-white shadow-2xl relative overflow-hidden">
-                <p class="text-[10px] text-gray-400 font-bold uppercase mb-1 tracking-widest opacity-60">Balance Anda</p>
+                <p class="text-[10px] text-gray-400 font-bold uppercase mb-1 opacity-60">Balance Anda</p>
                 <h3 class="text-4xl font-extrabold tracking-tight">Rp <span id="u_bal">0</span></h3>
                 <div class="mt-10 flex gap-3">
                     <button onclick="switchTab('qris')" class="flex-1 bg-blue-600 py-4 rounded-2xl font-bold text-sm">TOP UP</button>
@@ -65,72 +63,70 @@
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-4">
-                <div class="bg-white p-6 rounded-[35px] border border-gray-50 text-center shadow-sm">
-                    <p class="text-[9px] font-bold text-gray-400 uppercase mb-1">Total In</p>
+                <div class="bg-white p-6 rounded-[35px] text-center shadow-sm">
+                    <p class="text-[9px] font-bold text-gray-400 uppercase">Total In</p>
                     <p class="text-lg font-black text-green-500">Rp <span id="u_in">0</span></p>
                 </div>
-                <div class="bg-white p-6 rounded-[35px] border border-gray-50 text-center shadow-sm">
-                    <p class="text-[9px] font-bold text-gray-400 uppercase mb-1">Total Out</p>
+                <div class="bg-white p-6 rounded-[35px] text-center shadow-sm">
+                    <p class="text-[9px] font-bold text-gray-400 uppercase">Total Out</p>
                     <p class="text-lg font-black text-red-500">Rp <span id="u_out">0</span></p>
                 </div>
             </div>
         </div>
 
-        <div id="page-history" class="hidden p-6 fade-in min-h-screen">
-            <h2 class="text-2xl font-black mb-6 italic uppercase tracking-tighter">Riwayat</h2>
-            <div id="h_list" class="space-y-4 pb-20"></div>
-        </div>
-
         <div id="page-qris" class="hidden p-6 fade-in text-center min-h-screen">
             <div id="q_form" class="text-left space-y-4">
-                <h2 class="text-2xl font-black italic uppercase tracking-tighter">Deposit Saldo</h2>
-                <div class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
-                    <p class="text-[10px] font-black text-gray-400 uppercase mb-2">Input Nominal</p>
+                <h2 class="text-2xl font-black italic uppercase">Deposit Saldo</h2>
+                <div class="bg-white p-8 rounded-[40px] shadow-sm">
+                    <p class="text-[10px] font-black text-gray-400 uppercase">Nominal</p>
                     <input id="q_amt" type="number" value="1000" class="w-full text-4xl font-black outline-none text-blue-600 bg-transparent">
                 </div>
-                <button onclick="genQR()" id="btn_q" class="btn-grad w-full py-5 rounded-[30px] text-white font-bold text-lg shadow-xl uppercase">Generate QRIS</button>
+                <button onclick="genQR()" id="btn_q" class="btn-grad w-full py-5 rounded-[30px] text-white font-bold">GENERATE QRIS</button>
             </div>
             <div id="q_display" class="hidden fade-in">
-                <canvas id="q_canvas" width="400" height="550" class="mx-auto mb-6 bg-white p-4"></canvas>
-                <p class="text-blue-600 font-black animate-pulse text-[10px] tracking-[0.3em] uppercase">Checking Payment Status...</p>
-                <button onclick="cancelQR()" class="mt-8 text-red-500 font-black text-[10px] tracking-widest uppercase opacity-50">Batalkan Pesanan</button>
+                <canvas id="q_canvas" width="400" height="550" class="mx-auto bg-white p-4"></canvas>
+                <p class="text-blue-600 font-black animate-pulse text-[10px] uppercase mt-4">Checking Payment...</p>
+                <button onclick="cancelQR()" class="mt-8 text-red-500 font-black text-[10px] uppercase">Batalkan</button>
             </div>
         </div>
 
         <div id="page-wd" class="hidden p-6 fade-in min-h-screen">
-            <h2 class="text-2xl font-black mb-6 italic uppercase tracking-tighter text-red-600">Withdrawal</h2>
-            <div class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100 space-y-6">
+            <h2 class="text-2xl font-black mb-6 italic text-red-600">WITHDRAW</h2>
+            <div class="bg-white p-8 rounded-[40px] shadow-sm space-y-6">
                 <div>
-                    <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Pilih E-Wallet</p>
+                    <p class="text-[10px] font-black text-gray-400 uppercase">E-Wallet</p>
                     <select id="wd_method" class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none text-sm">
                         <option value="DANA">DANA</option><option value="GOPAY">GOPAY</option>
                     </select>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Nomor Tujuan</p>
-                    <input id="wd_target" type="number" placeholder="Nomor E-Wallet" class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none text-sm border-2 border-transparent focus:border-red-100">
+                    <p class="text-[10px] font-black text-gray-400 uppercase">Nomor Tujuan</p>
+                    <input id="wd_target" type="number" placeholder="08..." class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none text-sm">
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Nominal (Min. 10k)</p>
-                    <input id="wd_amt" type="number" placeholder="0" class="w-full text-3xl font-black outline-none text-red-600 bg-transparent">
+                    <p class="text-[10px] font-black text-gray-400 uppercase">Nominal</p>
+                    <input id="wd_amt" type="number" placeholder="10000" class="w-full text-3xl font-black outline-none text-red-600 bg-transparent">
                 </div>
             </div>
-            <button onclick="doWD()" class="w-full py-5 rounded-[30px] bg-gray-900 text-white font-bold text-lg shadow-2xl mt-8 uppercase tracking-widest">Tarik Dana</button>
+            <button onclick="doWD()" class="w-full py-5 rounded-[30px] bg-gray-900 text-white font-bold mt-8">TARIK DANA</button>
+        </div>
+
+        <div id="page-history" class="hidden p-6 fade-in min-h-screen">
+            <h2 class="text-2xl font-black mb-6 italic uppercase">Riwayat</h2>
+            <div id="h_list" class="space-y-4 pb-20"></div>
         </div>
 
         <div id="page-about" class="hidden p-6 fade-in min-h-screen">
-            <div class="bg-white p-10 rounded-[45px] text-center mb-6 shadow-sm border border-gray-100">
+            <div class="bg-white p-8 rounded-[45px] text-center shadow-sm mb-6">
                 <h3 class="font-black text-2xl italic">Cloudpay v1.2.0</h3>
-                <p class="text-gray-400 text-[10px] font-black tracking-widest uppercase mt-1">Dev by @maramadhona</p>
+                <p class="text-gray-400 text-[10px] font-black tracking-widest uppercase">Dev by @maramadhona</p>
             </div>
-            <div class="bg-white p-8 rounded-[45px] shadow-sm border border-gray-50">
-                <h4 class="font-black text-xs mb-4 uppercase tracking-widest">Report Problem</h4>
-                <textarea id="rep_txt" placeholder="Jelaskan kendala anda di sini..." class="w-full h-32 p-5 bg-gray-50 rounded-3xl outline-none text-sm font-semibold mb-4 border-2 border-transparent focus:border-blue-500"></textarea>
-                <p class="text-[9px] text-blue-500 font-bold mb-6 italic text-center">Jawaban kendala akan dijawab lewat nomor WhatsApp anda</p>
-                <button onclick="doReport()" id="btn_rep" class="w-full py-4 rounded-2xl bg-blue-600 text-white font-bold text-sm shadow-lg shadow-blue-200 uppercase">Kirim Laporan</button>
+            <div class="bg-white p-8 rounded-[45px] shadow-sm">
+                <h4 class="font-black text-xs mb-4 uppercase">Report Problem</h4>
+                <textarea id="rep_txt" placeholder="Jelaskan kendala..." class="w-full h-32 p-5 bg-gray-50 rounded-3xl outline-none text-sm font-semibold mb-4"></textarea>
+                <button onclick="doReport()" id="btn_rep" class="w-full py-4 rounded-2xl bg-blue-600 text-white font-bold text-sm shadow-lg shadow-blue-200">KIRIM LAPORAN</button>
             </div>
         </div>
-
     </div>
 
     <div id="nav-bar" class="fixed bottom-6 left-6 right-6 h-20 liquid-nav z-50 hidden flex items-center justify-around">
@@ -140,7 +136,6 @@
         <button onclick="switchTab('about')" id="nav-about" class="text-gray-400 flex flex-col items-center"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="text-[7px] font-black mt-1">ABOUT</span></button>
         <button onclick="doLogout()" class="text-red-400 flex flex-col items-center opacity-40"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg><span class="text-[7px] font-black mt-1">EXIT</span></button>
     </div>
-
 </div>
 
 <script type="module">
@@ -159,9 +154,8 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    let currentUser = null, checker = null, isUpdating = false;
+    let currentUser = null, checker = null, isSaving = false;
 
-    // -- UTILS --
     async function apiCall(p, m = 'GET', b = null) {
         const o = { method: m, headers: { 'Content-Type': 'application/json' } };
         if (b) o.body = JSON.stringify(b);
@@ -177,15 +171,13 @@
         }, 1500);
     };
 
-    // -- AUTH --
     window.toggleAuth = (isLogin) => {
         document.getElementById('login-form').classList.toggle('hidden', !isLogin);
         document.getElementById('reg-form').classList.toggle('hidden', isLogin);
     };
 
     window.doLogin = async () => {
-        const wa = document.getElementById('l_wa').value;
-        const pw = document.getElementById('l_pw').value;
+        const wa = document.getElementById('l_wa').value, pw = document.getElementById('l_pw').value;
         const s = await get(ref(db, 'users/' + wa));
         if (s.exists() && s.val().password === pw) {
             const data = { wa, name: s.val().username };
@@ -195,15 +187,12 @@
     };
 
     window.doRegister = async () => {
-        const wa = document.getElementById('r_wa').value;
-        const nm = document.getElementById('r_name').value;
-        const pw = document.getElementById('r_pw').value;
+        const wa = document.getElementById('r_wa').value, nm = document.getElementById('r_name').value, pw = document.getElementById('r_pw').value;
         if(!wa || !nm || !pw) return alert("Lengkapi data!");
         const s = await get(ref(db, 'users/' + wa));
         if (s.exists()) return alert("Nomor sudah terdaftar!");
         await set(ref(db, 'users/' + wa), { username: nm, password: pw, wa: wa, balance: 0, total_in: 0, total_out: 0 });
-        const data = { wa, name: nm };
-        localStorage.setItem('cp_v12', JSON.stringify(data));
+        localStorage.setItem('cp_v12', JSON.stringify({ wa, name: nm }));
         loadDash(wa, nm);
     };
 
@@ -238,7 +227,7 @@
         });
     }
 
-    // -- TOP UP WITH ANTI-DOUBLE FIX --
+    // --- TOPUP ATOMIC LOCK SYSTEM ---
     window.genQR = async () => {
         const amt = document.getElementById('q_amt').value;
         if(amt < 100) return alert("Min. 100");
@@ -251,83 +240,72 @@
                 draw(d.qr, amt);
                 if(checker) clearInterval(checker);
                 
-                isUpdating = false; // RESET LOCK
+                isSaving = false; // Reset lock UI
 
                 checker = setInterval(async () => {
-                    if(isUpdating) return; // FRONTEND LOCK
-
+                    if(isSaving) return; // Prevent concurrent calls
                     const c = await apiCall(`/api/check-qris?trxId=${d.trxId}`);
                     
                     if((c.paid || c.status === "Success") && c.isFirstValid) {
-                        isUpdating = true; // KUNCI SEGERA
+                        isSaving = true; // LOCK UI IMMEDIATELY
                         clearInterval(checker);
-                        checker = null;
 
-                        const r = ref(db, `users/${currentUser.wa}`);
-                        const s = await get(r);
-                        const cur = s.val();
+                        // ATOMIC DATABASE LOCK
+                        const lockRef = ref(db, `processed_trxs/${d.trxId}`);
+                        const checkLock = await get(lockRef);
 
-                        // Update Firebase
-                        await update(r, { 
-                            balance: Number(cur.balance) + Number(amt), 
-                            total_in: (Number(cur.total_in) || 0) + Number(amt) 
-                        });
+                        if (checkLock.exists()) {
+                            console.log("Transaksi sudah terproses di DB.");
+                            return;
+                        }
 
-                        // Riwayat
-                        await push(ref(db, `users/${currentUser.wa}/riwayat`), { 
-                            type: 'TOPUP QRIS', 
-                            amt: Number(amt), 
-                            time: Date.now() 
-                        });
+                        try {
+                            // 1. Write the lock first
+                            await set(lockRef, { user: currentUser.wa, amt, time: Date.now() });
 
-                        // Notif Telegram
-                        await apiCall('/api/tele-notif', 'POST', { 
-                            message: `✅ *Deposit Sukses*\n\n👤 User: ${currentUser.name}\n💰 Nominal: Rp ${Number(amt).toLocaleString()}\n🆔 Trx: ${d.trxId}` 
-                        });
+                            // 2. Fetch fresh user data and update
+                            const userRef = ref(db, `users/${currentUser.wa}`);
+                            const uSnap = await get(userRef);
+                            const uData = uSnap.val();
 
-                        alert("Top Up Sukses!"); 
-                        cancelQR(); 
-                        switchTab('home');
+                            await update(userRef, { 
+                                balance: Number(uData.balance) + Number(amt),
+                                total_in: (Number(uData.total_in) || 0) + Number(amt)
+                            });
+
+                            await push(ref(db, `users/${currentUser.wa}/riwayat`), { type: 'TOPUP QRIS', amt: Number(amt), time: Date.now(), trxId: d.trxId });
+                            
+                            await apiCall('/api/tele-notif', 'POST', { message: `✅ *Deposit Sukses*\n\n👤 User: ${currentUser.name}\n💰 Nominal: Rp ${Number(amt).toLocaleString()}\n🆔 Trx: ${d.trxId}` });
+
+                            alert("Top Up Sukses!"); cancelQR(); switchTab('home');
+                        } catch (e) { isSaving = false; console.error(e); }
                     }
                 }, 5000);
             }
-        } catch(e) { 
-            alert("Error Server"); 
-            document.getElementById('btn_q').disabled = false; 
-        }
+        } catch(e) { alert("Error Server"); document.getElementById('btn_q').disabled = false; }
     };
 
     window.doWD = async () => {
-        const amt = parseInt(document.getElementById('wd_amt').value);
-        const method = document.getElementById('wd_method').value;
-        const target = document.getElementById('wd_target').value;
+        const amt = parseInt(document.getElementById('wd_amt').value), method = document.getElementById('wd_method').value, target = document.getElementById('wd_target').value;
         if(!target || target.length < 8) return alert("Input nomor tujuan!");
         if(amt < 10000) return alert("Min. WD 10rb");
-        
-        const r = ref(db, `users/${currentUser.wa}`);
-        const s = await get(r);
+        const r = ref(db, `users/${currentUser.wa}`), s = await get(r);
         if(s.val().balance < amt) return alert("Saldo Kurang!");
 
         if(confirm(`Tarik Rp ${amt.toLocaleString()} ke ${method} ${target}?`)) {
             await update(r, { balance: s.val().balance - amt, total_out: (s.val().total_out || 0) + amt });
-            push(ref(db, `users/${currentUser.wa}/riwayat`), { type: `WD ${method}`, amt: amt, time: Date.now(), target: target });
-            await apiCall('/api/tele-notif', 'POST', { message: `⚠️ *Request WD*\n\n👤 *User*: ${currentUser.name}\n💸 *Nominal*: Rp ${amt.toLocaleString()}\n💳 *Tujuan*: ${method} (${target})\n📱 *Nomor Akun*: ${currentUser.wa}` });
+            push(ref(db, `users/${currentUser.wa}/riwayat`), { type: `WD ${method}`, amt: amt, time: Date.now(), target });
+            await apiCall('/api/tele-notif', 'POST', { message: `⚠️ *Request WD*\n\n👤 *User*: ${currentUser.name}\n💸 *Nominal*: Rp ${amt.toLocaleString()}\n💳 *Tujuan*: ${method} (${target})` });
             alert("Withdraw diproses!"); switchTab('home');
         }
     };
 
     window.doReport = async () => {
         const txt = document.getElementById('rep_txt').value;
-        if(txt.length < 5) return alert("Tulis kendala lengkap!");
-        const rid = "CLOUD-" + Math.random().toString(36).substr(2, 8).toUpperCase();
-        const btn = document.getElementById('btn_rep');
-        btn.disabled = true; btn.innerText = "SAMPUN...";
-        try {
-            await apiCall('/api/report', 'POST', { username: currentUser.name, wa: currentUser.wa, kendala: txt, reportId: rid });
-            alert(`Laporan terkirim! ID: ${rid}`);
-            document.getElementById('rep_txt').value = ""; switchTab('home');
-        } catch(e) { alert("Error"); }
-        finally { btn.disabled = false; btn.innerText = "KIRIM LAPORAN"; }
+        if(txt.length < 5) return alert("Tulis kendala!");
+        const rid = "CLOUD-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+        await apiCall('/api/tele-notif', 'POST', { message: `⚠️ *Report*\n\n👤 User: ${currentUser.name}\n📱 WA: ${currentUser.wa}\n📝: ${txt}\n🆔: ${rid}` });
+        alert("Laporan Terkirim!"); document.getElementById('rep_txt').value = ""; switchTab('home');
     };
 
     function draw(q, a) {
