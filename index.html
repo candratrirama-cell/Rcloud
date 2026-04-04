@@ -3,342 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cloudpay v1.2.7</title>
+    <title>CLOUDPAY - Maintenance</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; color: #1E293B; -webkit-tap-highlight-color: transparent; }
-        .liquid-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .nav-active { color: #2563EB; transform: scale(1.1); transition: 0.3s; }
-        .btn-grad { background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%); }
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        canvas { max-width: 100%; height: auto; border-radius: 20px; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow: hidden; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.4); }
+        .fade-in { animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body>
+<body class="flex items-center justify-center min-h-screen p-6">
 
-<div id="app" class="max-w-md mx-auto min-h-screen pb-32">
-    <div id="splash-screen" class="flex items-center justify-center min-h-screen bg-white z-[100] fixed inset-0">
-        <div class="text-center animate-pulse">
-            <div class="bg-blue-600 w-16 h-16 rounded-[20px] flex items-center justify-center mb-4 mx-auto shadow-xl text-white text-2xl font-black">C</div>
-            <h2 class="text-lg font-black tracking-tighter uppercase">CLOUDPAY</h2>
-        </div>
-    </div>
-
-    <div id="auth-section" class="hidden p-6 pt-20 fade-in">
-        <div id="login-form" class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
-            <h1 class="text-2xl font-black mb-6 italic uppercase">Login</h1>
-            <div class="space-y-4">
-                <input id="l_wa" type="number" placeholder="WhatsApp" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
-                <input id="l_pw" type="password" placeholder="Password" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
-                <button onclick="doLogin()" class="btn-grad w-full py-4 rounded-2xl text-white font-bold">MASUK</button>
-                <p class="text-center text-xs font-bold text-gray-400 mt-4">Belum ada akun? <span onclick="toggleAuth(false)" class="text-blue-600 cursor-pointer">Daftar</span></p>
-            </div>
-        </div>
-        <div id="reg-form" class="hidden bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
-            <h1 class="text-2xl font-black mb-6 italic uppercase">Daftar</h1>
-            <div class="space-y-4">
-                <input id="r_wa" type="number" placeholder="WhatsApp" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
-                <input id="r_name" type="text" placeholder="Username" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
-                <input id="r_pw" type="password" placeholder="Password" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold focus:border-blue-500">
-                <button onclick="doRegister()" class="btn-grad w-full py-4 rounded-2xl text-white font-bold">DAFTAR</button>
-                <p class="text-center text-xs font-bold text-gray-400 mt-4">Ada akun? <span onclick="toggleAuth(true)" class="text-blue-600 cursor-pointer">Login</span></p>
-            </div>
-        </div>
-    </div>
-
-    <div id="main-section" class="hidden fade-in">
-        <div id="page-home" class="p-6 space-y-6">
-            <div class="flex justify-between items-center">
-                <h2 class="font-black text-2xl italic tracking-tighter">CLOUDPAY.</h2>
-                <span id="u_name" class="text-[10px] font-black bg-white px-4 py-2 rounded-full border border-gray-100 uppercase tracking-widest">...</span>
-            </div>
-            <div class="bg-gray-900 p-8 rounded-[45px] text-white shadow-2xl relative overflow-hidden">
-                <p class="text-[10px] text-gray-400 font-bold uppercase mb-1 opacity-60">Balance</p>
-                <h3 class="text-4xl font-extrabold tracking-tight">Rp <span id="u_bal">0</span></h3>
-                <div class="mt-10 flex gap-3">
-                    <button onclick="switchTab('qris')" class="flex-1 bg-blue-600 py-4 rounded-2xl font-bold text-sm">TOP UP</button>
-                    <button onclick="switchTab('wd')" class="flex-1 bg-white/10 py-4 rounded-2xl font-bold text-sm backdrop-blur-md">WITHDRAW</button>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-white p-6 rounded-[35px] text-center shadow-sm">
-                    <p class="text-[9px] font-bold text-gray-400 uppercase">Total In</p>
-                    <p class="text-lg font-black text-green-500">Rp <span id="u_in">0</span></p>
-                </div>
-                <div class="bg-white p-6 rounded-[35px] text-center shadow-sm">
-                    <p class="text-[9px] font-bold text-gray-400 uppercase">Total Out</p>
-                    <p class="text-lg font-black text-red-500">Rp <span id="u_out">0</span></p>
-                </div>
-            </div>
-        </div>
-
-        <div id="page-qris" class="hidden p-6 fade-in text-center min-h-screen">
-            <div id="q_form" class="text-left space-y-4">
-                <h2 class="text-2xl font-black italic uppercase">Deposit</h2>
-                <div class="bg-white p-8 rounded-[40px] shadow-sm">
-                    <p class="text-[10px] font-black text-gray-400 uppercase mb-2">Nominal</p>
-                    <input id="q_amt" type="number" value="1000" class="w-full text-4xl font-black outline-none text-blue-600 bg-transparent">
-                </div>
-                <button onclick="genQR()" id="btn_q" class="btn-grad w-full py-5 rounded-[30px] text-white font-bold uppercase shadow-lg">Generate QRIS</button>
-            </div>
-            <div id="q_display" class="hidden fade-in">
-                <canvas id="q_canvas" width="400" height="550" class="mx-auto bg-white p-4 shadow-xl"></canvas>
-                <p id="q_status_txt" class="text-blue-600 font-black animate-pulse text-[10px] uppercase mt-4">Menunggu Pembayaran...</p>
-                <button onclick="cancelQR()" class="mt-8 text-red-500 font-black text-[10px] uppercase opacity-50">Batal</button>
-            </div>
-        </div>
-
-        <div id="page-wd" class="hidden p-6 fade-in min-h-screen">
-            <h2 class="text-2xl font-black mb-6 italic uppercase text-red-600">Withdraw</h2>
-            <div class="bg-white p-8 rounded-[40px] shadow-sm space-y-6">
-                <div><p class="text-[10px] font-black text-gray-400 uppercase mb-3">Tujuan</p>
-                    <select id="wd_method" class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none text-sm">
-                        <option value="DANA">DANA</option><option value="GOPAY">GOPAY</option>
-                    </select>
-                </div>
-                <div><p class="text-[10px] font-black text-gray-400 uppercase mb-3">Nomor</p>
-                    <input id="wd_target" type="number" placeholder="08..." class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none text-sm">
-                </div>
-                <div><p class="text-[10px] font-black text-gray-400 uppercase mb-3">Nominal</p>
-                    <input id="wd_amt" type="number" placeholder="0" class="w-full text-3xl font-black outline-none text-red-600 bg-transparent">
-                </div>
-            </div>
-            <button onclick="doWD()" class="w-full py-5 rounded-[30px] bg-gray-900 text-white font-bold text-lg shadow-xl mt-8">TARIK SEKARANG</button>
-        </div>
-
-        <div id="page-history" class="hidden p-6 fade-in min-h-screen">
-            <h2 class="text-2xl font-black mb-6 italic uppercase">Logs</h2>
-            <div id="h_list" class="space-y-4 pb-20"></div>
-        </div>
-
-        <div id="page-about" class="hidden p-6 fade-in min-h-screen">
-            <div class="bg-white p-8 rounded-[45px] text-center shadow-sm mb-6">
-                <h3 class="font-black text-2xl italic">Cloudpay v1.2.7</h3>
-                <p class="text-gray-400 text-[10px] font-black mt-1 uppercase">Dev: @maramadhona</p>
-            </div>
-            <div class="bg-white p-8 rounded-[45px] shadow-sm border border-gray-50">
-                <h4 class="font-black text-xs mb-4 uppercase">Report Problem</h4>
-                <textarea id="rep_txt" placeholder="Ketik kendala..." class="w-full h-32 p-5 bg-gray-50 rounded-3xl outline-none text-sm font-semibold mb-4"></textarea>
-                <button onclick="doReport()" id="btn_rep" class="w-full py-4 rounded-2xl bg-blue-600 text-white font-bold uppercase">Kirim</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="nav-bar" class="fixed bottom-6 left-6 right-6 h-20 liquid-nav z-50 hidden flex items-center justify-around">
-        <button onclick="switchTab('home')" id="nav-home" class="nav-active flex flex-col items-center"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg><span class="text-[7px] font-black mt-1 uppercase">Home</span></button>
-        <button onclick="switchTab('qris')" id="nav-qris" class="text-gray-400 flex flex-col items-center"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg><span class="text-[7px] font-black mt-1 uppercase">Topup</span></button>
-        <button onclick="switchTab('history')" id="nav-history" class="text-gray-400 flex flex-col items-center"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="text-[7px] font-black mt-1 uppercase">Logs</span></button>
-        <button onclick="switchTab('about')" id="nav-about" class="text-gray-400 flex flex-col items-center"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="text-[7px] font-black mt-1 uppercase">About</span></button>
-        <button onclick="doLogout()" class="text-red-400 flex flex-col items-center opacity-40"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg><span class="text-[7px] font-black mt-1 uppercase">Exit</span></button>
-    </div>
-</div>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, set, get, update, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyD1OHn2utYY881b504XEgMAwmhrglqtinQ",
-        authDomain: "sedabase.firebaseapp.com",
-        databaseURL: "https://sedabase-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "sedabase",
-        storageBucket: "sedabase.firebasestorage.app",
-        messagingSenderId: "921144451877",
-        appId: "1:921144451877:web:f37ec5e4de4ff4fc4870cc"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    let currentUser = null, checker = null, isSavingLocal = false;
-
-    async function apiCall(p, m = 'GET', b = null) {
-        const o = { method: m, headers: { 'Content-Type': 'application/json' } };
-        if (b) o.body = JSON.stringify(b);
-        const r = await fetch(p, o); return await r.json();
-    }
-
-    window.onload = () => {
-        const s = localStorage.getItem('cp_v12');
-        setTimeout(() => {
-            document.getElementById('splash-screen').classList.add('hidden');
-            if (s) { const d = JSON.parse(s); loadDash(d.wa, d.name); } 
-            else { document.getElementById('auth-section').classList.remove('hidden'); }
-        }, 1500);
-    };
-
-    window.toggleAuth = (isLogin) => {
-        document.getElementById('login-form').classList.toggle('hidden', !isLogin);
-        document.getElementById('reg-form').classList.toggle('hidden', isLogin);
-    };
-
-    window.doLogin = async () => {
-        const wa = document.getElementById('l_wa').value, pw = document.getElementById('l_pw').value;
-        const s = await get(ref(db, 'users/' + wa));
-        if (s.exists() && s.val().password === pw) {
-            const dt = { wa, name: s.val().username };
-            localStorage.setItem('cp_v12', JSON.stringify(dt));
-            loadDash(wa, dt.name);
-        } else alert("WhatsApp/Password salah!");
-    };
-
-    window.doRegister = async () => {
-        const wa = document.getElementById('r_wa').value, nm = document.getElementById('r_name').value, pw = document.getElementById('r_pw').value;
-        if(!wa || !nm || !pw) return alert("Lengkapi data!");
-        const s = await get(ref(db, 'users/' + wa));
-        if (s.exists()) return alert("Nomor sudah terdaftar!");
-        await set(ref(db, 'users/' + wa), { username: nm, password: pw, wa: wa, balance: 0, total_in: 0, total_out: 0 });
-        localStorage.setItem('cp_v12', JSON.stringify({ wa, name: nm }));
-        loadDash(wa, nm);
-    };
-
-    function loadDash(wa, name) {
-        currentUser = { wa, name };
-        document.getElementById('auth-section').classList.add('hidden');
-        document.getElementById('main-section').classList.remove('hidden');
-        document.getElementById('nav-bar').classList.remove('hidden');
-        document.getElementById('u_name').innerText = name;
-
-        onValue(ref(db, `users/${wa}`), (snap) => {
-            const d = snap.val() || {};
-            document.getElementById('u_bal').innerText = (d.balance || 0).toLocaleString();
-            document.getElementById('u_in').innerText = (d.total_in || 0).toLocaleString();
-            document.getElementById('u_out').innerText = (d.total_out || 0).toLocaleString();
-        });
-
-        onValue(ref(db, `users/${wa}/riwayat`), (snap) => {
-            const list = document.getElementById('h_list'); list.innerHTML = "";
-            if(snap.exists()) {
-                Object.values(snap.val()).reverse().forEach(t => {
-                    const isIn = t.type.includes('TOPUP');
-                    list.innerHTML += `<div class="bg-white p-5 rounded-[30px] flex justify-between items-center border border-gray-50 shadow-sm fade-in">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 ${isIn?'bg-green-50 text-green-600':'bg-red-50 text-red-600'} rounded-2xl flex items-center justify-center font-bold">${isIn?'↓':'↑'}</div>
-                            <div><p class="text-[9px] font-black uppercase">${t.type}</p><p class="text-[7px] text-gray-400 font-bold">${new Date(t.time).toLocaleString()}</p></div>
-                        </div>
-                        <p class="font-black text-xs ${isIn?'text-green-600':'text-red-600'}">${isIn?'+':'-'} ${t.amt.toLocaleString()}</p>
-                    </div>`;
-                });
-            }
-        });
-    }
-
-    // --- GEN QR & ANTI-STUCK VERIFY ---
-    window.genQR = async () => {
-        const amt = parseInt(document.getElementById('q_amt').value);
-        if(amt < 100) return alert("Min. 100");
-        document.getElementById('btn_q').disabled = true;
+    <div class="max-w-md w-full glass-card p-10 rounded-[50px] shadow-2xl text-center flex flex-col items-center fade-in">
         
-        try {
-            const d = await apiCall(`/api/generate-qris?amt=${amt}`);
-            if(d.success && d.trxId) {
-                document.getElementById('q_form').classList.add('hidden');
-                document.getElementById('q_display').classList.remove('hidden');
-                draw(d.qr, amt);
-                
-                if(checker) clearInterval(checker);
-                isSavingLocal = false;
+        <div class="relative mb-8">
+            <div class="absolute inset-0 bg-orange-500 rounded-[35px] blur-2xl opacity-20 animate-pulse"></div>
+            <div class="bg-gradient-to-br from-orange-400 to-orange-600 w-24 h-24 rounded-[35px] flex items-center justify-center shadow-xl relative border border-white/20">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a2 2 0 0 1 2.83 0l1.2 1.2a2 2 0 0 1 0 2.83l-3.77 3.77a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0"></path>
+                    <path d="m2 22 1-1"></path>
+                    <path d="M8 6l1-1"></path>
+                    <path d="M18 16l1-1"></path>
+                </svg>
+            </div>
+        </div>
 
-                checker = setInterval(async () => {
-                    if(isSavingLocal) return;
+        <h1 class="text-3xl font-[800] text-gray-900 tracking-tighter italic mb-2 uppercase">CLOUDPAY.</h1>
+        <div class="inline-block bg-orange-100 text-orange-600 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] mb-6 border border-orange-200">
+            System Maintenance
+        </div>
+        
+        <p class="text-[13px] text-gray-500 font-bold leading-relaxed px-4 mb-10 uppercase opacity-70">
+            Server sedang dalam peningkatan sistem. Transaksi dihentikan sementara demi keamanan saldo Anda.
+        </p>
 
-                    const c = await apiCall(`/api/check-qris?trxId=${d.trxId}`);
-                    
-                    // AUTO-SYNC: Jika sudah pernah sukses di DB, anggap beres
-                    if(c.status === "ALREADY_PROCESSED") {
-                        clearInterval(checker);
-                        alert("Pembayaran Terverifikasi!");
-                        cancelQR();
-                        switchTab('home');
-                        return;
-                    }
+        <div class="w-full bg-white/50 p-6 rounded-[35px] border border-gray-100 text-left space-y-4 shadow-sm">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Estimasi Selesai</span>
+                <span class="text-[10px] font-black text-orange-600 uppercase">1 - 2 Jam</span>
+            </div>
+            <div class="h-[1px] w-full bg-gray-100/50"></div>
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Status Update</span>
+                <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping"></div>
+                    <span class="text-[10px] font-black text-gray-800 uppercase italic">On Progress</span>
+                </div>
+            </div>
+        </div>
 
-                    if(c.isFirstValid) {
-                        isSavingLocal = true; 
-                        document.getElementById('q_status_txt').innerText = "MENYIMPAN SALDO...";
-                        clearInterval(checker);
+        <a href="https://wa.me/62882008519349" class="mt-8 flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-[0.25em] hover:opacity-70 transition-opacity">
+            <span>Hubungi Admin</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <path d="M5 12h14m-7-7l7 7-7 7"/>
+            </svg>
+        </a>
 
-                        const lockRef = ref(db, `processed_trxs/${d.trxId}`);
-                        const userRef = ref(db, `users/${currentUser.wa}`);
+        <p class="mt-12 text-[8px] font-bold text-gray-300 uppercase tracking-widest">Cloudpay v1.2.8 &copy; 2026</p>
 
-                        try {
-                            // Atomic Transaction
-                            await runTransaction(userRef, (cur) => {
-                                if (cur) {
-                                    cur.balance = (Number(cur.balance) || 0) + amt;
-                                    cur.total_in = (Number(cur.total_in) || 0) + amt;
-                                }
-                                return cur;
-                            });
+    </div>
 
-                            // Finalize Lock
-                            await set(lockRef, { status: "COMPLETED", user: currentUser.wa, time: Date.now() });
-
-                            await push(ref(db, `users/${currentUser.wa}/riwayat`), { 
-                                type: 'TOPUP QRIS', amt, time: Date.now(), trxId: d.trxId 
-                            });
-                            
-                            await apiCall('/api/tele-notif', 'POST', { 
-                                message: `✅ *DEPOSIT SUKSES*\n\n👤 User: ${currentUser.name}\n💰 Nominal: Rp ${amt.toLocaleString()}\n🆔 Trx: ${d.trxId}` 
-                            });
-
-                            alert("Saldo Berhasil Masuk!");
-                            cancelQR();
-                            switchTab('home');
-                        } catch (e) { isSavingLocal = false; console.error(e); }
-                    }
-                }, 5000);
-            }
-        } catch(e) { alert("Server Error"); document.getElementById('btn_q').disabled = false; }
-    };
-
-    window.doWD = async () => {
-        const amt = parseInt(document.getElementById('wd_amt').value), method = document.getElementById('wd_method').value, target = document.getElementById('wd_target').value;
-        if(!target || target.length < 8) return alert("Nomor tujuan salah!");
-        if(amt < 10000) return alert("Min. 10rb");
-        const r = ref(db, `users/${currentUser.wa}`), s = await get(r);
-        if(s.val().balance < amt) return alert("Saldo Kurang!");
-
-        if(confirm(`Konfirmasi WD Rp ${amt.toLocaleString()} ke ${method}?`)) {
-            await update(r, { balance: s.val().balance - amt, total_out: (s.val().total_out || 0) + amt });
-            push(ref(db, `users/${currentUser.wa}/riwayat`), { type: `WD ${method}`, amt, time: Date.now(), target });
-            await apiCall('/api/tele-notif', 'POST', { message: `⚠️ *REQ WD*\n\n👤 User: ${currentUser.name}\n💸 Rp ${amt.toLocaleString()}\n💳 ${method} (${target})` });
-            alert("WD Diproses!"); switchTab('home');
-        }
-    };
-
-    window.doReport = async () => {
-        const txt = document.getElementById('rep_txt').value;
-        if(txt.length < 5) return alert("Tulis kendala!");
-        await apiCall('/api/tele-notif', 'POST', { message: `🆘 *REPORT*\n\n👤 User: ${currentUser.name}\n📝: ${txt}` });
-        alert("Terkirim!"); document.getElementById('rep_txt').value = ""; switchTab('home');
-    };
-
-    function draw(q, a) {
-        const c = document.getElementById('q_canvas'), x = c.getContext('2d');
-        x.fillStyle = 'white'; x.fillRect(0,0,400,550);
-        x.fillStyle = 'black'; x.font = 'bold 24px sans-serif'; x.textAlign = 'center'; x.fillText('QRIS CLOUDPAY', 200, 70);
-        const img = new Image(); img.crossOrigin = "anonymous";
-        img.src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(q)}`;
-        img.onload = () => {
-            x.drawImage(img, 70, 150, 260, 260);
-            x.fillStyle = '#2563EB'; x.font = '900 32px sans-serif'; x.fillText(`Rp ${parseInt(a).toLocaleString()}`, 200, 480);
-        };
-    }
-
-    window.switchTab = (t) => {
-        ['home', 'qris', 'history', 'wd', 'about'].forEach(p => {
-            document.getElementById('page-'+p).classList.add('hidden');
-            const nav = document.getElementById('nav-'+p);
-            if(nav) nav.classList.replace('nav-active', 'text-gray-400');
-        });
-        document.getElementById('page-'+t).classList.remove('hidden');
-        document.getElementById('nav-'+t).classList.replace('text-gray-400', 'nav-active');
-    };
-
-    window.cancelQR = () => { clearInterval(checker); document.getElementById('q_form').classList.remove('hidden'); document.getElementById('q_display').classList.add('hidden'); document.getElementById('btn_q').disabled = false; };
-    window.doLogout = () => { if(confirm("Keluar?")) { localStorage.clear(); location.reload(); } };
-</script>
 </body>
 </html>
