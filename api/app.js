@@ -6,13 +6,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// --- KONFIGURASI SENSITIF ---
+// --- CONFIGURATION ---
 const TELE_TOKEN = "8277517895:AAEbF7jLzgRMl8_clyuMdRkt9WK4TlQjTp8";
 const TELE_CHAT_ID = "7535108414";
 const QRIS_API_KEY = "rapay_jur337mgb";
 const QRIS_BASE_URL = "https://bior-beta.vercel.app/api/pay";
 
-// Endpoint untuk kirim Notifikasi Telegram
+// Anti-Double Top Up Cache (Menyimpan trxId yang sudah sukses)
+const processedTransactions = new Set();
+
+// Endpoint: Kirim Notifikasi Telegram
 app.post('/api/tele-notif', async (req, res) => {
     const { message } = req.body;
     try {
@@ -23,29 +26,42 @@ app.post('/api/tele-notif', async (req, res) => {
         });
         res.json({ success: true });
     } catch (error) {
-        res.status(500).json({ error: "Gagal kirim Telegram" });
+        res.status(500).json({ error: "Tele Error" });
     }
 });
 
-// Endpoint untuk Generate QRIS
+// Endpoint: Generate QRIS
 app.get('/api/generate-qris', async (req, res) => {
     const { amt } = req.query;
     try {
         const response = await axios.get(`${QRIS_BASE_URL}?key=${QRIS_API_KEY}&amt=${amt}`);
         res.json(response.data);
     } catch (error) {
-        res.status(500).json({ error: "Gagal generate QRIS" });
+        res.status(500).json({ error: "QRIS Generate Error" });
     }
 });
 
-// Endpoint untuk Check Status Pembayaran
+// Endpoint: Check Status & Anti-Double Lock
 app.get('/api/check-qris', async (req, res) => {
     const { trxId } = req.query;
+
+    // Jika trxId sudah pernah sukses sebelumnya, blokir request selanjutnya
+    if (processedTransactions.has(trxId)) {
+        return res.json({ paid: false, status: "Already Processed" });
+    }
+
     try {
         const response = await axios.get(`${QRIS_BASE_URL}?key=${QRIS_API_KEY}&action=check&trxId=${trxId}`);
-        res.json(response.data);
+        const data = response.data;
+
+        if (data.paid || data.status === "Success") {
+            processedTransactions.add(trxId); // Kunci trxId ini
+            return res.json({ ...data, isFirstValid: true });
+        }
+
+        res.json(data);
     } catch (error) {
-        res.status(500).json({ error: "Gagal check status" });
+        res.status(500).json({ error: "Check Status Error" });
     }
 });
 
