@@ -12,67 +12,40 @@ const TELE_CHAT_ID = "7535108414";
 const QRIS_API_KEY = "rapay_jur337mgb";
 const QRIS_BASE_URL = "https://bior-beta.vercel.app/api/pay";
 
-// Anti-Double Top Up Cache (Server Side Lock)
-const processedTransactions = new Set();
+// Cache ID Transaksi agar tidak diproses ulang oleh server
+const processedCache = new Set();
 
-// Endpoint: Generate QRIS
 app.get('/api/generate-qris', async (req, res) => {
     const { amt } = req.query;
     try {
         const response = await axios.get(`${QRIS_BASE_URL}?key=${QRIS_API_KEY}&amt=${amt}`);
         res.json(response.data);
-    } catch (error) {
-        res.status(500).json({ error: "QRIS Error" });
-    }
+    } catch (error) { res.status(500).json({ error: "QRIS Error" }); }
 });
 
-// Endpoint: Check Status dengan Anti-Double Lock
 app.get('/api/check-qris', async (req, res) => {
     const { trxId } = req.query;
-    
-    // Jika ID ini sudah pernah sukses, langsung tolak request berikutnya
-    if (processedTransactions.has(trxId)) {
-        return res.json({ paid: false, status: "Already Processed" });
-    }
+    if (processedCache.has(trxId)) return res.json({ paid: false, status: "Locked" });
 
     try {
         const response = await axios.get(`${QRIS_BASE_URL}?key=${QRIS_API_KEY}&action=check&trxId=${trxId}`);
         const data = response.data;
-
         if (data.paid || data.status === "Success") {
-            processedTransactions.add(trxId); // Kunci ID ini selamanya (selama server running)
+            processedCache.add(trxId);
             return res.json({ ...data, isFirstValid: true });
         }
         res.json(data);
-    } catch (error) {
-        res.status(500).json({ error: "Check Error" });
-    }
+    } catch (error) { res.status(500).json({ error: "Check Error" }); }
 });
 
-// Endpoint: Telegram Notif & Report
 app.post('/api/tele-notif', async (req, res) => {
     const { message } = req.body;
     try {
         await axios.post(`https://api.telegram.org/bot${TELE_TOKEN}/sendMessage`, {
-            chat_id: TELE_CHAT_ID,
-            text: message,
-            parse_mode: "Markdown"
+            chat_id: TELE_CHAT_ID, text: message, parse_mode: "Markdown"
         });
         res.json({ success: true });
     } catch (error) { res.status(500).json({ error: "Tele Error" }); }
-});
-
-app.post('/api/report', async (req, res) => {
-    const { username, wa, kendala, reportId } = req.body;
-    const msg = `⚠️ *Report New*\n\n👤 *Username* : ${username}\n📱 *Nomor WA* : ${wa}\n📝 *Kendala* : ${kendala}\n🆔 *Id report* : ${reportId}`;
-    try {
-        await axios.post(`https://api.telegram.org/bot${TELE_TOKEN}/sendMessage`, {
-            chat_id: TELE_CHAT_ID,
-            text: msg,
-            parse_mode: "Markdown"
-        });
-        res.json({ success: true });
-    } catch (error) { res.status(500).json({ error: "Report Error" }); }
 });
 
 module.exports = app;
