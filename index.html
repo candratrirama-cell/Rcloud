@@ -84,7 +84,7 @@
         <div id="page-qris" class="hidden p-6 fade-in text-center min-h-screen">
             <div id="q_form" class="text-left space-y-4">
                 <h2 class="text-2xl font-black italic uppercase tracking-tighter">Deposit Saldo</h2>
-                <div class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-50">
+                <div class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
                     <p class="text-[10px] font-black text-gray-400 uppercase mb-2">Input Nominal</p>
                     <input id="q_amt" type="number" value="1000" class="w-full text-4xl font-black outline-none text-blue-600 bg-transparent">
                 </div>
@@ -103,11 +103,12 @@
                 <div>
                     <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Pilih E-Wallet</p>
                     <select id="wd_method" class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none text-sm">
-                        <option value="DANA">DANA</option><option value="GOPAY">GOPAY</option><option value="OVO">OVO</option>
+                        <option value="DANA">DANA</option>
+                        <option value="GOPAY">GOPAY</option>
                     </select>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Nomor Tujuan (Bebas)</p>
+                    <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Nomor Tujuan</p>
                     <input id="wd_target" type="number" placeholder="Contoh: 0882..." class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none text-sm border-2 border-transparent focus:border-red-100">
                 </div>
                 <div>
@@ -119,7 +120,7 @@
         </div>
 
         <div id="page-about" class="hidden p-6 fade-in min-h-screen">
-            <div class="bg-white p-10 rounded-[45px] text-center mb-6 shadow-sm border border-gray-50">
+            <div class="bg-white p-10 rounded-[45px] text-center mb-6 shadow-sm border border-gray-100">
                 <h3 class="font-black text-2xl italic">Cloudpay v1.2.0</h3>
                 <p class="text-gray-400 text-[10px] font-black tracking-widest uppercase mt-1">Dev by @maramadhona</p>
             </div>
@@ -161,7 +162,6 @@
     const db = getDatabase(app);
     let currentUser = null, checker = null, isUpdating = false;
 
-    // -- UTILS --
     async function apiCall(p, m = 'GET', b = null) {
         const o = { method: m, headers: { 'Content-Type': 'application/json' } };
         if (b) o.body = JSON.stringify(b);
@@ -177,7 +177,6 @@
         }, 1500);
     };
 
-    // -- AUTH --
     window.toggleAuth = (isLogin) => {
         document.getElementById('login-form').classList.toggle('hidden', !isLogin);
         document.getElementById('reg-form').classList.toggle('hidden', isLogin);
@@ -238,7 +237,6 @@
         });
     }
 
-    // -- FEATURES --
     window.genQR = async () => {
         const amt = document.getElementById('q_amt').value;
         if(amt < 100) return alert("Min. 100");
