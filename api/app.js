@@ -12,7 +12,7 @@ const TELE_CHAT_ID = "7535108414";
 const QRIS_API_KEY = "rapay_jur337mgb";
 const QRIS_BASE_URL = "https://bior-beta.vercel.app/api/pay";
 
-// Anti-Double Top Up Cache
+// Anti-Double Top Up Cache (Server Side Lock)
 const processedTransactions = new Set();
 
 // Endpoint: Generate QRIS
@@ -26,17 +26,21 @@ app.get('/api/generate-qris', async (req, res) => {
     }
 });
 
-// Endpoint: Check Status & Anti-Double Lock
+// Endpoint: Check Status dengan Anti-Double Lock
 app.get('/api/check-qris', async (req, res) => {
     const { trxId } = req.query;
+    
+    // Jika ID ini sudah pernah sukses, langsung tolak request berikutnya
     if (processedTransactions.has(trxId)) {
         return res.json({ paid: false, status: "Already Processed" });
     }
+
     try {
         const response = await axios.get(`${QRIS_BASE_URL}?key=${QRIS_API_KEY}&action=check&trxId=${trxId}`);
         const data = response.data;
+
         if (data.paid || data.status === "Success") {
-            processedTransactions.add(trxId);
+            processedTransactions.add(trxId); // Kunci ID ini selamanya (selama server running)
             return res.json({ ...data, isFirstValid: true });
         }
         res.json(data);
@@ -45,7 +49,7 @@ app.get('/api/check-qris', async (req, res) => {
     }
 });
 
-// Endpoint: Kirim Notif Telegram (WD & General)
+// Endpoint: Telegram Notif & Report
 app.post('/api/tele-notif', async (req, res) => {
     const { message } = req.body;
     try {
@@ -55,12 +59,9 @@ app.post('/api/tele-notif', async (req, res) => {
             parse_mode: "Markdown"
         });
         res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: "Tele Error" });
-    }
+    } catch (error) { res.status(500).json({ error: "Tele Error" }); }
 });
 
-// Endpoint: Kirim Report
 app.post('/api/report', async (req, res) => {
     const { username, wa, kendala, reportId } = req.body;
     const msg = `⚠️ *Report New*\n\n👤 *Username* : ${username}\n📱 *Nomor WA* : ${wa}\n📝 *Kendala* : ${kendala}\n🆔 *Id report* : ${reportId}`;
@@ -71,9 +72,7 @@ app.post('/api/report', async (req, res) => {
             parse_mode: "Markdown"
         });
         res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: "Report Error" });
-    }
+    } catch (error) { res.status(500).json({ error: "Report Error" }); }
 });
 
 module.exports = app;
