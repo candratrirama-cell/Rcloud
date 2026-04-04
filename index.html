@@ -29,7 +29,7 @@
 
     <div id="auth-section" class="hidden p-6 pt-20 fade-in">
         <div id="login-form" class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
-            <h1 class="text-2xl font-black mb-6 italic tracking-tight uppercase">Login Cloudpay</h1>
+            <h1 class="text-2xl font-black mb-6 italic uppercase">Login Cloudpay</h1>
             <div class="space-y-4">
                 <input id="l_wa" type="number" placeholder="Nomor WhatsApp" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
                 <input id="l_pw" type="password" placeholder="Password" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
@@ -38,7 +38,7 @@
             </div>
         </div>
         <div id="reg-form" class="hidden bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
-            <h1 class="text-2xl font-black mb-6 italic tracking-tight uppercase">Daftar Akun</h1>
+            <h1 class="text-2xl font-black mb-6 italic uppercase">Daftar Akun</h1>
             <div class="space-y-4">
                 <input id="r_wa" type="number" placeholder="WhatsApp" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
                 <input id="r_name" type="text" placeholder="Username" class="w-full p-4 bg-gray-50 rounded-2xl outline-none font-semibold border-2 border-transparent focus:border-blue-500">
@@ -99,17 +99,16 @@
 
         <div id="page-wd" class="hidden p-6 fade-in min-h-screen">
             <h2 class="text-2xl font-black mb-6 italic uppercase tracking-tighter text-red-600">Withdrawal</h2>
-            <div class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-50 space-y-6">
+            <div class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100 space-y-6">
                 <div>
                     <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Pilih E-Wallet</p>
                     <select id="wd_method" class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none text-sm">
-                        <option value="DANA">DANA</option>
-                        <option value="GOPAY">GOPAY</option>
+                        <option value="DANA">DANA</option><option value="GOPAY">GOPAY</option>
                     </select>
                 </div>
                 <div>
                     <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Nomor Tujuan</p>
-                    <input id="wd_target" type="number" placeholder="Contoh: 0882..." class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none text-sm border-2 border-transparent focus:border-red-100">
+                    <input id="wd_target" type="number" placeholder="Nomor E-Wallet" class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none text-sm border-2 border-transparent focus:border-red-100">
                 </div>
                 <div>
                     <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Nominal (Min. 10k)</p>
@@ -127,7 +126,7 @@
             <div class="bg-white p-8 rounded-[45px] shadow-sm border border-gray-50">
                 <h4 class="font-black text-xs mb-4 uppercase tracking-widest">Report Problem</h4>
                 <textarea id="rep_txt" placeholder="Jelaskan kendala anda di sini..." class="w-full h-32 p-5 bg-gray-50 rounded-3xl outline-none text-sm font-semibold mb-4 border-2 border-transparent focus:border-blue-500"></textarea>
-                <p class="text-[9px] text-blue-500 font-bold mb-6 italic text-center leading-relaxed">Jawaban kendala akan dijawab lewat nomor WhatsApp anda</p>
+                <p class="text-[9px] text-blue-500 font-bold mb-6 italic text-center">Jawaban kendala akan dijawab lewat nomor WhatsApp anda</p>
                 <button onclick="doReport()" id="btn_rep" class="w-full py-4 rounded-2xl bg-blue-600 text-white font-bold text-sm shadow-lg shadow-blue-200 uppercase">Kirim Laporan</button>
             </div>
         </div>
@@ -162,6 +161,7 @@
     const db = getDatabase(app);
     let currentUser = null, checker = null, isUpdating = false;
 
+    // -- UTILS --
     async function apiCall(p, m = 'GET', b = null) {
         const o = { method: m, headers: { 'Content-Type': 'application/json' } };
         if (b) o.body = JSON.stringify(b);
@@ -177,6 +177,7 @@
         }, 1500);
     };
 
+    // -- AUTH --
     window.toggleAuth = (isLogin) => {
         document.getElementById('login-form').classList.toggle('hidden', !isLogin);
         document.getElementById('reg-form').classList.toggle('hidden', isLogin);
@@ -237,6 +238,7 @@
         });
     }
 
+    // -- TOP UP WITH ANTI-DOUBLE FIX --
     window.genQR = async () => {
         const amt = document.getElementById('q_amt').value;
         if(amt < 100) return alert("Min. 100");
@@ -248,23 +250,51 @@
                 document.getElementById('q_display').classList.remove('hidden');
                 draw(d.qr, amt);
                 if(checker) clearInterval(checker);
-                isUpdating = false;
+                
+                isUpdating = false; // RESET LOCK
+
                 checker = setInterval(async () => {
-                    if(isUpdating) return;
+                    if(isUpdating) return; // FRONTEND LOCK
+
                     const c = await apiCall(`/api/check-qris?trxId=${d.trxId}`);
+                    
                     if((c.paid || c.status === "Success") && c.isFirstValid) {
-                        isUpdating = true; clearInterval(checker);
+                        isUpdating = true; // KUNCI SEGERA
+                        clearInterval(checker);
+                        checker = null;
+
                         const r = ref(db, `users/${currentUser.wa}`);
                         const s = await get(r);
                         const cur = s.val();
-                        await update(r, { balance: Number(cur.balance) + Number(amt), total_in: (cur.total_in || 0) + Number(amt) });
-                        push(ref(db, `users/${currentUser.wa}/riwayat`), { type: 'TOPUP QRIS', amt: Number(amt), time: Date.now() });
-                        await apiCall('/api/tele-notif', 'POST', { message: `✅ *Deposit Sukses*\n\n👤 User: ${currentUser.name}\n💰 Nominal: Rp ${Number(amt).toLocaleString()}\n🆔 Trx: ${d.trxId}` });
-                        alert("Top Up Sukses!"); cancelQR(); switchTab('home');
+
+                        // Update Firebase
+                        await update(r, { 
+                            balance: Number(cur.balance) + Number(amt), 
+                            total_in: (Number(cur.total_in) || 0) + Number(amt) 
+                        });
+
+                        // Riwayat
+                        await push(ref(db, `users/${currentUser.wa}/riwayat`), { 
+                            type: 'TOPUP QRIS', 
+                            amt: Number(amt), 
+                            time: Date.now() 
+                        });
+
+                        // Notif Telegram
+                        await apiCall('/api/tele-notif', 'POST', { 
+                            message: `✅ *Deposit Sukses*\n\n👤 User: ${currentUser.name}\n💰 Nominal: Rp ${Number(amt).toLocaleString()}\n🆔 Trx: ${d.trxId}` 
+                        });
+
+                        alert("Top Up Sukses!"); 
+                        cancelQR(); 
+                        switchTab('home');
                     }
                 }, 5000);
             }
-        } catch(e) { alert("Error Server"); document.getElementById('btn_q').disabled = false; }
+        } catch(e) { 
+            alert("Error Server"); 
+            document.getElementById('btn_q').disabled = false; 
+        }
     };
 
     window.doWD = async () => {
