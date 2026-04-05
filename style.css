@@ -1,0 +1,43 @@
+.glass-card {
+    background: rgba(30, 41, 59, 0.5);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(15, 23, 42, 0.8);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-field:focus { border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-radius: 16px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+.btn-primary:active { transform: scale(0.95); }
+
+.nav-btn {
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    transition: 0.3s;
+}
+
+.nav-btn:hover { transform: translateY(-5px); }
+
+.batik-overlay {
+    background-image: url('https://www.transparenttextures.com/patterns/batik-floral.png');
+}
+
+/* Scrollbar Hide */
+::-webkit-scrollbar { width: 0px; }
