@@ -3,111 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLOUDPAY V1.2.9</title>
+    <title>CLOUDPAY OFFICIAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-        .glass-card {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-        }
-        .input-field {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(2, 6, 23, 0.8);
-            border-radius: 16px;
+        :root { --primary: #2563eb; --bg: #020617; }
+        body { background-color: var(--bg); color: white; font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            outline: none;
-            color: white;
-            transition: 0.3s;
+            border-radius: 20px;
         }
-        .input-field:focus { border-color: #3b82f6; }
-        .btn-primary {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            border-radius: 16px;
-            font-weight: 900;
-            transition: 0.3s;
+        .input-box {
+            width: 100%; padding: 14px; background: #0f172a;
+            border-radius: 12px; border: 1px solid #1e293b;
+            color: white; outline: none; transition: 0.3s;
         }
-        .btn-primary:active { transform: scale(0.95); }
-        .batik-overlay {
-            background-image: url('https://www.transparenttextures.com/patterns/batik-floral.png');
-            opacity: 0.05;
+        .input-box:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2); }
+        .btn-main {
+            background: var(--primary); border-radius: 12px;
+            font-weight: 800; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px;
         }
+        .btn-main:active { transform: scale(0.97); }
+        .nav-item { font-size: 10px; font-weight: 900; font-style: italic; color: #64748b; transition: 0.3s; }
+        .nav-item:hover { color: var(--primary); }
+        .batik-bg { background-image: url('https://www.transparenttextures.com/patterns/batik-floral.png'); opacity: 0.03; }
         ::-webkit-scrollbar { width: 0px; }
     </style>
 </head>
-<body class="bg-slate-950 text-white font-sans selection:bg-blue-500 overflow-x-hidden">
+<body class="overflow-x-hidden">
 
     <div id="auth-screen" class="min-h-screen flex items-center justify-center p-6">
-        <div class="glass-card p-8 w-full max-w-sm animate__animated animate__fadeInDown">
-            <h1 class="text-3xl font-black text-center mb-1 italic text-blue-500 tracking-tighter">CLOUDPAY</h1>
-            <p class="text-center text-gray-500 text-[10px] uppercase tracking-[0.2em] mb-8">Secure Digital Gateway</p>
+        <div class="glass-panel p-10 w-full max-w-sm animate__animated animate__fadeIn">
+            <h1 class="text-2xl font-black text-center mb-1 italic tracking-tighter text-blue-500">CLOUDPAY</h1>
+            <p class="text-center text-gray-500 text-[9px] uppercase tracking-[0.3em] mb-10">Secure Gateway System</p>
             <div class="space-y-4">
-                <input id="reg-user" type="text" placeholder="USERNAME" class="input-field text-xs font-bold">
-                <input id="reg-wa" type="number" placeholder="WHATSAPP" class="input-field text-xs font-bold">
-                <input id="reg-pass" type="password" placeholder="PASSWORD" class="input-field text-xs font-bold">
-                <button onclick="handleAuth()" class="btn-primary w-full py-4 text-xs italic tracking-widest">MASUK / DAFTAR</button>
+                <input id="reg-user" type="text" placeholder="ID PENGGUNA" class="input-box text-xs font-bold">
+                <input id="reg-wa" type="number" placeholder="WHATSAPP" class="input-box text-xs font-bold">
+                <input id="reg-pass" type="password" placeholder="KATA SANDI" class="input-box text-xs font-bold">
+                <button onclick="handleAuth()" class="btn-main w-full py-4 text-[10px]">OTENTIKASI</button>
             </div>
         </div>
     </div>
 
     <div id="main-app" class="hidden min-h-screen pb-32">
-        <header class="p-6 sticky top-0 bg-slate-950/90 backdrop-blur-md z-40">
-            <div class="flex justify-between items-center mb-6">
+        <header class="p-8 sticky top-0 bg-slate-950/90 backdrop-blur-xl z-40 border-b border-white/5">
+            <div class="flex justify-between items-end mb-8">
                 <div>
-                    <p class="text-gray-500 text-[10px] font-black uppercase tracking-widest">USER: <span id="display-user" class="text-blue-400">---</span></p>
+                    <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">SALDO TERSEDIA</p>
                     <h2 id="user-balance" class="text-4xl font-black italic tracking-tighter">RP 0</h2>
                 </div>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div class="glass-card p-4 border-l-2 border-blue-500">
-                    <p class="text-[9px] text-gray-500 uppercase font-black">MASUK / HARI</p>
-                    <p id="stat-in" class="font-bold text-sm">RP 0</p>
+                <div class="text-right">
+                    <p class="text-[9px] font-black text-blue-500 uppercase italic" id="display-user">---</p>
                 </div>
-                <div class="glass-card p-4 border-l-2 border-red-500">
-                    <p class="text-[9px] text-gray-500 uppercase font-black">KELUAR / HARI</p>
-                    <p id="stat-out" class="font-bold text-sm">RP 0</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass-panel p-4 bg-blue-500/5">
+                    <p class="text-[8px] font-black text-gray-500 mb-1">DEBIT</p>
+                    <p id="stat-in" class="text-sm font-bold text-blue-400">RP 0</p>
+                </div>
+                <div class="glass-panel p-4 bg-red-500/5">
+                    <p class="text-[8px] font-black text-gray-500 mb-1">KREDIT</p>
+                    <p id="stat-out" class="text-sm font-bold text-red-400">RP 0</p>
                 </div>
             </div>
         </header>
 
-        <main id="content-area" class="px-6 space-y-4 animate__animated animate__fadeInUp"></main>
+        <main id="content-area" class="px-8 space-y-6 animate__animated animate__fadeInUp"></main>
 
-        <nav class="fixed bottom-6 left-6 right-6 z-50">
-            <div class="glass-card flex justify-around items-center py-5 px-2 border-white/5">
-                <button onclick="router('home')" class="text-[10px] font-black italic hover:text-blue-500 transition">HOME</button>
-                <button onclick="router('withdraw')" class="text-[10px] font-black italic hover:text-blue-500 transition">WITHDRAW</button>
-                <button onclick="router('qris')" class="text-[10px] font-black italic hover:text-blue-500 transition">QRIS</button>
-                <button onclick="router('history')" class="text-[10px] font-black italic hover:text-blue-500 transition">LOGS</button>
-                <button onclick="router('about')" class="text-[10px] font-black italic hover:text-blue-500 transition">INFO</button>
+        <nav class="fixed bottom-8 left-8 right-8 z-50">
+            <div class="glass-panel flex justify-around items-center py-6 px-4 shadow-2xl">
+                <button onclick="router('home')" class="nav-item">UTAMA</button>
+                <button onclick="router('withdraw')" class="nav-item">TARIK</button>
+                <button onclick="router('qris')" class="nav-item text-blue-500">QRIS</button>
+                <button onclick="router('history')" class="nav-item">RIWAYAT</button>
+                <button onclick="router('about')" class="nav-item">INFO</button>
             </div>
         </nav>
     </div>
 
-    <div id="custom-modal" class="fixed inset-0 bg-black/90 hidden z-[200] flex items-center justify-center p-6 backdrop-blur-md">
-        <div class="glass-card p-8 w-full max-w-sm animate__animated animate__zoomIn text-center border-white/10">
-            <h3 id="modal-title" class="text-lg font-black mb-2 text-blue-500 italic tracking-tighter uppercase">SYSTEM</h3>
-            <p id="modal-msg" class="text-gray-400 text-xs mb-8 leading-relaxed"></p>
-            <div id="modal-input-container" class="hidden mb-8">
-                <input id="modal-input" type="number" class="input-field text-center font-bold text-xl" placeholder="0">
+    <div id="custom-modal" class="fixed inset-0 bg-black/95 hidden z-[200] flex items-center justify-center p-8 backdrop-blur-md">
+        <div class="glass-panel p-10 w-full max-w-sm animate__animated animate__zoomIn text-center">
+            <h3 id="modal-title" class="text-sm font-black mb-2 text-blue-500 italic tracking-widest uppercase">SYSTEM MSG</h3>
+            <p id="modal-msg" class="text-gray-400 text-[11px] mb-10 leading-relaxed font-medium uppercase tracking-tighter"></p>
+            <div id="modal-input-container" class="hidden mb-10">
+                <input id="modal-input" type="number" class="input-box text-center font-black text-2xl" placeholder="0">
             </div>
-            <div class="flex gap-3">
-                <button id="modal-cancel-btn" onclick="closeModal()" class="hidden flex-1 bg-slate-900 py-4 rounded-2xl font-black text-[10px] text-gray-500">BATAL</button>
-                <button id="modal-ok-btn" class="flex-1 btn-primary py-4 text-[10px] tracking-widest">LANJUTKAN</button>
+            <div class="flex gap-4">
+                <button id="modal-cancel-btn" onclick="closeModal()" class="hidden flex-1 bg-slate-900 py-4 rounded-xl text-[9px] font-black text-gray-500 uppercase">BATAL</button>
+                <button id="modal-ok-btn" class="flex-1 btn-main py-4 text-[9px]">LANJUTKAN</button>
             </div>
         </div>
     </div>
 
-    <div id="qris-modal" class="fixed inset-0 bg-black/95 hidden z-[100] flex items-center justify-center p-6">
-        <div class="bg-white text-black p-8 rounded-[3rem] w-full max-w-xs text-center relative overflow-hidden animate__animated animate__jackInTheBox">
-            <div class="batik-overlay absolute inset-0 opacity-20"></div>
+    <div id="qris-modal" class="fixed inset-0 bg-black/98 hidden z-[100] flex items-center justify-center p-8">
+        <div class="bg-white text-black p-10 rounded-[3rem] w-full max-w-xs text-center relative overflow-hidden shadow-white/5 shadow-2xl">
+            <div class="batik-bg absolute inset-0 opacity-10"></div>
             <div class="relative z-10">
-                <h3 class="font-black italic text-sm tracking-tighter mb-4">CLOUDPAY X LHOKTO</h3>
-                <div id="qr-display" class="bg-white p-4 inline-block rounded-3xl mb-6 border-2 border-slate-100"></div>
-                <p class="text-[9px] text-red-600 font-black tracking-widest mb-6 animate-pulse">QRIS EXPIRED DALAM 15 MENIT</p>
-                <button onclick="closeQRIS()" class="w-full bg-slate-100 py-4 rounded-2xl font-black text-[10px] text-slate-400 tracking-widest">BATALKAN TRANSAKSI</button>
+                <p class="font-black italic text-[10px] tracking-widest mb-6 opacity-40 uppercase">OFFICIAL QRIS GATEWAY</p>
+                <div id="qr-display" class="bg-white p-4 inline-block rounded-3xl mb-8 border border-slate-100 shadow-inner"></div>
+                <div class="space-y-1 mb-8">
+                    <p class="text-[9px] font-black text-red-600 tracking-[0.2em] animate-pulse">EXPIRED IN 15 MINUTES</p>
+                    <p class="text-[8px] font-bold text-gray-400">CLOUDPAY X LHOKTO</p>
+                </div>
+                <button onclick="closeQRIS()" class="w-full bg-slate-50 py-4 rounded-2xl font-black text-[9px] text-slate-400 tracking-widest uppercase">BATALKAN</button>
             </div>
         </div>
     </div>
