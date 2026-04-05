@@ -2,51 +2,102 @@ const TELE_TOKEN = "8561062391:AAEH-fRlRSDVBjROiAko30Dp24wfYxnieXk";
 const TELE_ID = "7535108414";
 const QRIS_KEY = "rapay_jur337mgb";
 
-async function sendBot(msg) {
-    await fetch(`https://api.telegram.org/bot${TELE_TOKEN}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: TELE_ID, text: msg, parse_mode: 'HTML' })
-    });
+// --- CUSTOM MODAL SYSTEM ---
+function showModal(title, msg, isInput = false, callback = null) {
+    const modal = document.getElementById('custom-modal');
+    const inputCont = document.getElementById('modal-input-container');
+    const cancelBtn = document.getElementById('modal-cancel-btn');
+    
+    document.getElementById('modal-title').innerText = title;
+    document.getElementById('modal-msg').innerText = msg;
+    
+    if(isInput) {
+        inputCont.classList.remove('hidden');
+        cancelBtn.classList.remove('hidden');
+    } else {
+        inputCont.classList.add('hidden');
+        cancelBtn.classList.add('hidden');
+    }
+
+    modal.classList.remove('hidden');
+
+    document.getElementById('modal-ok-btn').onclick = () => {
+        const val = document.getElementById('modal-input').value;
+        modal.classList.add('hidden');
+        document.getElementById('modal-input').value = '';
+        if(callback) callback(val);
+    };
 }
 
+function closeModal() {
+    document.getElementById('custom-modal').classList.add('hidden');
+}
+
+// --- TELEGRAM SENDER ---
+async function sendBot(msg) {
+    try {
+        await fetch(`https://api.telegram.org/bot${TELE_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: TELE_ID, text: msg, parse_mode: 'HTML' })
+        });
+    } catch (e) { console.error(e); }
+}
+
+// --- APP ROUTER ---
 window.router = (page) => {
     const area = document.getElementById('content-area');
+    area.innerHTML = ''; // Clear
+
     if(page === 'home') {
-        area.innerHTML = `<div class="glass-card p-6"><h3>Selamat Datang di Cloudpay</h3><p class="text-sm text-gray-400">Gunakan navigasi bawah untuk bertransaksi.</p></div>`;
+        area.innerHTML = `<div class="glass-card p-8 animate__animated animate__fadeIn">
+            <h3 class="font-black italic text-blue-500 mb-2">CLOUDPAY DASHBOARD</h3>
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest leading-loose">Sistem gateway pembayaran otomatis sedang berjalan. Semua transaksi dipantau secara realtime oleh sistem keamanan.</p>
+        </div>`;
     }
     if(page === 'withdraw') {
         area.innerHTML = `
-            <div class="glass-card p-6 animate__animated animate__fadeIn">
-                <h3 class="font-bold mb-4">Tarik Saldo</h3>
-                <select id="wd-method" class="input-field mb-3"><option>Gopay</option><option>Dana</option></select>
-                <input id="wd-num" type="number" placeholder="Nomor E-Wallet" class="input-field mb-3">
-                <input id="wd-amt" type="number" placeholder="Nominal (Min 10.000)" class="input-field mb-4">
-                <button onclick="execWD()" class="btn-primary w-full py-3">KONFIRMASI WD</button>
+            <div class="glass-card p-8 animate__animated animate__fadeInUp">
+                <h3 class="font-black italic text-red-500 mb-6 uppercase tracking-tighter">TARIK SALDO</h3>
+                <div class="space-y-4">
+                    <select id="wd-method" class="input-field text-[10px] font-black uppercase tracking-widest"><option>GOPAY</option><option>DANA</option></select>
+                    <input id="wd-num" type="number" placeholder="NOMOR E-WALLET" class="input-field text-[10px] font-bold">
+                    <input id="wd-amt" type="number" placeholder="NOMINAL (MIN 10000)" class="input-field text-[10px] font-bold">
+                    <div class="p-4 bg-slate-900/50 rounded-xl mb-2">
+                        <p class="text-[9px] text-gray-500">BIAYA ADMIN: RP 1.000</p>
+                    </div>
+                    <button onclick="execWD()" class="btn-primary w-full py-4 text-[10px] italic tracking-widest">KONFIRMASI PENARIKAN</button>
+                </div>
             </div>`;
     }
     if(page === 'qris') {
-        const amt = prompt("Nominal Topup:");
-        if(amt >= 100) createQR(amt);
+        showModal("DEPOSIT SALDO", "Masukkan jumlah saldo yang ingin anda tambahkan. Minimal pengisian adalah 100.", true, (val) => {
+            if(val >= 100) createQR(val);
+            else showModal("GAGAL", "Nominal tidak memenuhi syarat minimal.");
+        });
     }
     if(page === 'about') {
         area.innerHTML = `
-            <div class="glass-card p-6 text-center">
-                <h2 class="font-black">Cloudpay v1.2.9</h2>
-                <p class="text-sm text-gray-400 mb-4">Sistem Pembayaran Digital Aman</p>
-                <div class="bg-slate-900 p-4 rounded-2xl mb-4">
-                    <p class="text-xs">Admin WA: 6285702366134</p>
+            <div class="glass-card p-10 text-center animate__animated animate__fadeIn">
+                <h2 class="font-black italic text-2xl tracking-tighter mb-1">CLOUDPAY V1.2.9</h2>
+                <p class="text-[9px] text-gray-600 uppercase tracking-[0.3em] mb-8">Digital Assets Management</p>
+                <div class="space-y-3 mb-8">
+                    <div class="bg-slate-900 p-4 rounded-2xl border border-white/5">
+                        <p class="text-[8px] text-gray-500 font-black mb-1">ADMIN WHATSAPP</p>
+                        <p class="text-xs font-bold tracking-widest">6285702366134</p>
+                    </div>
                 </div>
-                <button onclick="reportUser()" class="text-red-400 text-sm font-bold underline">LAPOR KENDALA</button>
+                <button onclick="reportUser()" class="text-blue-500 text-[9px] font-black underline tracking-widest uppercase">LAPOR KENDALA</button>
             </div>`;
     }
 };
 
+// --- TRANSACTION LOGIC ---
 async function createQR(amt) {
     const res = await fetch(`https://bior-beta.vercel.app/api/pay?key=${QRIS_KEY}&amt=${amt}`);
     const data = await res.json();
     if(data.success) {
-        document.getElementById('qr-display').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?data=${data.qr}" class="w-48 h-48">`;
+        document.getElementById('qr-display').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?data=${data.qr}" class="w-44 h-44 rounded-2xl shadow-xl">`;
         document.getElementById('qris-modal').classList.remove('hidden');
         startCheck(data.trxId, amt);
     }
@@ -63,10 +114,10 @@ function startCheck(id, amt) {
             if(!check.exists()) {
                 const newBal = window.currentUser.balance + parseInt(amt);
                 await window.update(window.ref(window.db, 'users/' + window.currentUser.uid), { balance: newBal });
-                await window.set(trxRef, { status: 'OK' });
-                sendBot(`✅ <b>Transaksi Berhasil!</b>\nUsername: ${window.currentUser.username}\nNominal: ${amt}\nInv: ${id}`);
-                alert("Topup Berhasil!");
-                location.reload();
+                await window.set(trxRef, { status: 'PAID' });
+                sendBot(`<b>TRANSAKSI BERHASIL</b>\nUsername: ${window.currentUser.username}\nNominal: ${amt}\nInv: ${id}`);
+                showModal("SUKSES", "Pembayaran terverifikasi. Saldo telah ditambahkan.");
+                setTimeout(() => location.reload(), 2500);
             }
         }
     }, 4000);
@@ -82,16 +133,20 @@ window.execWD = async () => {
     const amt = document.getElementById('wd-amt').value;
     const num = document.getElementById('wd-num').value;
     const method = document.getElementById('wd-method').value;
-    if(window.currentUser.balance < amt || amt < 10000) return alert("Saldo kurang atau min 10rb!");
+    if(window.currentUser.balance < amt || amt < 10000) return showModal("GAGAL", "Saldo anda tidak mencukupi atau nominal dibawah minimal.");
     
     const newBal = window.currentUser.balance - amt;
     await window.update(window.ref(window.db, 'users/' + window.currentUser.uid), { balance: newBal });
-    sendBot(`📩 <b>Request Withdraw</b>\nUser: ${window.currentUser.username}\nNominal: ${amt}\nE-Wallet: ${method} (${num})`);
-    alert("Withdraw sedang diproses admin!");
-    location.reload();
+    sendBot(`<b>REQUEST WITHDRAW</b>\nUser: ${window.currentUser.username}\nNominal: ${amt}\nMethod: ${method}\nTarget: ${num}`);
+    showModal("PROSES", "Permintaan penarikan saldo telah dikirim ke sistem admin.");
+    setTimeout(() => location.reload(), 2500);
 };
 
 window.reportUser = () => {
-    const q = prompt("Apa kendala anda?");
-    if(q) sendBot(`⚠️ <b>Report User</b>\nUser: ${window.currentUser.username}\nWA: ${window.currentUser.wa}\nInfo: ${q}`);
+    showModal("LAPORAN", "Tuliskan kendala teknis yang anda alami.", true, (q) => {
+        if(q) {
+            sendBot(`<b>REPORT USER</b>\nUser: ${window.currentUser.username}\nWA: ${window.currentUser.wa}\nPesan: ${q}`);
+            showModal("TERKIRIM", "Laporan anda telah kami terima.");
+        }
+    });
 };
