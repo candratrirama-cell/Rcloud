@@ -3,44 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloudpay v1.2.9</title>
+    <title>CLOUDPAY V1.2.9</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(2, 6, 23, 0.8);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            outline: none;
+            color: white;
+            transition: 0.3s;
+        }
+        .input-field:focus { border-color: #3b82f6; }
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border-radius: 16px;
+            font-weight: 900;
+            transition: 0.3s;
+        }
+        .btn-primary:active { transform: scale(0.95); }
+        .batik-overlay {
+            background-image: url('https://www.transparenttextures.com/patterns/batik-floral.png');
+            opacity: 0.05;
+        }
+        ::-webkit-scrollbar { width: 0px; }
+    </style>
 </head>
-<body class="bg-slate-950 text-white font-sans selection:bg-blue-500">
+<body class="bg-slate-950 text-white font-sans selection:bg-blue-500 overflow-x-hidden">
 
     <div id="auth-screen" class="min-h-screen flex items-center justify-center p-6">
-        <div class="glass-card p-8 w-full max-w-sm animate__animated animate__zoomIn">
-            <h1 class="text-3xl font-black text-center mb-2 italic text-blue-500">CLOUDPAY</h1>
-            <p class="text-center text-gray-400 text-sm mb-8">Silahkan masuk atau daftar</p>
+        <div class="glass-card p-8 w-full max-w-sm animate__animated animate__fadeInDown">
+            <h1 class="text-3xl font-black text-center mb-1 italic text-blue-500 tracking-tighter">CLOUDPAY</h1>
+            <p class="text-center text-gray-500 text-[10px] uppercase tracking-[0.2em] mb-8">Secure Digital Gateway</p>
             <div class="space-y-4">
-                <input id="reg-user" type="text" placeholder="Username unik" class="input-field">
-                <input id="reg-wa" type="number" placeholder="Nomor WhatsApp" class="input-field">
-                <input id="reg-pass" type="password" placeholder="Password" class="input-field">
-                <button onclick="handleAuth()" class="btn-primary w-full py-3 mt-4">MASUK / DAFTAR</button>
+                <input id="reg-user" type="text" placeholder="USERNAME" class="input-field text-xs font-bold">
+                <input id="reg-wa" type="number" placeholder="WHATSAPP" class="input-field text-xs font-bold">
+                <input id="reg-pass" type="password" placeholder="PASSWORD" class="input-field text-xs font-bold">
+                <button onclick="handleAuth()" class="btn-primary w-full py-4 text-xs italic tracking-widest">MASUK / DAFTAR</button>
             </div>
         </div>
     </div>
 
-    <div id="main-app" class="hidden min-h-screen pb-28">
-        <header class="p-6 sticky top-0 bg-slate-950/80 backdrop-blur-xl z-40">
+    <div id="main-app" class="hidden min-h-screen pb-32">
+        <header class="p-6 sticky top-0 bg-slate-950/90 backdrop-blur-md z-40">
             <div class="flex justify-between items-center mb-6">
                 <div>
-                    <p class="text-gray-400 text-sm">Halo, <span id="display-user" class="text-blue-400 font-bold">User</span></p>
-                    <h2 id="user-balance" class="text-3xl font-black tracking-tight">Rp 0</h2>
+                    <p class="text-gray-500 text-[10px] font-black uppercase tracking-widest">USER: <span id="display-user" class="text-blue-400">---</span></p>
+                    <h2 id="user-balance" class="text-4xl font-black italic tracking-tighter">RP 0</h2>
                 </div>
-                <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center font-bold">CP</div>
             </div>
-            
             <div class="grid grid-cols-2 gap-3">
-                <div class="glass-card p-3 border-l-4 border-green-500">
-                    <p class="text-[10px] text-gray-400 uppercase tracking-widest">Masuk (Hari ini)</p>
-                    <p id="stat-in" class="font-bold text-green-400">Rp 0</p>
+                <div class="glass-card p-4 border-l-2 border-blue-500">
+                    <p class="text-[9px] text-gray-500 uppercase font-black">MASUK / HARI</p>
+                    <p id="stat-in" class="font-bold text-sm">RP 0</p>
                 </div>
-                <div class="glass-card p-3 border-l-4 border-red-500">
-                    <p class="text-[10px] text-gray-400 uppercase tracking-widest">Keluar (Hari ini)</p>
-                    <p id="stat-out" class="font-bold text-red-400">Rp 0</p>
+                <div class="glass-card p-4 border-l-2 border-red-500">
+                    <p class="text-[9px] text-gray-500 uppercase font-black">KELUAR / HARI</p>
+                    <p id="stat-out" class="font-bold text-sm">RP 0</p>
                 </div>
             </div>
         </header>
@@ -48,24 +76,38 @@
         <main id="content-area" class="px-6 space-y-4 animate__animated animate__fadeInUp"></main>
 
         <nav class="fixed bottom-6 left-6 right-6 z-50">
-            <div class="glass-card flex justify-around items-center py-4 px-2 border-slate-700/50">
-                <button onclick="router('home')" class="nav-btn">🏠</button>
-                <button onclick="router('withdraw')" class="nav-btn">💸</button>
-                <button onclick="router('qris')" class="nav-btn">📸</button>
-                <button onclick="router('history')" class="nav-btn">📜</button>
-                <button onclick="router('about')" class="nav-btn">ℹ️</button>
+            <div class="glass-card flex justify-around items-center py-5 px-2 border-white/5">
+                <button onclick="router('home')" class="text-[10px] font-black italic hover:text-blue-500 transition">HOME</button>
+                <button onclick="router('withdraw')" class="text-[10px] font-black italic hover:text-blue-500 transition">WITHDRAW</button>
+                <button onclick="router('qris')" class="text-[10px] font-black italic hover:text-blue-500 transition">QRIS</button>
+                <button onclick="router('history')" class="text-[10px] font-black italic hover:text-blue-500 transition">LOGS</button>
+                <button onclick="router('about')" class="text-[10px] font-black italic hover:text-blue-500 transition">INFO</button>
             </div>
         </nav>
     </div>
 
-    <div id="qris-modal" class="fixed inset-0 bg-black/95 hidden z-[100] flex items-center justify-center p-6 backdrop-blur-md">
-        <div class="bg-white text-black p-6 rounded-[2.5rem] w-full max-w-xs text-center relative overflow-hidden shadow-2xl animate__animated animate__bounceIn">
-            <div class="batik-overlay absolute inset-0 opacity-10"></div>
+    <div id="custom-modal" class="fixed inset-0 bg-black/90 hidden z-[200] flex items-center justify-center p-6 backdrop-blur-md">
+        <div class="glass-card p-8 w-full max-w-sm animate__animated animate__zoomIn text-center border-white/10">
+            <h3 id="modal-title" class="text-lg font-black mb-2 text-blue-500 italic tracking-tighter uppercase">SYSTEM</h3>
+            <p id="modal-msg" class="text-gray-400 text-xs mb-8 leading-relaxed"></p>
+            <div id="modal-input-container" class="hidden mb-8">
+                <input id="modal-input" type="number" class="input-field text-center font-bold text-xl" placeholder="0">
+            </div>
+            <div class="flex gap-3">
+                <button id="modal-cancel-btn" onclick="closeModal()" class="hidden flex-1 bg-slate-900 py-4 rounded-2xl font-black text-[10px] text-gray-500">BATAL</button>
+                <button id="modal-ok-btn" class="flex-1 btn-primary py-4 text-[10px] tracking-widest">LANJUTKAN</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="qris-modal" class="fixed inset-0 bg-black/95 hidden z-[100] flex items-center justify-center p-6">
+        <div class="bg-white text-black p-8 rounded-[3rem] w-full max-w-xs text-center relative overflow-hidden animate__animated animate__jackInTheBox">
+            <div class="batik-overlay absolute inset-0 opacity-20"></div>
             <div class="relative z-10">
-                <h3 class="font-black italic text-xl mb-1">CLOUDPAY <span class="text-blue-600 italic">X</span> LHOKTO</h3>
-                <div id="qr-display" class="bg-white p-4 inline-block rounded-3xl mb-4 border-4 border-slate-100 mt-2"></div>
-                <p class="text-[10px] text-red-600 font-black tracking-tighter mb-4 animate-pulse uppercase">QRIS HANYA BERLAKU 15 MENIT</p>
-                <button onclick="closeQRIS()" class="w-full bg-slate-100 py-3 rounded-2xl font-bold text-slate-500">BATALKAN</button>
+                <h3 class="font-black italic text-sm tracking-tighter mb-4">CLOUDPAY X LHOKTO</h3>
+                <div id="qr-display" class="bg-white p-4 inline-block rounded-3xl mb-6 border-2 border-slate-100"></div>
+                <p class="text-[9px] text-red-600 font-black tracking-widest mb-6 animate-pulse">QRIS EXPIRED DALAM 15 MENIT</p>
+                <button onclick="closeQRIS()" class="w-full bg-slate-100 py-4 rounded-2xl font-black text-[10px] text-slate-400 tracking-widest">BATALKAN TRANSAKSI</button>
             </div>
         </div>
     </div>
