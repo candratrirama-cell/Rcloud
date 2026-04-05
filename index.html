@@ -2,67 +2,75 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CLOUDPAY - Maintenance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloudpay v1.2.9</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow: hidden; }
-        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.4); }
-        .fade-in { animation: fadeIn 0.8s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
-<body class="flex items-center justify-center min-h-screen p-6">
+<body class="bg-slate-950 text-white font-sans selection:bg-blue-500">
 
-    <div class="max-w-md w-full glass-card p-10 rounded-[50px] shadow-2xl text-center flex flex-col items-center fade-in">
-        
-        <div class="relative mb-8">
-            <div class="absolute inset-0 bg-orange-500 rounded-[35px] blur-2xl opacity-20 animate-pulse"></div>
-            <div class="bg-gradient-to-br from-orange-400 to-orange-600 w-24 h-24 rounded-[35px] flex items-center justify-center shadow-xl relative border border-white/20">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a2 2 0 0 1 2.83 0l1.2 1.2a2 2 0 0 1 0 2.83l-3.77 3.77a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0"></path>
-                    <path d="m2 22 1-1"></path>
-                    <path d="M8 6l1-1"></path>
-                    <path d="M18 16l1-1"></path>
-                </svg>
+    <div id="auth-screen" class="min-h-screen flex items-center justify-center p-6">
+        <div class="glass-card p-8 w-full max-w-sm animate__animated animate__zoomIn">
+            <h1 class="text-3xl font-black text-center mb-2 italic text-blue-500">CLOUDPAY</h1>
+            <p class="text-center text-gray-400 text-sm mb-8">Silahkan masuk atau daftar</p>
+            <div class="space-y-4">
+                <input id="reg-user" type="text" placeholder="Username unik" class="input-field">
+                <input id="reg-wa" type="number" placeholder="Nomor WhatsApp" class="input-field">
+                <input id="reg-pass" type="password" placeholder="Password" class="input-field">
+                <button onclick="handleAuth()" class="btn-primary w-full py-3 mt-4">MASUK / DAFTAR</button>
             </div>
         </div>
-
-        <h1 class="text-3xl font-[800] text-gray-900 tracking-tighter italic mb-2 uppercase">CLOUDPAY.</h1>
-        <div class="inline-block bg-orange-100 text-orange-600 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] mb-6 border border-orange-200">
-            System Maintenance
-        </div>
-        
-        <p class="text-[13px] text-gray-500 font-bold leading-relaxed px-4 mb-10 uppercase opacity-70">
-            Server sedang dalam peningkatan sistem. Transaksi dihentikan sementara demi keamanan saldo Anda.
-        </p>
-
-        <div class="w-full bg-white/50 p-6 rounded-[35px] border border-gray-100 text-left space-y-4 shadow-sm">
-            <div class="flex items-center justify-between">
-                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Estimasi Selesai</span>
-                <span class="text-[10px] font-black text-orange-600 uppercase">1 - 2 minggu / bulan</span>
-            </div>
-            <div class="h-[1px] w-full bg-gray-100/50"></div>
-            <div class="flex items-center justify-between">
-                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Status Update</span>
-                <div class="flex items-center gap-2">
-                    <div class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping"></div>
-                    <span class="text-[10px] font-black text-gray-800 uppercase italic">On Progress</span>
-                </div>
-            </div>
-        </div>
-
-        <a href="https://wa.me/62882008519349" class="mt-8 flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-[0.25em] hover:opacity-70 transition-opacity">
-            <span>Hubungi Admin</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <path d="M5 12h14m-7-7l7 7-7 7"/>
-            </svg>
-        </a>
-
-        <p class="mt-12 text-[8px] font-bold text-gray-300 uppercase tracking-widest">Cloudpay v1.2.8 &copy; 2026</p>
-
     </div>
 
+    <div id="main-app" class="hidden min-h-screen pb-28">
+        <header class="p-6 sticky top-0 bg-slate-950/80 backdrop-blur-xl z-40">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <p class="text-gray-400 text-sm">Halo, <span id="display-user" class="text-blue-400 font-bold">User</span></p>
+                    <h2 id="user-balance" class="text-3xl font-black tracking-tight">Rp 0</h2>
+                </div>
+                <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center font-bold">CP</div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3">
+                <div class="glass-card p-3 border-l-4 border-green-500">
+                    <p class="text-[10px] text-gray-400 uppercase tracking-widest">Masuk (Hari ini)</p>
+                    <p id="stat-in" class="font-bold text-green-400">Rp 0</p>
+                </div>
+                <div class="glass-card p-3 border-l-4 border-red-500">
+                    <p class="text-[10px] text-gray-400 uppercase tracking-widest">Keluar (Hari ini)</p>
+                    <p id="stat-out" class="font-bold text-red-400">Rp 0</p>
+                </div>
+            </div>
+        </header>
+
+        <main id="content-area" class="px-6 space-y-4 animate__animated animate__fadeInUp"></main>
+
+        <nav class="fixed bottom-6 left-6 right-6 z-50">
+            <div class="glass-card flex justify-around items-center py-4 px-2 border-slate-700/50">
+                <button onclick="router('home')" class="nav-btn">🏠</button>
+                <button onclick="router('withdraw')" class="nav-btn">💸</button>
+                <button onclick="router('qris')" class="nav-btn">📸</button>
+                <button onclick="router('history')" class="nav-btn">📜</button>
+                <button onclick="router('about')" class="nav-btn">ℹ️</button>
+            </div>
+        </nav>
+    </div>
+
+    <div id="qris-modal" class="fixed inset-0 bg-black/95 hidden z-[100] flex items-center justify-center p-6 backdrop-blur-md">
+        <div class="bg-white text-black p-6 rounded-[2.5rem] w-full max-w-xs text-center relative overflow-hidden shadow-2xl animate__animated animate__bounceIn">
+            <div class="batik-overlay absolute inset-0 opacity-10"></div>
+            <div class="relative z-10">
+                <h3 class="font-black italic text-xl mb-1">CLOUDPAY <span class="text-blue-600 italic">X</span> LHOKTO</h3>
+                <div id="qr-display" class="bg-white p-4 inline-block rounded-3xl mb-4 border-4 border-slate-100 mt-2"></div>
+                <p class="text-[10px] text-red-600 font-black tracking-tighter mb-4 animate-pulse uppercase">QRIS HANYA BERLAKU 15 MENIT</p>
+                <button onclick="closeQRIS()" class="w-full bg-slate-100 py-3 rounded-2xl font-bold text-slate-500">BATALKAN</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+    <script src="api.js"></script>
 </body>
 </html>
